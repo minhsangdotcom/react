@@ -32,5 +32,6 @@
     "compilerOptions": {
       "module": "CommonJS"
     }
-  }
+  },
+  "types": ["tailwindcss"]
 }
