@@ -1,5 +1,4 @@
 import { merge } from "webpack-merge";
-import common from "./webpack.common.js";
 
 import { resolve as _resolve } from "path";
 import { fileURLToPath } from "url";
@@ -19,8 +18,8 @@ export default merge(common, {
     open: false,
     historyApiFallback: true,
     static: _resolve(__dirname, "public"),
-    hot : true,
-    port: 3000,
+    hot: true,
+    port: process.env.HOST_PORT || '3000',
   },
   stats: {
     errorDetails: true,
