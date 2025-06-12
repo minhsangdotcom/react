@@ -5,11 +5,16 @@ import { dirname } from "path";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+import webpack from "webpack";
+
 export default {
   entry: "./src/index.tsx",
   plugins: [
     new HtmlWebpackPlugin({
       template: "public/index.html",
+    }),
+    new webpack.DefinePlugin({
+      'process.env': JSON.stringify(process.env),
     }),
     // new CopyPlugin({
     //   patterns: [{ from: "public/icons", to: "icons" }],
