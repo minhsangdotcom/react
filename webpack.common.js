@@ -1,6 +1,5 @@
 import HtmlWebpackPlugin from "html-webpack-plugin";
-import CopyPlugin from "copy-webpack-plugin";
-import { resolve as _resolve } from "path";
+import { resolve as _resolve, join } from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 const __filename = fileURLToPath(import.meta.url);
