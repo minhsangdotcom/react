@@ -1,0 +1,74 @@
+.login-form-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin: auto;
+}
+.login-form-group label {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+.login-form-title {
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.login-form-group {
+  width: 100%;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.login-form-input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.login-form-input:focus {
+  outline: none;
+  border-color: #f0f0f0;
+  box-shadow: 0 0 0 2px #f0f0f0;
+}
+.login-form-input:hover {
+  background-color: #fafafa;
+  border-color: #e6e6e6;
+}
+
+.login-form-button {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+.login-form-button:hover {
+  background: #0056b3;
+}
+.show-password {
+  position: absolute;
+  right: 10px;
+  top: 40px;
+  cursor: pointer;
+}
+.error {
+  color: red;
+  font-size: 1rem;
+  margin-top: 5rem;
+  font-weight: 700;
+}
