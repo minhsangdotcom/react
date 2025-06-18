@@ -1,5 +1,5 @@
-import "./loginForm.css";
-import { ILoginRequest } from "../../types/Auth/ILoginRequest";
+import "./login.css";
+import { ILoginRequest } from "../../types/auth/ILoginRequest";
 import { useState } from "react";
 
 import { loginAsync } from "../../store/auth/authSlice";

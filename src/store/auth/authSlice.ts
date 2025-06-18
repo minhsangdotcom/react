@@ -1,53 +1,90 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import IUser from "../../types/Auth/User";
-import authService from "../../features/auth/authService";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import authService from "../../services/auth/authService";
 import IResponse from "../../types/IResponse";
-import { ILoginRequest } from "../../types/Auth/ILoginRequest";
-import { ILoginResponse } from "../../types/Auth/ILoginResponse";
+import { ILoginRequest } from "../../types/auth/ILoginRequest";
+import { ILoginResponse } from "../../types/auth/ILoginResponse";
 import {
-  IBadRequestResponse,
-  IErrorResponse,
-  INotFoundResponse,
-} from "../../types/IErrorResponse";
+  IBadRequestError,
+  IForbiddenError,
+  INotFoundError,
+  IUnauthorizedError,
+} from "../../types/IError";
+import { IUser } from "../../types/user/IUser";
+import { ITokenResponse } from "../../types/auth/ITokenResponse";
 
 interface AuthState {
-  user: null | IUser;
+  user: IUser | null;
   token: string | null;
   refreshToken: string | null;
   loading: boolean;
   error: any;
 }
 const userInfo = localStorage.getItem("userInfo");
+const user = userInfo ? JSON.parse(userInfo) : null;
+const token = user?.token;
+const refreshToken = user?.refreshToken;
 const initialState: AuthState = {
   user: null,
-  token: userInfo ? JSON.parse(userInfo)?.token : null,
+  token,
   loading: false,
   error: null,
-  refreshToken: null,
+  refreshToken,
 };
 
-export const loginAsync = createAsyncThunk<
-  | IResponse<ILoginResponse>
-  | IErrorResponse<IBadRequestResponse>
-  | IErrorResponse<INotFoundResponse>
-  | null,
-  ILoginRequest,
-  { rejectValue: any }
->("user/login", async (credentials, thunkAPI) => {
-  const response = await authService.login(credentials);
+export const loginAsync = createAsyncThunk(
+  "user/login",
+  async (credentials: ILoginRequest, thunkAPI) => {
+    const response = await authService.login(credentials);
 
-  if (response?.status == 400) {
-    const badRequestResponse = response as IErrorResponse<IBadRequestResponse>;
-    return thunkAPI.rejectWithValue(badRequestResponse.ErrorDetail);
+    if (!response.isSuccess && response?.error?.status == 400) {
+      const badRequestResponse = response.error as IBadRequestError;
+      return thunkAPI.rejectWithValue(badRequestResponse.ErrorDetail);
+    }
+
+    if (!response.isSuccess && response?.error?.status == 404) {
+      const notFoundResponse = response.error as INotFoundError;
+      return thunkAPI.rejectWithValue(notFoundResponse.ErrorDetail);
+    }
+
+    return response;
   }
+);
 
-  if (response?.status == 404) {
-    const notFoundResponse = response as IErrorResponse<INotFoundResponse>;
-    return thunkAPI.rejectWithValue(notFoundResponse.ErrorDetail);
+export const profileAsync = createAsyncThunk(
+  "user/profile",
+  async (_, thunkApi) => {
+    const response = await authService.getProfile();
+    if (!response.isSuccess && response?.error?.status == 400) {
+      const badRequestError = response.error as IBadRequestError;
+      return thunkApi.rejectWithValue(badRequestError.ErrorDetail);
+    }
+
+    if (!response.isSuccess && response?.error?.status == 403) {
+      const forbiddenError = response.error as IForbiddenError;
+      return thunkApi.rejectWithValue(forbiddenError.ErrorDetail);
+    }
+
+    if (!response.isSuccess && response?.error?.status == 401) {
+      const forbiddenError = response.error as IUnauthorizedError;
+      return thunkApi.rejectWithValue(forbiddenError.ErrorDetail);
+    }
+
+    return response;
   }
+);
 
-  return response;
-});
+export const refreshAsync = createAsyncThunk(
+  "user/refreshToken",
+  async (token: string, thunkApi) => {
+    const response = await authService.refresh(token);
+    if (!response.isSuccess && response?.error?.status == 400) {
+      const badRequestError = response.error as IBadRequestError;
+      return thunkApi.rejectWithValue(badRequestError.ErrorDetail);
+    }
+
+    return response;
+  }
+);
 
 const authSlice = createSlice({
   name: "auth",
@@ -71,35 +108,83 @@ const authSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(
-        loginAsync.fulfilled,
-        (
-          state: AuthState,
-          action: PayloadAction<
-            | IResponse<ILoginResponse>
-            | IErrorResponse<IBadRequestResponse>
-            | IErrorResponse<INotFoundResponse>
-            | null
-          >
-        ) => {
-          const data = action.payload;
-          const result = data as IResponse<ILoginResponse>;
-          const { token } = result.results!;
-          localStorage.setItem("userInfo", JSON.stringify({ token }));
-          return {
-            ...state,
-            loading: false,
-            token: token,
-            error: null,
-          };
-        }
-      )
+      .addCase(loginAsync.fulfilled, (state: AuthState, action) => {
+        const result = action.payload.data as IResponse<ILoginResponse>;
+        const { token, refreshToken } = result.results!;
+        localStorage.setItem(
+          "userInfo",
+          JSON.stringify({ token, refreshToken })
+        );
+        return {
+          ...state,
+          loading: false,
+          token: token,
+          refreshToken: refreshToken,
+          error: null,
+        };
+      })
       .addCase(loginAsync.rejected, (state: AuthState, action) => {
         return {
           ...state,
           loading: false,
           user: null,
           token: null,
+          refreshToken: null,
+          error: action?.payload ?? "unknown error",
+        };
+      })
+      .addCase(profileAsync.pending, (state: AuthState) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(profileAsync.fulfilled, (state: AuthState, action) => {
+        const result = action.payload.data as IResponse<IUser>;
+        const user = result?.results;
+
+        const uerInfo = JSON.parse(localStorage.getItem("userInfo")!);
+        localStorage.setItem("userInfo", JSON.stringify({ ...uerInfo, user }));
+        return {
+          ...state,
+          loading: false,
+          error: null,
+          user,
+        };
+      })
+      .addCase(profileAsync.rejected, (state: AuthState, action) => {
+        return {
+          ...state,
+          loading: false,
+          user: null,
+          error: action?.payload ?? "unknown error",
+        };
+      })
+      .addCase(refreshAsync.pending, (state: AuthState) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(refreshAsync.fulfilled, (state: AuthState, action) => {
+        const result = action.payload.data as IResponse<ITokenResponse>;
+
+        const token = result?.results?.token!;
+        const refreshToken = result?.results?.refreshToken!;
+
+        const uerInfo = JSON.parse(localStorage.getItem("userInfo")!);
+        localStorage.setItem(
+          "userInfo",
+          JSON.stringify({ ...uerInfo, token, refreshToken })
+        );
+        return {
+          ...state,
+          loading: false,
+          error: null,
+          refreshToken,
+          token,
+        };
+      })
+      .addCase(refreshAsync.rejected, (state: AuthState, action) => {
+        return {
+          ...state,
+          loading: false,
           error: action?.payload ?? "unknown error",
         };
       });

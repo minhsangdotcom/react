@@ -1,9 +1,8 @@
-import IUser from "./User";
+import { ITokenResponse } from "./ITokenResponse";
+import IUser from "./IUserResponse";
 
-export interface ILoginResponse {
+export interface ILoginResponse extends ITokenResponse {
   tokenType: string;
   accessTokenExpiredIn: number;
-  token: string;
-  refresh: string;
   user: IUser,
 }
