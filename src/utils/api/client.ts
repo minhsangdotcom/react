@@ -1,7 +1,7 @@
 import axios from "axios";
 import { env } from "../../config/env";
 import { IApiResult } from "./IApiResult";
-import IAxiosRequest from "./iAxiosRequest";
+import IAxiosRequest from "./IAxiosRequest";
 
 const apiClient = axios.create({
   baseURL: env.apiBaseUrl,

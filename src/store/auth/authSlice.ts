@@ -24,7 +24,7 @@ const user = userInfo ? JSON.parse(userInfo) : null;
 const token = user?.token;
 const refreshToken = user?.refreshToken;
 const initialState: AuthState = {
-  user: null,
+  user: user?.user,
   token,
   loading: false,
   error: null,
@@ -36,14 +36,14 @@ export const loginAsync = createAsyncThunk(
   async (credentials: ILoginRequest, thunkAPI) => {
     const response = await authService.login(credentials);
 
-    if (!response.isSuccess && response?.error?.status == 400) {
+    if (response.error?.status === 400) {
       const badRequestResponse = response.error as IBadRequestError;
-      return thunkAPI.rejectWithValue(badRequestResponse.ErrorDetail);
+      return thunkAPI.rejectWithValue(badRequestResponse.errorDetails);
     }
 
-    if (!response.isSuccess && response?.error?.status == 404) {
+    if (response.error?.status == 404) {
       const notFoundResponse = response.error as INotFoundError;
-      return thunkAPI.rejectWithValue(notFoundResponse.ErrorDetail);
+      return thunkAPI.rejectWithValue(notFoundResponse.errorDetails);
     }
 
     return response;
@@ -54,19 +54,19 @@ export const profileAsync = createAsyncThunk(
   "user/profile",
   async (_, thunkApi) => {
     const response = await authService.getProfile();
-    if (!response.isSuccess && response?.error?.status == 400) {
+    if (response?.error?.status == 400) {
       const badRequestError = response.error as IBadRequestError;
-      return thunkApi.rejectWithValue(badRequestError.ErrorDetail);
+      return thunkApi.rejectWithValue(badRequestError.errorDetails);
     }
 
-    if (!response.isSuccess && response?.error?.status == 403) {
+    if (response?.error?.status == 403) {
       const forbiddenError = response.error as IForbiddenError;
-      return thunkApi.rejectWithValue(forbiddenError.ErrorDetail);
+      return thunkApi.rejectWithValue(forbiddenError.errorDetails);
     }
 
-    if (!response.isSuccess && response?.error?.status == 401) {
+    if (response?.error?.status == 401) {
       const forbiddenError = response.error as IUnauthorizedError;
-      return thunkApi.rejectWithValue(forbiddenError.ErrorDetail);
+      return thunkApi.rejectWithValue(forbiddenError.errorDetails);
     }
 
     return response;
@@ -77,9 +77,9 @@ export const refreshAsync = createAsyncThunk(
   "user/refreshToken",
   async (token: string, thunkApi) => {
     const response = await authService.refresh(token);
-    if (!response.isSuccess && response?.error?.status == 400) {
+    if (response?.error?.status == 400) {
       const badRequestError = response.error as IBadRequestError;
-      return thunkApi.rejectWithValue(badRequestError.ErrorDetail);
+      return thunkApi.rejectWithValue(badRequestError.errorDetails);
     }
 
     return response;
@@ -109,12 +109,13 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(loginAsync.fulfilled, (state: AuthState, action) => {
-        const result = action.payload.data as IResponse<ILoginResponse>;
+        const result = action.payload?.data as IResponse<ILoginResponse>;
         const { token, refreshToken } = result.results!;
         localStorage.setItem(
           "userInfo",
           JSON.stringify({ token, refreshToken })
         );
+        
         return {
           ...state,
           loading: false,
