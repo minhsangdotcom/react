@@ -11,22 +11,28 @@ import {
 } from "../../types/IError";
 import { IUser } from "../../types/user/IUser";
 import { ITokenResponse } from "../../types/auth/ITokenResponse";
+import Configs from "../../config/authConfigs";
+import localStorageHelper from "../../utils/storages/localStorageHelper";
 
-interface AuthState {
-  user: IUser | null;
-  token: string | null;
-  refreshToken: string | null;
-  loading: boolean;
+interface IAuthState extends IAuthInfo {
+  isLoading: boolean;
   error: any;
 }
-const userInfo = localStorage.getItem("userInfo");
-const user = userInfo ? JSON.parse(userInfo) : null;
-const token = user?.token;
-const refreshToken = user?.refreshToken;
-const initialState: AuthState = {
-  user: user?.user,
+interface IAuthInfo {
+  user?: IUser | null;
+  token?: string | null;
+  refreshToken?: string | null;
+}
+
+const authInfo = localStorageHelper.get<IAuthInfo>(Configs.authInfoKey);
+const token = authInfo?.token;
+const refreshToken = authInfo?.refreshToken;
+const user = authInfo?.user;
+
+const initialState: IAuthState = {
+  user,
   token,
-  loading: false,
+  isLoading: false,
   error: null,
   refreshToken,
 };
@@ -90,102 +96,108 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    logout: (state: AuthState) => {
-      localStorage.removeItem("userInfo");
+    logout: (state: IAuthState) => {
+      localStorage.removeItem(Configs.authInfoKey);
       return {
         ...state,
         user: null,
         token: null,
         refreshToken: null,
-        loading: false,
+        isLoading: false,
         error: null,
       };
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(loginAsync.pending, (state: AuthState) => {
-        state.loading = true;
+      .addCase(loginAsync.pending, (state: IAuthState) => {
+        state.isLoading = true;
         state.error = null;
       })
-      .addCase(loginAsync.fulfilled, (state: AuthState, action) => {
+      .addCase(loginAsync.fulfilled, (state: IAuthState, action) => {
         const result = action.payload?.data as IResponse<ILoginResponse>;
         const { token, refreshToken } = result.results!;
-        localStorage.setItem(
-          "userInfo",
-          JSON.stringify({ token, refreshToken })
-        );
-        
+
+        localStorageHelper.set<IAuthInfo>(Configs.authInfoKey, {
+          token,
+          refreshToken,
+        });
+
         return {
           ...state,
-          loading: false,
+          isLoading: false,
           token: token,
           refreshToken: refreshToken,
           error: null,
         };
       })
-      .addCase(loginAsync.rejected, (state: AuthState, action) => {
+      .addCase(loginAsync.rejected, (state: IAuthState, action) => {
         return {
           ...state,
-          loading: false,
+          isLoading: false,
           user: null,
           token: null,
           refreshToken: null,
           error: action?.payload ?? "unknown error",
         };
       })
-      .addCase(profileAsync.pending, (state: AuthState) => {
-        state.loading = true;
+      .addCase(profileAsync.pending, (state: IAuthState) => {
+        state.isLoading = true;
         state.error = null;
       })
-      .addCase(profileAsync.fulfilled, (state: AuthState, action) => {
+      .addCase(profileAsync.fulfilled, (state: IAuthState, action) => {
         const result = action.payload.data as IResponse<IUser>;
         const user = result?.results;
 
-        const uerInfo = JSON.parse(localStorage.getItem("userInfo")!);
-        localStorage.setItem("userInfo", JSON.stringify({ ...uerInfo, user }));
+        const authInfo = localStorageHelper.get<IAuthInfo>(
+          Configs.authInfoKey
+        );
+        localStorageHelper.set<IAuthInfo>(Configs.authInfoKey, {
+          ...authInfo,
+          user,
+        });
+
         return {
           ...state,
-          loading: false,
+          isLoading: false,
           error: null,
           user,
         };
       })
-      .addCase(profileAsync.rejected, (state: AuthState, action) => {
+      .addCase(profileAsync.rejected, (state: IAuthState, action) => {
         return {
           ...state,
-          loading: false,
+          isLoading: false,
           user: null,
           error: action?.payload ?? "unknown error",
         };
       })
-      .addCase(refreshAsync.pending, (state: AuthState) => {
-        state.loading = true;
+      .addCase(refreshAsync.pending, (state: IAuthState) => {
+        state.isLoading = true;
         state.error = null;
       })
-      .addCase(refreshAsync.fulfilled, (state: AuthState, action) => {
+      .addCase(refreshAsync.fulfilled, (state: IAuthState, action) => {
         const result = action.payload.data as IResponse<ITokenResponse>;
 
         const token = result?.results?.token!;
         const refreshToken = result?.results?.refreshToken!;
 
-        const uerInfo = JSON.parse(localStorage.getItem("userInfo")!);
-        localStorage.setItem(
-          "userInfo",
-          JSON.stringify({ ...uerInfo, token, refreshToken })
-        );
+        localStorageHelper.set<IAuthInfo>(Configs.authInfoKey, {
+          token,
+          refreshToken,
+        });
         return {
           ...state,
-          loading: false,
+          isLoading: false,
           error: null,
           refreshToken,
           token,
         };
       })
-      .addCase(refreshAsync.rejected, (state: AuthState, action) => {
+      .addCase(refreshAsync.rejected, (state: IAuthState, action) => {
         return {
           ...state,
-          loading: false,
+          isLoading: false,
           error: action?.payload ?? "unknown error",
         };
       });

@@ -6,12 +6,14 @@ import { useAppDispatch, useAppSelector } from "../store/hook";
 
 export function useAuth() {
   const dispatch = useAppDispatch();
-  const { token, refreshToken, user: initUser } = useAppSelector((s) => s.auth);
+  const { token, refreshToken, user: initUser, isLoading } = useAppSelector((s) => s.auth);
   const [user, setUser] = useState<IUser | null>(initUser ?? null);
 
   useLayoutEffect(() => {
     const id1 = apiClient.interceptors.request.use((cfg) => {
-      if (token) cfg.headers.Authorization = `Bearer ${token}`;
+      if (token) {
+        cfg.headers.Authorization = `Bearer ${token}`;
+      }
       return cfg;
     });
     return () => {
@@ -24,7 +26,7 @@ export function useAuth() {
       (res) => res,
       (error) => {
         if (error.status == 401) {
-          console.log("do refresh token");
+          console.warn("do refresh token....");
           dispatch(refreshAsync(refreshToken!));
         }
         return Promise.reject(error);
@@ -50,5 +52,6 @@ export function useAuth() {
     setUser,
     token,
     refreshToken,
+    isLoading
   };
 }

@@ -4,11 +4,17 @@ import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
+import { useLocation, Navigate } from "react-router-dom";
 
 export default function profilePage() {
   const currentDate = new Date();
   const [startDate, setStartDate] = useState<Date>(new Date("1990-01-01"));
-  const { user, setUser } = useAuth();
+  const { user, setUser, isLoading } = useAuth();
+
+  if (!isLoading && !user) {
+    const location = useLocation();
+    <Navigate to="/login" state={{ from: location }} replace />;
+  }
 
   return (
     user && (
