@@ -1,12 +1,17 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 import { apiClient } from "../utils/api/client";
-import { profileAsync, refreshAsync } from "../store/auth/authSlice";
+import { logout, profileAsync, refreshAsync } from "../store/auth/authSlice";
 import { IUser } from "../types/user/IUser";
 import { useAppDispatch, useAppSelector } from "../store/hook";
 
 export function useAuth() {
   const dispatch = useAppDispatch();
-  const { token, refreshToken, user: initUser, isLoading } = useAppSelector((s) => s.auth);
+  const {
+    token,
+    refreshToken,
+    user: initUser,
+    isLoading,
+  } = useAppSelector((s) => s.auth);
   const [user, setUser] = useState<IUser | null>(initUser ?? null);
 
   useLayoutEffect(() => {
@@ -25,9 +30,18 @@ export function useAuth() {
     const id2 = apiClient.interceptors.response.use(
       (res) => res,
       (error) => {
-        if (error.status == 401) {
-          console.warn("do refresh token....");
-          dispatch(refreshAsync(refreshToken!));
+        const originalRequest = error.config;
+        const status = error.response?.status;
+
+        if (status === 401 && originalRequest?.url === "users/refreshToken") {
+          console.warn("Refresh token request failed, logging out...");
+          dispatch(logout());
+          return Promise.reject(error);
+        }
+
+        if (status === 401 && refreshToken) {
+          console.warn("token expired, try to do refresh token....");
+          dispatch(refreshAsync(refreshToken));
         }
         return Promise.reject(error);
       }
@@ -39,6 +53,9 @@ export function useAuth() {
   });
 
   useEffect(() => {
+    if (!token) {
+      return;
+    }
     dispatch(profileAsync()).then((response: any) => {
       const result = response.payload?.data?.results as IUser;
       if (result) {
@@ -52,6 +69,7 @@ export function useAuth() {
     setUser,
     token,
     refreshToken,
-    isLoading
+    isLoading,
+    apiClient,
   };
 }

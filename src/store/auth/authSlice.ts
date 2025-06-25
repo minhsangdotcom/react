@@ -27,10 +27,9 @@ interface IAuthInfo {
 const authInfo = localStorageHelper.get<IAuthInfo>(Configs.authInfoKey);
 const token = authInfo?.token;
 const refreshToken = authInfo?.refreshToken;
-const user = authInfo?.user;
 
 const initialState: IAuthState = {
-  user,
+  user: null,
   token,
   isLoading: false,
   error: null,
@@ -86,6 +85,11 @@ export const refreshAsync = createAsyncThunk(
     if (response?.error?.status == 400) {
       const badRequestError = response.error as IBadRequestError;
       return thunkApi.rejectWithValue(badRequestError.errorDetails);
+    }
+
+    if (response?.error?.status == 401) {
+      const unauthorizedRequestError = response.error as IUnauthorizedError;
+      return thunkApi.rejectWithValue(unauthorizedRequestError.errorDetails);
     }
 
     return response;
@@ -149,9 +153,7 @@ const authSlice = createSlice({
         const result = action.payload.data as IResponse<IUser>;
         const user = result?.results;
 
-        const authInfo = localStorageHelper.get<IAuthInfo>(
-          Configs.authInfoKey
-        );
+        const authInfo = localStorageHelper.get<IAuthInfo>(Configs.authInfoKey);
         localStorageHelper.set<IAuthInfo>(Configs.authInfoKey, {
           ...authInfo,
           user,
@@ -198,7 +200,7 @@ const authSlice = createSlice({
         return {
           ...state,
           isLoading: false,
-          error: action?.payload ?? "unknown error",
+          error: action.payload ?? "unknown error",
         };
       });
   },

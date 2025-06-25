@@ -14,11 +14,19 @@ async function send<TRequest, TResult, TError>(
   request: IAxiosRequest<TRequest>
 ): Promise<IApiResult<TResult, TError>> {
   try {
-    const result = (await apiClient({
+    let params = {
       url: request.url,
       method: request.method,
       data: request.data,
-    })).data as TResult;
+      headers: request.headers,
+    } as any;
+
+    if (params.method === "GET") {
+      delete params.data;
+      params.params = request.data;
+    }
+
+    const result = (await apiClient(params)).data as TResult;
     return { isSuccess: true, data: result, error: null };
   } catch (error: any) {
     const err = error.response.data as TError;

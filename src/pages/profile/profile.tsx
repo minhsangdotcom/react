@@ -1,165 +1,370 @@
 import "./profile.css";
-import Select from "react-select";
+import Select, { SingleValue } from "react-select";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
-import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
-import { useLocation, Navigate } from "react-router-dom";
+import LoadingPage from "../../components/loading";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { regionService } from "../../services/regions/regionService";
+import { ICommune, IDistrict, IProvince } from "../../types/regions/IRegion";
+import authService from "../../services/auth/authService";
+import IUpdateProfileRequest from "../../types/user/IUpdateProfileRequest";
+import { IUser } from "../../types/user/IUser";
+
+type Region = {
+  provinces: Array<IProvince>;
+  districts: Array<IProvince>;
+  communes: Array<IProvince>;
+};
+
+async function fetchDistrict(id: string) {
+  return await regionService.listDistrict({
+    filter: { provinceId: { $eq: id } },
+  });
+}
+
+async function fetchCommune(id: string) {
+  return await regionService.listCommune({
+    filter: { districtId: { $eq: id } },
+  });
+}
+
+const toRequest = (user: IUser): IUpdateProfileRequest => ({
+  firstName: user?.firstName!,
+  lastName: user?.lastName!,
+  dayOfBirth: user?.dayOfBirth!,
+  email: user?.email!,
+  provinceId: user?.userAddress?.provinceId!,
+  districtId: user?.userAddress?.districtId!,
+  communeId: user?.userAddress?.communeId!,
+  province: user?.userAddress?.province,
+  district: user?.userAddress?.district,
+  commune: user?.userAddress?.commune,
+  street: user?.userAddress?.street,
+  phoneNumber: user?.phoneNumber!,
+  avatar: user?.avatar!,
+});
 
 export default function profilePage() {
   const currentDate = new Date();
-  const [startDate, setStartDate] = useState<Date>(new Date("1990-01-01"));
-  const { user, setUser, isLoading } = useAuth();
+  const { user, isLoading } = useAuth();
 
-  if (!isLoading && !user) {
-    const location = useLocation();
-    <Navigate to="/login" state={{ from: location }} replace />;
+  const [startDate, setStartDate] = useState<Date>(new Date("1990-01-01"));
+  const [regionLoading, setRegionLoading] = useState<boolean>(false);
+  const [region, setRegion] = useState<Region>({
+    provinces: [],
+    districts: [],
+    communes: [],
+  });
+  const [userRequest, setUserRequest] = useState<IUpdateProfileRequest>({});
+
+  const [avatar, setAvatar] = useState<File | null>(null);
+
+  const onChangeProvince = (
+    e: SingleValue<{ value: string | undefined; label: string | undefined }>
+  ) => {
+    setUserRequest((pre) => ({
+      ...pre,
+      provinceId: e?.value,
+      province: e?.label,
+    }));
+
+    fetchDistrict(e?.value!)
+      .then((result) => {
+        const districts = result.data?.results?.data as any as Array<IDistrict>;
+        setRegion((pre) => ({ ...pre, districts }));
+        setUserRequest((pre) => ({
+          ...pre,
+          districtId: districts[0]?.id,
+          district: districts[0]?.fullName,
+        }));
+      })
+      .catch((error) => {
+        console.log("🚀 ~ profilePage ~ error:", error);
+      });
+  };
+
+  const onChangeDistrict = (
+    e: SingleValue<{ value: string | undefined; label: string | undefined }>
+  ) => {
+    setUserRequest((pre) => ({
+      ...pre!,
+      districtId: e?.value,
+      district: e?.label,
+    }));
+    fetchCommune(e?.value!)
+      .then((result) => {
+        const communes = result.data?.results?.data as any as Array<ICommune>;
+        setRegion((pre) => ({ ...pre, communes }));
+        setUserRequest((pre) => ({
+          ...pre,
+          communeId: communes[0]?.id,
+          commune: communes[0]?.fullName,
+        }));
+      })
+      .catch((error) => {
+        console.log("🚀 ~ profilePage ~ error:", error);
+      });
+  };
+  const onChangeCommune = (
+    e: SingleValue<{
+      value: string | null | undefined;
+      label: string | null | undefined;
+    }>
+  ) => {
+    setUserRequest((pre) => ({
+      ...pre!,
+      communeId: e?.value,
+      commune: e?.label,
+    }));
+  };
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const img = e.target.files?.[0];
+    if (!img) return;
+    if (!img.type.startsWith("image/")) {
+      return;
+    }
+    setAvatar(img);
+    setUserRequest((pre) => ({ ...pre, avatar: URL.createObjectURL(img) }));
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    const formData = new FormData();
+
+    Object.entries(userRequest).forEach(([key, val]) => {
+      if (val == null) return;
+      if (key === "avatar") return;
+
+      formData.append(key, String(val));
+    });
+
+    if (avatar) {
+      formData.append("avatar", avatar, avatar.name);
+    }
+
+    var result = await authService.updateProfile(formData);
+
+    if (result.isSuccess) {
+      const data = result.data?.results;
+      setUserRequest((pre) => ({
+        ...pre,
+        avatar: data?.avatar ? data?.avatar : "/images/default-avatar.png",
+      }));
+    }
+  };
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+    setUserRequest(toRequest(user));
+    async function fetchRegionData() {
+      setRegionLoading(true);
+      try {
+        const provRes = await regionService.listProvince({});
+        const provinces = (provRes.data?.results?.data ?? []) as IProvince[];
+
+        setRegion((prev) => ({ ...prev, provinces }));
+
+        let districts = [] as Array<IDistrict>;
+        if (provinces.length > 0) {
+          const firstProvinceId =
+            user?.userAddress?.provinceId ?? provinces[0].id;
+          const distRes = await fetchDistrict(firstProvinceId);
+          districts = (distRes.data?.results?.data ?? []) as IDistrict[];
+          setRegion((prev) => ({ ...prev, districts }));
+        }
+
+        if (districts.length > 0) {
+          const firstDistrictId =
+            user?.userAddress?.districtId ?? districts[0].id;
+          const communeRes = await fetchCommune(firstDistrictId);
+          const communes = (communeRes.data?.results?.data ?? []) as ICommune[];
+          setRegion((prev) => ({ ...prev, communes }));
+        }
+      } catch (err) {
+        console.error("Error fetching region data", err);
+      } finally {
+        setRegionLoading(false);
+      }
+    }
+
+    fetchRegionData();
+  }, [user]);
+
+  if (isLoading && regionLoading) {
+    return <LoadingPage />;
   }
 
   return (
-    user && (
-      <div className="profile-page">
-        <div className="profile-header">
-          <div className="avatar-wrapper">
-            <img className="avatar" src="" alt="Avatar" />
-            <label className="edit-overlay">
-              <img alt="Edit" />
-              <input
-                type="file"
-                accept="image/*"
-                hidden
-                onChange={() => {
-                  /* handle upload */
-                }}
-              />
-            </label>
-          </div>
-          <div className="profile-info">
-            <h2>
-              {user?.firstName} {user?.lastName}
-            </h2>
-            <p className="subheading">{user?.address}</p>
-          </div>
+    <div className="profile-page">
+      <div className="profile-header">
+        <div className="relative max-sm:w-3/10 mr-3">
+          <img
+            src={userRequest.avatar ?? "/images/default-avatar.png"}
+            alt="Avatar"
+            className="rounded-full w-32"
+          />
+          <label className="absolute -bottom-1 -right-1 sm:bottom-0 sm:right-0 bg-blue-300 w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center cursor-pointer shadow-md">
+            <img
+              src="/icons/edit-icon.png"
+              alt="Edit"
+              className="w-3 h-3 sm:w-4 sm:h-4 object-contain"
+            />
+            <input
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={handleFileChange}
+            />
+          </label>
         </div>
+        <div className="profile-info max-sm:w-7/10">
+          <h2>
+            {userRequest?.firstName} {userRequest?.lastName}
+          </h2>
+          <p className="subheading">
+            {userRequest.street},{userRequest.commune},{userRequest.district},
+            {userRequest.province}
+          </p>
+        </div>
+      </div>
 
-        <form className="profile-form">
-          <div className="row">
-            <div className="field">
-              <label>First Name</label>
-              <input
-                name="firstName"
-                value={user?.firstName}
-                onChange={(e) =>
-                  setUser({ ...user, firstName: e.target.value })
-                }
-              />
-            </div>
-            <div className="field">
-              <label>Last Name</label>
-              <input
-                name="lastName"
-                value={user?.lastName}
-                onChange={(e) => setUser({ ...user, lastName: e.target.value })}
-              />
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="field">
-              <label>Email Address</label>
-              <input
-                name="email"
-                type="email"
-                value={user?.email}
-                onChange={(e) => setUser({ ...user, email: e.target.value })}
-              />
-            </div>
-            <div className="field">
-              <label>Phone Number</label>
-              <input
-                name="phone"
-                value={user?.phoneNumber}
-                onChange={(e) =>
-                  setUser({ ...user, phoneNumber: e.target.value })
-                }
-              />
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="field">
-              <label>Day of Birth</label>
-              <DatePicker
-                selected={user.dayOfBirth ?? startDate}
-                onChange={(date) => setStartDate(date!)}
-                dateFormat="dd-MM-yyyy"
-                placeholderText="DD-MM-yyyy"
-                minDate={new Date(currentDate.getFullYear() - 100, 0, 1)}
-                maxDate={new Date(currentDate.getFullYear() - 18, 11, 31)}
-                showMonthDropdown
-                showYearDropdown
-                dropdownMode="select"
-              />
-            </div>
-            <div className="field">
-              <label>Province</label>
-              <Select
-                name="province"
-                styles={customStyles}
-                options={[
-                  { value: "chocolate", label: "Chocolate" },
-                  { value: "strawberry", label: "Strawberry" },
-                  { value: "vanilla", label: "Vanilla" },
-                ]}
-              />
-            </div>
-            <div className="field">
-              <label>District</label>
-              <Select
-                name="district"
-                styles={customStyles}
-                options={[
-                  { value: "chocolate", label: "Chocolate" },
-                  { value: "strawberry", label: "Strawberry" },
-                  { value: "vanilla", label: "Vanilla" },
-                ]}
-              />
-            </div>
-            <div className="field">
-              <label>Commune</label>
-              <Select
-                name="commune"
-                styles={customStyles}
-                options={[
-                  { value: "chocolate", label: "Chocolate" },
-                  { value: "strawberry", label: "Strawberry" },
-                  { value: "vanilla", label: "Vanilla" },
-                ]}
-              />
-            </div>
-          </div>
-          <div className="full-row">
-            <label>Street</label>
-            <textarea
-              name="street"
-              value={user?.userAddress?.street}
+      <form className="profile-form" onSubmit={handleSubmit}>
+        <div className="row">
+          <div className="field">
+            <label>First Name</label>
+            <input
+              name="firstName"
+              value={userRequest?.firstName}
               onChange={(e) =>
-                setUser({
-                  ...user,
-                  userAddress: { ...user.userAddress, street: e.target.value },
-                })
+                setUserRequest((pre) => ({ ...pre, firstName: e.target.value }))
               }
             />
           </div>
-
-          <div className="btn-wrapper">
-            <button className="save-btn" type="submit">
-              Save Changes
-            </button>
+          <div className="field">
+            <label>Last Name</label>
+            <input
+              name="lastName"
+              value={userRequest?.lastName}
+              onChange={(e) =>
+                setUserRequest((pre) => ({ ...pre, lastName: e.target.value }))
+              }
+            />
           </div>
-        </form>
-      </div>
-    )
+        </div>
+
+        <div className="row">
+          <div className="field">
+            <label>Email Address</label>
+            <input
+              name="email"
+              type="email"
+              value={userRequest?.email}
+              onChange={(e) =>
+                setUserRequest((pre) => ({ ...pre!, email: e.target.value }))
+              }
+            />
+          </div>
+          <div className="field">
+            <label>Phone Number</label>
+            <input
+              name="phone"
+              value={user?.phoneNumber}
+              onChange={(e) =>
+                setUserRequest((pre) => ({
+                  ...pre!,
+                  phoneNumber: e.target.value,
+                }))
+              }
+            />
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="field">
+            <label>Day of Birth</label>
+            <DatePicker
+              selected={user?.dayOfBirth ?? startDate}
+              onChange={(date) => setStartDate(date!)}
+              dateFormat="dd-MM-yyyy"
+              placeholderText="DD-MM-yyyy"
+              minDate={new Date(currentDate.getFullYear() - 100, 0, 1)}
+              maxDate={new Date(currentDate.getFullYear() - 18, 11, 31)}
+              showMonthDropdown
+              showYearDropdown
+              dropdownMode="select"
+            />
+          </div>
+          <div className="field">
+            <label>Province</label>
+            <Select
+              name="province"
+              styles={customStyles}
+              options={region.provinces?.map((x) => ({
+                value: x.id,
+                label: x.fullName,
+              }))}
+              value={{
+                value: userRequest.provinceId,
+                label: userRequest.province,
+              }}
+              onChange={onChangeProvince}
+            />
+          </div>
+          <div className="field">
+            <label>District</label>
+            <Select
+              name="district"
+              styles={customStyles}
+              options={region.districts?.map((x) => ({
+                value: x.id,
+                label: x.fullName,
+              }))}
+              value={{
+                value: userRequest.districtId,
+                label: userRequest.district,
+              }}
+              onChange={onChangeDistrict}
+            />
+          </div>
+          <div className="field">
+            <label>Commune</label>
+            <Select
+              name="commune"
+              styles={customStyles}
+              options={region.communes?.map((x) => ({
+                value: x.id,
+                label: x.fullName,
+              }))}
+              value={{
+                value: userRequest.communeId,
+                label: userRequest.commune,
+              }}
+              onChange={onChangeCommune}
+            />
+          </div>
+        </div>
+        <div className="full-row">
+          <label>Street</label>
+          <textarea
+            name="street"
+            value={userRequest.street}
+            onChange={(e) =>
+              setUserRequest((pre) => ({ ...pre!, street: e.target.value }))
+            }
+          />
+        </div>
+
+        <div className="btn-wrapper">
+          <button className="save-btn" type="submit">
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }
 

@@ -6,13 +6,14 @@ import { loginAsync } from "../../../store/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "../../../store/hook";
 import NormalInput from "../../../components/normalInput";
 import PasswordInput from "../../../components/passwordInput";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const loginPage = () => {
   const [form, setForm] = useState<ILoginRequest>({
-    username: "",
-    password: "",
+    username: "chloe.kim",
+    password: "Admin@456",
   });
+  const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
   const data = useAppSelector((store) => store.auth);
@@ -22,7 +23,12 @@ const loginPage = () => {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(loginAsync(form));
+    try {
+      await dispatch(loginAsync(form)).unwrap();
+      navigate("/");
+    } catch (error) {
+      console.log("🚀 ~ onSubmit ~ error:", error)
+    }
   };
 
   return (
@@ -48,8 +54,13 @@ const loginPage = () => {
         <button type="submit" className="login-form-button">
           Sign In
         </button>
-        <Link to={"/forgot-password"} className="text-blue-600 forget-password-text">Forget password</Link>
-        {data.error?.en && <span className="error">* {data.error?.en}</span>}
+        <Link
+          to={"/forgot-password"}
+          className="text-blue-600 forget-password-text"
+        >
+          Forget password
+        </Link>
+        {data.error?.en && <p className="error">* {data.error?.en}</p>}
       </form>
     </div>
   );

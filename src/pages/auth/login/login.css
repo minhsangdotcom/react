@@ -41,13 +41,12 @@
 .error {
   color: red;
   font-size: 1rem;
-  margin-top: 5rem;
+  margin-top: 1rem;
   font-weight: 700;
 }
 
 .forget-password-text{
   cursor: pointer;
-  padding: 5px;
   font-size: 1rem;
   text-decoration: underline
 }

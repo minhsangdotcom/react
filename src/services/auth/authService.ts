@@ -30,9 +30,26 @@ const authService = {
   > {
     return await send({ url: "users/profile", method: "GET" });
   },
+  updateProfile: async function (
+    request: FormData
+  ): Promise<
+    IApiResult<
+      IResponse<IUser>,
+      IBadRequestError | IForbiddenError | IUnauthorizedError
+    >
+  > {
+    return await send({
+      url: "users/profile",
+      method: "PUT",
+      data: request,
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  },
   refresh: async function (
     refreshToken: string
-  ): Promise<IApiResult<IResponse<ITokenResponse>, IBadRequestError>> {
+  ): Promise<
+    IApiResult<IResponse<ITokenResponse>, IBadRequestError | IUnauthorizedError>
+  > {
     return await send({
       url: "users/refreshToken",
       method: "POST",
