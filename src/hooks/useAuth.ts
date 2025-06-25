@@ -15,8 +15,8 @@ export function useAuth() {
   const [user, setUser] = useState<IUser | null>(initUser ?? null);
 
   useLayoutEffect(() => {
-    const id1 = apiClient.interceptors.request.use((cfg) => {
-      if (token) {
+    const id1 = apiClient.interceptors.request.use((cfg: any) => {
+      if (!cfg._retry && token) {
         cfg.headers.Authorization = `Bearer ${token}`;
       }
       return cfg;
@@ -29,19 +29,29 @@ export function useAuth() {
   useLayoutEffect(() => {
     const id2 = apiClient.interceptors.response.use(
       (res) => res,
-      (error) => {
+      async (error) => {
         const originalRequest = error.config;
         const status = error.response?.status;
+        if (status === 401) {
 
-        if (status === 401 && originalRequest?.url === "users/refreshToken") {
-          console.warn("Refresh token request failed, logging out...");
-          dispatch(logout());
-          return Promise.reject(error);
-        }
-
-        if (status === 401 && refreshToken) {
-          console.warn("token expired, try to do refresh token....");
-          dispatch(refreshAsync(refreshToken));
+          // if get 401 from refresh token api then logout
+          if (originalRequest?.url === "users/refreshToken") {
+            console.warn("Refresh token request failed, logging out...");
+            dispatch(logout());
+            return Promise.reject(error);
+          }
+          
+          if (refreshToken) {
+            console.warn("token expired, try to do refresh token....");
+            var response = await dispatch(refreshAsync(refreshToken)).unwrap();
+            
+            originalRequest.headers["Authorization"] = `Bearer ${response?.data?.results?.token}`;
+            originalRequest._retry = true;
+            console.warn("Doing refresh token is completed........");
+            
+            // calling the failed api with new token after doing refresh token
+            return apiClient(originalRequest);
+          }
         }
         return Promise.reject(error);
       }
@@ -62,7 +72,7 @@ export function useAuth() {
         setUser({ ...result });
       }
     });
-  }, [dispatch, token, refreshToken]);
+  }, []);
 
   return {
     user,

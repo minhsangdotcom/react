@@ -101,7 +101,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout: (state: IAuthState) => {
-      localStorage.removeItem(Configs.authInfoKey);
+     localStorageHelper.remove(Configs.authInfoKey);
       return {
         ...state,
         user: null,

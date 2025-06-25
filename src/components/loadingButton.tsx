@@ -1,21 +1,31 @@
+import React from "react";
+
+const defaultTailwindcss =
+  "w-full px-4 py-2 bg-blue-500 text-white font-semibold rounded shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition";
+
 export default function LoadingButton({
   loading,
   text,
   type,
+  tailwindcss,
+  manualCss,
 }: {
   loading: boolean;
   text: string;
   type: "submit" | "button" | "reset" | undefined;
+  tailwindcss?: string | null;
+  manualCss?: React.CSSProperties | null;
+  className?: string;
 }) {
   return (
     <div>
       <button
         disabled={loading}
         type={type}
-        className="w-full px-4 py-2 bg-blue-500 text-white font-semibold
-            rounded shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-            transition"
-        style={{ cursor: "pointer" }}
+        className={
+          manualCss ? "the-button" : (tailwindcss ?? defaultTailwindcss)
+        }
+        style={!tailwindcss && manualCss ? manualCss : { cursor: "pointer" }}
       >
         {loading && (
           <svg

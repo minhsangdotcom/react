@@ -10,6 +10,7 @@ import { ICommune, IDistrict, IProvince } from "../../types/regions/IRegion";
 import authService from "../../services/auth/authService";
 import IUpdateProfileRequest from "../../types/user/IUpdateProfileRequest";
 import { IUser } from "../../types/user/IUser";
+import LoadingButton from "../../components/loadingButton";
 
 type Region = {
   provinces: Array<IProvince>;
@@ -50,7 +51,7 @@ export default function profilePage() {
   const { user, isLoading } = useAuth();
 
   const [startDate, setStartDate] = useState<Date>(new Date("1990-01-01"));
-  const [regionLoading, setRegionLoading] = useState<boolean>(false);
+  const [currentLoading, setCurrentLoading] = useState<boolean>(false);
   const [region, setRegion] = useState<Region>({
     provinces: [],
     districts: [],
@@ -144,6 +145,7 @@ export default function profilePage() {
       formData.append("avatar", avatar, avatar.name);
     }
 
+    setCurrentLoading(true);
     var result = await authService.updateProfile(formData);
 
     if (result.isSuccess) {
@@ -153,6 +155,7 @@ export default function profilePage() {
         avatar: data?.avatar ? data?.avatar : "/images/default-avatar.png",
       }));
     }
+    setCurrentLoading(false);
   };
 
   useEffect(() => {
@@ -161,7 +164,7 @@ export default function profilePage() {
     }
     setUserRequest(toRequest(user));
     async function fetchRegionData() {
-      setRegionLoading(true);
+      setCurrentLoading(true);
       try {
         const provRes = await regionService.listProvince({});
         const provinces = (provRes.data?.results?.data ?? []) as IProvince[];
@@ -187,25 +190,25 @@ export default function profilePage() {
       } catch (err) {
         console.error("Error fetching region data", err);
       } finally {
-        setRegionLoading(false);
+        setCurrentLoading(false);
       }
     }
 
     fetchRegionData();
   }, [user]);
 
-  if (isLoading && regionLoading) {
+  if (isLoading && currentLoading) {
     return <LoadingPage />;
   }
 
   return (
     <div className="profile-page">
       <div className="profile-header">
-        <div className="relative max-sm:w-3/10 mr-3">
+        <div className="relative max-sm:w-2/10 mr-3">
           <img
             src={userRequest.avatar ?? "/images/default-avatar.png"}
             alt="Avatar"
-            className="rounded-full w-32"
+            className="rounded-full w-32 max-sm:w-60"
           />
           <label className="absolute -bottom-1 -right-1 sm:bottom-0 sm:right-0 bg-blue-300 w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center cursor-pointer shadow-md">
             <img
@@ -221,7 +224,7 @@ export default function profilePage() {
             />
           </label>
         </div>
-        <div className="profile-info max-sm:w-7/10">
+        <div className="profile-info max-sm:w-8/10">
           <h2>
             {userRequest?.firstName} {userRequest?.lastName}
           </h2>
@@ -359,9 +362,25 @@ export default function profilePage() {
         </div>
 
         <div className="btn-wrapper">
-          <button className="save-btn" type="submit">
-            Save Changes
-          </button>
+          <LoadingButton
+            loading={currentLoading}
+            text="Save Changes"
+            type="submit"
+            manualCss={{
+              display: "block",
+              width: "50%",
+              padding: "0.75rem",
+              backgroundColor: "#5bc0de",
+              color: "white",
+              border: "none",
+              borderRadius: "0.75rem",
+              fontSize: "1.1rem",
+              cursor: "pointer",
+              boxShadow: "0 4px 12px rgba(91, 192, 222, 0.3)",
+              transition: "background 0.2s",
+              margin: "0 auto",
+            }}
+          />
         </div>
       </form>
     </div>
