@@ -366,20 +366,7 @@ export default function profilePage() {
             loading={currentLoading}
             text="Save Changes"
             type="submit"
-            manualCss={{
-              display: "block",
-              width: "50%",
-              padding: "0.75rem",
-              backgroundColor: "#5bc0de",
-              color: "white",
-              border: "none",
-              borderRadius: "0.75rem",
-              fontSize: "1.1rem",
-              cursor: "pointer",
-              boxShadow: "0 4px 12px rgba(91, 192, 222, 0.3)",
-              transition: "background 0.2s",
-              margin: "0 auto",
-            }}
+            className="save-btn"
           />
         </div>
       </form>
