@@ -14,7 +14,7 @@ export default {
       template: "public/index.html",
     }),
     new webpack.DefinePlugin({
-      'process.env': JSON.stringify(process.env),
+      "process.env": JSON.stringify(process.env),
     }),
     // new CopyPlugin({
     //   patterns: [{ from: "public/icons", to: "icons" }],
@@ -29,7 +29,7 @@ export default {
       },
       {
         test: /\.css$/i,
-        use: ["style-loader", "css-loader", 'postcss-loader'],
+        use: ["style-loader", "css-loader", "postcss-loader"],
       },
       {
         test: /\.(png|svg|jpg|jpeg|gif|ico)$/i,
