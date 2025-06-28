@@ -4,6 +4,8 @@ import { logout, profileAsync, refreshAsync } from "../store/auth/authSlice";
 import { IUser } from "../types/user/IUser";
 import { useAppDispatch, useAppSelector } from "../store/hook";
 
+let refreshInProgress: Promise<string> | null = null;
+
 export function useAuth() {
   const dispatch = useAppDispatch();
   const {
@@ -32,28 +34,45 @@ export function useAuth() {
       async (error) => {
         const originalRequest = error.config;
         const status = error.response?.status;
-        if (status === 401) {
+        if (status !== 401) {
+          return Promise.reject(error);
+        }
 
-          // if get 401 from refresh token api then logout
-          if (originalRequest?.url === "users/refreshToken") {
-            console.warn("Refresh token request failed, logging out...");
-            dispatch(logout());
-            return Promise.reject(error);
-          }
-          
-          if (refreshToken) {
+        // if get 401 from refresh token api then logout
+        if (originalRequest?.url === "users/refreshToken") {
+          console.warn("Refresh token request failed, logging out...");
+          dispatch(logout());
+          return Promise.reject(error);
+        }
+
+        if (refreshToken && !originalRequest._retry) {
+          originalRequest._retry = true;
+
+          if (!refreshInProgress) {
             console.warn("token expired, try to do refresh token....");
-            var response = await dispatch(refreshAsync(refreshToken)).unwrap();
-            
-            originalRequest.headers["Authorization"] = `Bearer ${response?.data?.results?.token}`;
-            originalRequest._retry = true;
-            console.warn("Doing refresh token is completed........");
-            
+            refreshInProgress = dispatch(refreshAsync(refreshToken))
+              .unwrap()
+              .then((res) => res.data?.results?.token!)
+              .catch((err) => {
+                dispatch(logout());
+                throw err;
+              })
+              .finally(() => {
+                console.warn("Doing refresh token is completed........");
+                refreshInProgress = null;
+              });
+          }
+
+          try {
+            const newToken = await refreshInProgress;
+            originalRequest.headers!["Authorization"] = `Bearer ${newToken}`;
+
             // calling the failed api with new token after doing refresh token
             return apiClient(originalRequest);
+          } catch (e) {
+            return Promise.reject(e);
           }
         }
-        return Promise.reject(error);
       }
     );
 
