@@ -17,9 +17,13 @@
     "noImplicitAny": true,
     "noImplicitThis": true,
     "noUnusedLocals": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
-  "include": ["src/**/*", "tests/**/*"],
+  "include": ["src/**/*", "tests/**/*", "src/lib/utils.ts"],
   "exclude": [
     "node_modules",
     "dist",
@@ -32,6 +36,5 @@
     "compilerOptions": {
       "module": "CommonJS"
     }
-  },
-  "types": ["tailwindcss"]
+  }
 }

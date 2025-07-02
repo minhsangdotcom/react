@@ -1,0 +1,105 @@
+.profile-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.profile-info h2 {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+.subheading {
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+.profile-form .row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.field input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #b4afaf;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+}
+
+.field input:focus {
+  outline: none;
+  border-color: #5bc0de;
+}
+
+.btn-wrapper {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.save-btn {
+  display: block;
+  width: 50%;
+  padding: 0.75rem;
+  background-color: #5bc0de;
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  font-size: 1.1rem;
+  cursor: "pointer";
+  box-shadow: 0 4px 12px rgba(91, 192, 222, 0.3);
+  transition: 'background 0.2s';
+  margin: 0 auto;
+  cursor: pointer;
+}
+
+.save-btn:hover {
+  background: #31a2c6;
+}
+
+.full-row {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.full-row label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.full-row textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #555;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  resize: none;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.full-row textarea:focus {
+  outline: none;
+  border-color: #5bc0de;
+}
+.react-datepicker-wrapper {
+  width: 100%;
+}

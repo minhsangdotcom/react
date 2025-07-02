@@ -1,0 +1,33 @@
+.form-group label {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.form-group {
+  width: 100%;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.form-input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #f0f0f0;
+  box-shadow: 0 0 0 2px #f0f0f0;
+}
+.form-input:hover {
+  background-color: #fafafa;
+  border-color: #e6e6e6;
+}
