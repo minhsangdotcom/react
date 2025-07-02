@@ -1,0 +1,87 @@
+.custom-table table {
+  background-color: white;
+  border-collapse: collapse;
+  width: 100%;
+  border: none;
+}
+
+.custom-table > div > div {
+  border-color: #5bc0de;
+}
+
+.custom-table thead {
+  background-color: #f9fafb;
+  font-weight: 600;
+}
+
+.custom-table tbody tr {
+  transition: background-color 0.2s;
+}
+
+.custom-table td,
+.custom-table th {
+  padding: 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.custom-table thead tr,
+.custom-table thead tr th button {
+  background-color: #5bc0de;
+  color: #e5e7eb;
+}
+
+.custom-toolbar button,
+.custom-toolbar button,
+.custom-toolbar input {
+  border-color: #5bc0de;
+}
+
+.custom-toolbar input:focus-visible {
+  --tw-ring-shadow: none;
+  border-color: #00c3ff;
+}
+
+/* [data-radix-popper-content-wrapper],
+[data-slot="popover-trigger"],
+[role="combobox"],
+[data-state="open"],
+[data-state="active"],
+[tabindex]:focus {
+  outline-color: transparent !important;
+  border-color: #5bc0de !important;
+  box-shadow: none !important;
+}
+
+[data-slot="command-input"] {
+  border-color: #5bc0de !important;
+}
+
+[data-slot="button"] {
+  background-color: #5bc0de;
+  color: #fff;
+}
+
+[data-slot="calendar"] table td button {
+  background-color: #fff;
+  color: #000;
+  cursor: pointer !important;
+}
+
+[data-slot="calendar"] table td button:hover {
+  background-color: #5bc0de;
+  color: #fff;
+}
+
+[role="listitem"] > button:nth-child(3),
+[role="listitem"] > button:nth-child(4) {
+  background-color: #fff;
+  color: #000;
+  border-color: #5bc0de;
+}
+
+[role="toolbar"] > div > div > div > button:nth-child(4),
+[role="toolbar"] > div > div > button:nth-child(2) {
+  background-color: #fff;
+  color: #000;
+  border-color: #5bc0de;
+} */

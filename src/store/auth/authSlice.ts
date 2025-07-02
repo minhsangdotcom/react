@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import authService from "../../services/auth/authService";
 import IResponse from "../../types/IResponse";
-import { ILoginRequest } from "../../types/auth/ILoginRequest";
-import { ILoginResponse } from "../../types/auth/ILoginResponse";
 import {
   IBadRequestError,
   IForbiddenError,
@@ -10,9 +8,11 @@ import {
   IUnauthorizedError,
 } from "../../types/IError";
 import { IUser } from "../../types/user/IUser";
-import { ITokenResponse } from "../../types/auth/ITokenResponse";
 import Configs from "../../config/authConfigs";
 import localStorageHelper from "../../utils/storages/localStorageHelper";
+import { ILoginResponse } from "@/src/types/Auth/ILoginResponse";
+import { ITokenResponse } from "@/src/types/Auth/ITokenResponse";
+import { ILoginRequest } from "@/src/types/Auth/ILoginRequest";
 
 interface IAuthState extends IAuthInfo {
   isLoading: boolean;

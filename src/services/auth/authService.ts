@@ -1,5 +1,3 @@
-import { ILoginRequest } from "../../types/auth/ILoginRequest";
-import { ILoginResponse } from "../../types/auth/ILoginResponse";
 import IResponse from "../../types/IResponse";
 import { send } from "../../utils/api/client";
 
@@ -10,9 +8,11 @@ import {
   IUnauthorizedError,
 } from "../../types/IError";
 import { IUser } from "../../types/user/IUser";
-import { ITokenResponse } from "../../types/auth/ITokenResponse";
 import { IApiResult } from "../../utils/api/IApiResult";
-import IResetpasswordRequest from "../../types/auth/IResetPasswordRequest";
+import IResetpasswordRequest from "@/src/types/Auth/IResetPasswordRequest";
+import { ILoginResponse } from "@/src/types/Auth/ILoginResponse";
+import { ITokenResponse } from "@/src/types/Auth/ITokenResponse";
+import { ILoginRequest } from "@/src/types/Auth/ILoginRequest";
 
 const authService = {
   login: async function (
