@@ -13,6 +13,7 @@ import IResetpasswordRequest from "@/src/types/Auth/IResetPasswordRequest";
 import { ILoginResponse } from "@/src/types/Auth/ILoginResponse";
 import { ITokenResponse } from "@/src/types/Auth/ITokenResponse";
 import { ILoginRequest } from "@/src/types/Auth/ILoginRequest";
+import IPermissionResponse from "@/src/types/Auth/IPermissionResponse";
 
 const authService = {
   login: async function (
@@ -73,6 +74,14 @@ const authService = {
       url: `users/${userId}/resetPassword`,
       method: "PUT",
       data: { ...request },
+    });
+  },
+  listPermission: async function (): Promise<
+    IApiResult<IResponse<Array<IPermissionResponse>>, void>
+  > {
+    return await send({
+      url: "permissions",
+      method: "GET",
     });
   },
 };

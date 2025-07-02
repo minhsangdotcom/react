@@ -3,7 +3,7 @@
     "rootDir": "src",
     "outDir": "build",
     "lib": ["dom", "esnext"],
-    "target": "es5",
+    "target": "es6",
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -21,7 +21,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"]
-    },
+    }
   },
   "include": ["src/**/*", "tests/**/*", "src/lib/utils.ts"],
   "exclude": [

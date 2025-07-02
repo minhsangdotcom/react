@@ -6,52 +6,66 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
+import { IPermission, Permissions } from "@/src/config/permission";
+import authService from "@/src/services/auth/authService";
+import { ulid } from "ulidx";
 
-export default function AddRoleModal({ onSubmit }: any) {
+export default function AddRoleModal({ onSubmit, isOpen, setOpen }: any) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [availablePermissions, setAvailablePermissions] = useState([
-    {
-      label: "Users",
-      value: "Users",
-      children: [
-        { label: "View Users", value: "Users.View" },
-        { label: "Edit Users", value: "Users.Edit" },
-      ],
-    },
-    {
-      label: "Roles",
-      value: "Roles",
-      children: [
-        { label: "View Roles", value: "Roles.View" },
-        { label: "Create Roles", value: "Roles.Create" },
-      ],
-    },
-  ]);
-  const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
+  const [selectedPermissions, setSelectedPermissions] = useState<
+    { id: string; value: string }[]
+  >([]);
+  const [availablePermissions, setAvailablePermissions] = useState<any>([]);
 
   useEffect(() => {
-    fetch("/api/permissions") // Replace with your actual endpoint
-      .then((res) => res.json())
-      .then((data) => setAvailablePermissions(data));
-  }, []);
+    authService.listPermission().then((data) => {
+      if (data?.data?.results?.length! > 0) {
+        const listPermission = data!.data!.results!.map((x) => x.claimValue);
+        const a = Permissions.filter((x) =>
+          listPermission.some((p) => p == x.value)
+        ) as Array<IPermission>;
+        a.forEach((x: IPermission) => {
+          x.id = ulid();
+          x.children?.forEach((p) => {
+            p.id = ulid();
+          });
+        });
+        setAvailablePermissions(a);
+      }
+    });
+  }, [isOpen]);
 
-  const handlePermissionToggle = (value: string) => {
-    setSelectedPermissions((prev) =>
-      prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
-    );
+  const handlePermissionToggle = (
+    { id, value }: { id: string; value: string },
+    children?: IPermission[]
+  ) => {
+    setSelectedPermissions((prev: any) => {
+      const isSelected = prev.some((x: any) => x.id == id);
+
+      if (isSelected) {
+        return prev.filter(
+          (v: any) =>
+            v.id !== id && !children?.some((child) => child.id === v.id)
+        );
+      }
+
+      const newItems = [{ id, value }];
+      return Array.from(new Set([...prev, ...newItems]));
+    });
   };
 
   const handleSubmit = () => {
     const payload = {
       name,
       description,
-      roleClaims: selectedPermissions.map((value) => ({
+      roleClaims: selectedPermissions.map((permission) => ({
         claimType: "Permission",
-        claimValue: value,
+        claimValue: permission.value,
       })),
     };
     onSubmit(payload);
+    setSelectedPermissions([]);
   };
 
   return (
@@ -86,34 +100,43 @@ export default function AddRoleModal({ onSubmit }: any) {
           <div>
             <h4 className="font-medium mb-2">Permissions</h4>
             <div className="max-h-64 overflow-y-auto shadow-md rounded p-3 space-y-2 bg-white">
-              {availablePermissions.map((perm) => (
-                <div key={perm.value}>
+              {availablePermissions?.map((perm: IPermission) => (
+                <div key={perm.id}>
                   <label className="flex items-center space-x-2 cursor-pointer">
                     <input
                       type="checkbox"
-                      checked={selectedPermissions.includes(perm.value)}
-                      onChange={() => handlePermissionToggle(perm.value)}
+                      checked={selectedPermissions.some((x) => perm.id == x.id)}
+                      onChange={() =>
+                        handlePermissionToggle(
+                          { id: perm.id, value: perm.value },
+                          perm.children
+                        )
+                      }
                     />
                     <span>{perm.label}</span>
                   </label>
 
                   {/* If permission has children and is selected, show them */}
                   {perm.children &&
-                    selectedPermissions.includes(perm.value) && (
+                    selectedPermissions.some((x) => perm.id == x.id) && (
                       <div className="pl-6 mt-2 space-y-2">
-                        {perm.children.map((child) => (
+                        {perm.children?.map((child: IPermission) => (
                           <label
-                            key={child.value}
+                            key={child.id}
                             className="flex items-center space-x-2 cursor-pointer"
                           >
                             <input
                               type="checkbox"
-                              checked={selectedPermissions.includes(
-                                child.value
+                              checked={selectedPermissions.some(
+                                (x) => perm.id == x.id
                               )}
                               onChange={() =>
-                                handlePermissionToggle(child.value)
+                                handlePermissionToggle(
+                                  { id: perm.id, value: perm.value },
+                                  perm.children
+                                )
                               }
+                              disabled={true}
                             />
                             <span>{child.label}</span>
                           </label>
@@ -129,7 +152,13 @@ export default function AddRoleModal({ onSubmit }: any) {
         {/* Action buttons */}
         <DialogFooter className="flex justify-end space-x-2 pt-6">
           <DialogClose asChild>
-            <button className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300">
+            <button
+              className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
+              onClick={(_) => {
+                setOpen(false);
+                setSelectedPermissions([]);
+              }}
+            >
               Cancel
             </button>
           </DialogClose>

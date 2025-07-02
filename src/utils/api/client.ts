@@ -30,7 +30,7 @@ async function send<TRequest, TResult, TError>(
     return { isSuccess: true, data: result, error: null };
   } catch (error: any) {
     const err = error.response.data as TError;
-    return { isSuccess: true, data: null, error: err };
+    return { isSuccess: false, data: null, error: err };
   }
 }
 

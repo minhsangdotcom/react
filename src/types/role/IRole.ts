@@ -4,7 +4,7 @@ export interface IRole extends IEntity {
   name: string;
   description: string;
   guard: string;
-  //roleClaims? : Array<IRoleClaim>
+  roleClaims? : Array<IRoleClaim>
 }
 
 export interface IRoleClaim {
