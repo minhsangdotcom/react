@@ -1,7 +1,7 @@
 import { IRoleClaim } from "./IRole";
 
 export default interface ICreateRoleRequest {
-  name: "string";
+  name: string;
   description: string;
   roleClaims: Array<IRoleClaim>;
 }

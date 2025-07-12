@@ -104,16 +104,13 @@ export const Permissions = [
     label: "List role",
     value: "list:role",
   },
-] as Array<{
-  label: string;
-  value: string;
-  children: Array<{ label: string; value: string }>;
-}>;
+] as Array<IPermission>;
 
 export interface IPermission {
   id: string;
   label: string;
   value: string;
   children?: IPermission[];
+  roleId: string,
 }
 

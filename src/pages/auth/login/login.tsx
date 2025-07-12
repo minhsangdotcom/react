@@ -11,7 +11,7 @@ import PasswordInput from "@/src/components/passwordInput";
 const loginPage = () => {
   const [form, setForm] = useState<ILoginRequest>({
     username: "chloe.kim",
-    password: "Admin@456",
+    password: "Admin@123",
   });
   const navigate = useNavigate();
 
