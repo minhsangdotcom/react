@@ -43,6 +43,7 @@ export default {
   },
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
+    alias: { "@": _resolve(__dirname, ".") },
   },
   output: {
     filename: "bundle.js",

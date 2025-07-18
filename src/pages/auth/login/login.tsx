@@ -1,17 +1,17 @@
 import "./login.css";
-import { ILoginRequest } from "../../../types/auth/ILoginRequest";
 import { useState } from "react";
 
-import { loginAsync } from "../../../store/auth/authSlice";
-import { useAppDispatch, useAppSelector } from "../../../store/hook";
-import NormalInput from "../../../components/normalInput";
-import PasswordInput from "../../../components/passwordInput";
 import { Link, useNavigate } from "react-router-dom";
+import { ILoginRequest } from "@/src/types/Auth/ILoginRequest";
+import { useAppDispatch, useAppSelector } from "@/src/store/hook";
+import { loginAsync } from "@/src/store/auth/authSlice";
+import NormalInput from "@/src/components/normalInput";
+import PasswordInput from "@/src/components/passwordInput";
 
 const loginPage = () => {
   const [form, setForm] = useState<ILoginRequest>({
     username: "chloe.kim",
-    password: "Admin@456",
+    password: "Admin@123",
   });
   const navigate = useNavigate();
 
