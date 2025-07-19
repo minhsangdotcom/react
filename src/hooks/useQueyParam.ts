@@ -1,38 +1,63 @@
 import { useLayoutEffect, useState } from "react";
-import { Params } from "../types/Params";
+import { IFilterParam, Params, defaultParams } from "../types/Params";
 import queryString from "query-string";
 import IFilter from "../types/IFilterType";
 
-function getFilterItems(filters: any): Array<IFilter> | [] {
+function getFilterItems(filters: any): IFilterParam {
   if (!filters) {
-    return [];
+    return {} as IFilterParam;
   }
   const filterObj = JSON.parse(filters as string) as Array<IFilter>;
-  return filterObj.map((filter) => ({
-    id: filter.id,
-    value: filter.value,
-    operator: filter.operator,
-    variant: filter.variant,
-  }));
+  return {
+    info: filterObj.map((filter) => ({
+      id: filter.id,
+      value: filter.value,
+      operator: filter.operator,
+      variant: filter.variant,
+    })),
+  };
 }
 
 export function useQueryParam() {
   const [query, setQuery] = useState<Params>();
-  console.log("🚀 ~ RolePage ~ query:", query);
 
-  useLayoutEffect(() => {
+  const updateQuery = () => {
     const queryParams = queryString.parse(window.location.search);
-    const { filters, sort, page, perPage } = queryParams;
-    setQuery((pre) => ({
-      ...pre,
+    const { filters, sort, page, perPage, previous, next } = queryParams;
+
+    setQuery({
       filter: getFilterItems(filters),
       sort: sort
-        ? JSON.parse(sort! as string)
+        ? JSON.parse(sort as string)
         : [{ id: "createdAt", desc: true }],
-      page: page ? parseInt(page! as string) : 1,
-      perPage: perPage ? parseInt(perPage! as string) : 10,
-    }));
-  }, [window.location.search]);
+      page: page ? parseInt(page as string) : undefined,
+      perPage: perPage ? parseInt(perPage as string) : defaultParams.perPage,
+      pre: previous as string | undefined,
+      next: next as string | undefined,
+    });
+  };
+
+  useLayoutEffect(() => {
+    updateQuery();
+
+    const onPopState = () => {
+      updateQuery();
+    };
+
+    window.addEventListener("popstate", onPopState);
+
+    // Monkey-patch pushState/replaceState if needed (optional but helpful)
+    const originalReplaceState = window.history.replaceState;
+    window.history.replaceState = function (...args) {
+      originalReplaceState.apply(window.history, args);
+      onPopState(); // Call update
+    };
+
+    return () => {
+      window.removeEventListener("popstate", onPopState);
+      window.history.replaceState = originalReplaceState;
+    };
+  }, []);
 
   return {
     query,

@@ -96,7 +96,7 @@ export function DataTableDateFilter<TData>({
         column.setFilterValue(date.getTime());
       }
     },
-    [column, multiple],
+    [column, multiple]
   );
 
   const onReset = React.useCallback(
@@ -104,7 +104,7 @@ export function DataTableDateFilter<TData>({
       event.stopPropagation();
       column.setFilterValue(undefined);
     },
-    [column],
+    [column]
   );
 
   const hasValue = React.useMemo(() => {
@@ -203,6 +203,7 @@ export function DataTableDateFilter<TData>({
                 : { from: undefined, to: undefined }
             }
             onSelect={onSelect}
+            captionLayout="dropdown"
           />
         ) : (
           <Calendar
@@ -212,6 +213,7 @@ export function DataTableDateFilter<TData>({
               !getIsDateRange(selectedDates) ? selectedDates[0] : undefined
             }
             onSelect={onSelect}
+            captionLayout="dropdown"
           />
         )}
       </PopoverContent>
