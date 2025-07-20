@@ -46,11 +46,10 @@ export function useQueryParam() {
 
     window.addEventListener("popstate", onPopState);
 
-    // Monkey-patch pushState/replaceState if needed (optional but helpful)
     const originalReplaceState = window.history.replaceState;
     window.history.replaceState = function (...args) {
       originalReplaceState.apply(window.history, args);
-      onPopState(); // Call update
+      onPopState();
     };
 
     return () => {

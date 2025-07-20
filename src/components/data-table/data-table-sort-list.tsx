@@ -1,6 +1,11 @@
 "use client";
 
-import type { ColumnSort, SortDirection, Table } from "@tanstack/react-table";
+import type {
+  ColumnSort,
+  SortDirection,
+  SortingState,
+  Table,
+} from "@tanstack/react-table";
 import {
   ArrowDownUp,
   ChevronsUpDown,
@@ -40,6 +45,8 @@ import {
 } from "@/src/components/ui/sortable";
 import { dataTableConfig } from "@/src/config/data-table";
 import { cn } from "@/src/lib/utils";
+import queryString from "query-string";
+import { defaultParams } from "@/src/types/Params";
 
 const OPEN_MENU_SHORTCUT = "s";
 const REMOVE_SORT_SHORTCUTS = ["backspace", "delete"];
@@ -88,6 +95,12 @@ export function DataTableSortList<TData>({
     const firstColumn = columns[0];
     if (!firstColumn) return;
 
+    const queries = queryString.parse(window.location.search);
+    if (queries.next || queries.previous) {
+      resetPaginationIfSortChange(sorting, StateSort.Add, firstColumn.id);
+      return;
+    }
+
     onSortingChange((prevSorting) => [
       ...prevSorting,
       { id: firstColumn.id, desc: false },
@@ -96,29 +109,39 @@ export function DataTableSortList<TData>({
 
   const onSortUpdate = React.useCallback(
     (sortId: string, updates: Partial<ColumnSort>) => {
+      const queries = queryString.parse(window.location.search);
+      if (queries.next || queries.previous) {
+        resetPaginationIfSortChange(sorting, StateSort.Update, sortId, updates);
+        return;
+      }
       onSortingChange((prevSorting) => {
         if (!prevSorting) return prevSorting;
         return prevSorting.map((sort) =>
-          sort.id === sortId ? { ...sort, ...updates } : sort,
+          sort.id === sortId ? { ...sort, ...updates } : sort
         );
       });
     },
-    [onSortingChange],
+    [onSortingChange]
   );
 
   const onSortRemove = React.useCallback(
     (sortId: string) => {
+      const queries = queryString.parse(window.location.search);
+      if (queries.next || queries.previous) {
+        resetPaginationIfSortChange(sorting, StateSort.Delete, sortId);
+        return;
+      }
       onSortingChange((prevSorting) =>
-        prevSorting.filter((item) => item.id !== sortId),
+        prevSorting.filter((item) => item.id !== sortId)
       );
     },
-    [onSortingChange],
+    [onSortingChange]
   );
 
-  const onSortingReset = React.useCallback(
-    () => onSortingChange(table.initialState.sorting),
-    [onSortingChange, table.initialState.sorting],
-  );
+  const onSortingReset = React.useCallback(() => {
+    resetPaginationIfSortChange(sorting, StateSort.Reset, "createdAt");
+    //onSortingChange(table.initialState.sorting);
+  }, [onSortingChange, table.initialState.sorting]);
 
   React.useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -163,14 +186,14 @@ export function DataTableSortList<TData>({
         onSortingReset();
       }
     },
-    [sorting.length, onSortingReset],
+    [sorting.length, onSortingReset]
   );
 
   return (
     <Sortable
       value={sorting}
       onValueChange={onSortingChange}
-      getItemValue={(item : any) => item.id}
+      getItemValue={(item: any) => item.id}
     >
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
@@ -201,7 +224,7 @@ export function DataTableSortList<TData>({
               id={descriptionId}
               className={cn(
                 "text-muted-foreground text-sm",
-                sorting.length > 0 && "sr-only",
+                sorting.length > 0 && "sr-only"
               )}
             >
               {sorting.length > 0
@@ -307,7 +330,7 @@ function DataTableSortItem({
         onSortRemove(sort.id);
       }
     },
-    [sort.id, showFieldSelector, showDirectionSelector, onSortRemove],
+    [sort.id, showFieldSelector, showDirectionSelector, onSortRemove]
   );
 
   return (
@@ -346,7 +369,9 @@ function DataTableSortItem({
                     <CommandItem
                       key={column.id}
                       value={column.id}
-                      onSelect={(value : any) => onSortUpdate(sort.id, { id: value })}
+                      onSelect={(value: any) =>
+                        onSortUpdate(sort.id, { id: value })
+                      }
                     >
                       <span className="truncate">{column.label}</span>
                     </CommandItem>
@@ -374,7 +399,7 @@ function DataTableSortItem({
             id={directionListboxId}
             className="min-w-[var(--radix-select-trigger-width)] origin-[var(--radix-select-content-transform-origin)]"
           >
-            {dataTableConfig.sortOrders.map((order : any) => (
+            {dataTableConfig.sortOrders.map((order: any) => (
               <SelectItem key={order.value} value={order.value}>
                 {order.label}
               </SelectItem>
@@ -402,4 +427,52 @@ function DataTableSortItem({
       </div>
     </SortableItem>
   );
+}
+
+function resetPaginationIfSortChange(
+  sorting: SortingState,
+  type: StateSort,
+  id?: any,
+  value?: Partial<ColumnSort>
+) {
+  const params = new URLSearchParams(window.location.search);
+  params.delete("previous");
+  params.delete("next");
+  params.set("page", "1");
+
+  if (type == StateSort.Add) {
+    sorting.push({ id: id, desc: false });
+    params.set("sort", JSON.stringify(sorting));
+  } else if (type == StateSort.Reset) {
+    sorting.length = 0;
+    sorting.push({ id: id, desc: true });
+    params.delete("sort");
+  } else if (type == StateSort.Delete) {
+    const index = sorting.findIndex((x) => x.id == id);
+    if (index > 0) {
+      sorting.splice(index, 1);
+    }
+    params.set("sort", JSON.stringify(sorting));
+  } else if (type == StateSort.Update) {
+    const index = sorting.findIndex((x) => x.id == id);
+    if (index >= 0) {
+      if (value?.desc != undefined) {
+        sorting[index].desc = value?.desc!;
+      }
+      if (value?.id != undefined) {
+        sorting[index].id = value?.id!;
+      }
+    }
+    params.set("sort", JSON.stringify(sorting));
+  }
+
+  const pretty = decodeURIComponent(params.toString());
+  window.history.replaceState({}, "", `${window.location.pathname}?${pretty}`);
+}
+
+enum StateSort {
+  Add = 1,
+  Update = 2,
+  Delete = 3,
+  Reset = 4,
 }

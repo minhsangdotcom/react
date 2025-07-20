@@ -1,7 +1,6 @@
 import { DataTable } from "@/src/components/data-table/data-table";
 import { DataTableAdvancedToolbar } from "@/src/components/data-table/data-table-advanced-toolbar";
 import { DataTableColumnHeader } from "@/src/components/data-table/data-table-column-header";
-import { DataTableFilterList } from "@/src/components/data-table/data-table-filter-list";
 import { DataTableSortList } from "@/src/components/data-table/data-table-sort-list";
 import { Badge } from "@/src/components/ui/badge";
 import { Button } from "@/src/components/ui/button";
@@ -274,6 +273,7 @@ export default function UserPage() {
     ],
     []
   );
+
   const { table } = useDataTable({
     data: user ?? [],
     columns,
