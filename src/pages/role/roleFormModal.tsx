@@ -6,46 +6,39 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../../components/ui/dialog";
-import { IPermission, Permissions } from "@/src/config/permission";
 import authService from "@/src/services/auth/authService";
 import { ulid } from "ulidx";
 import { roleService } from "@/src/services/roles/roleService";
 import { IRoleClaim } from "@/src/types/role/IRole";
 
-function mapping(roleClaims: IRoleClaim[], allPermissions: IPermission[]) {
-  return (
-    roleClaims.map((permission: any) => {
-      const id = permission.id;
-      const result: any = {
-        label: permission.claimValue,
-        value: permission.claimValue,
-        roleId: id,
-      };
-
-      const listPermission = Permissions.find(
-        (x: IPermission) => x.value == permission.claimValue
-      ) as IPermission;
-
-      const childrenPermissions = listPermission?.children
-        ? [...listPermission.children]
-        : [];
-
-      childrenPermissions.forEach((child: IPermission) => {
-        const childPermission = allPermissions
-          .flatMap((x: any) => x.children)
-          .find((p) => p?.value == child.value);
-        child.id = childPermission?.id!;
-      });
-
-      const per: any = allPermissions.find(
-        (x: any) => x.value == permission.claimValue
-      );
-      result.id = per?.id!;
-      result.children = childrenPermissions;
-      return result;
-    }) ?? []
-  );
+interface IPermission {
+  id: string;
+  label: string;
+  value: string;
+  children?: IPermission[];
+  roleId: string;
 }
+
+const mapping = (
+  roleClaims: IRoleClaim[],
+  allPermissions: IPermission[]
+): IPermission[] =>
+  roleClaims.map((permissionClaim: any) => {
+    const id = permissionClaim.id;
+    const result = {
+      label: permissionClaim.claimValue,
+      value: permissionClaim.claimValue,
+      roleId: id,
+    } as IPermission;
+
+    const parent = allPermissions.find(
+      (permission: IPermission) =>
+        permission.value == permissionClaim.claimValue
+    );
+    result.id = parent?.id!;
+    result.children = parent?.children;
+    return result;
+  }) ?? [];
 
 async function init(
   setAvailablePermissions: any,
@@ -61,15 +54,18 @@ async function init(
     return;
   }
 
-  const listPermission = apiResults!.data!.results!.map((x) => x.claimValue);
+  const listPermission = apiResults!.data!.results!;
   const allPermissions = listPermission.map((permission) => {
-    const permissions = Permissions.find((x) => x.value == permission);
-    permissions?.children?.forEach((x) => (x.id = ulid()));
+    const children = permission?.children?.map((x) => ({
+      id: ulid(),
+      label: x.claimValue,
+      value: x.claimValue,
+    }));
     return {
       id: ulid(),
-      label: permission,
-      value: permission,
-      children: permissions?.children,
+      label: permission.claimValue,
+      value: permission.claimValue,
+      children: children,
     } as IPermission;
   });
   setAvailablePermissions(allPermissions);
@@ -85,7 +81,7 @@ async function init(
     setName(role?.name!);
     setDescription(role?.description ?? "");
 
-    const roleClaims = [...role!.roleClaims!];
+    const roleClaims = [...(role!.roleClaims ?? [])];
     const rolePermissions = mapping(roleClaims, allPermissions);
 
     const initialSelected = rolePermissions.flatMap((p) => {
@@ -101,7 +97,7 @@ async function init(
 }
 
 export default function AddRoleModal({ onSubmit, setOpen, roleId, mode }: any) {
-  const [name, setName] = useState("");
+  const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string | undefined>("");
   const [selectedPermissions, setSelectedPermissions] = useState<
     { id: string; value: string; roleId: string }[]
@@ -110,7 +106,6 @@ export default function AddRoleModal({ onSubmit, setOpen, roleId, mode }: any) {
     IPermission[]
   >([]);
 
-  console.log("🚀 ~ AddRoleModal ~ selectedPermissions:", selectedPermissions);
   const didInit = useRef(false);
 
   useLayoutEffect(() => {
@@ -160,7 +155,7 @@ export default function AddRoleModal({ onSubmit, setOpen, roleId, mode }: any) {
           m.set(p.value, p);
         }
       }
-      return Array.from(m.values());
+      return [...m.values()];
     })();
 
     const roleClaims = distinctByValue.map((p) => ({
