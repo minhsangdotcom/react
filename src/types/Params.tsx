@@ -15,7 +15,7 @@ export const defaultParams: Params = {
   page: undefined,
   pre: undefined,
   next: undefined,
-  perPage: 1,
+  perPage: 10,
 };
 
 export interface IFilterParam {
