@@ -64,7 +64,6 @@ export default function profilePage() {
 
   const pRef = useRef<HTMLParagraphElement>(null);
   const [isTruncated, setIsTruncated] = useState(false);
-  console.log("🚀 ~ profilePage ~ isTruncated:", isTruncated);
 
   const fullAddress = getFullAddress(
     userRequest.street!,
