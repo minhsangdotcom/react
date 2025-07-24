@@ -13,12 +13,12 @@ export interface IUser extends IAuditable, IEntity {
   phoneNumber: string;
   dayOfBirth: Date;
   gender: Gender;
-  userAddress: IAddress;
+  address: IAddress;
   avatar: string | null;
   status: UserStatus;
   userClaims: Array<IUserClaim>;
   roles: Array<IRole>;
-  address: string;
+  fullAddress: string;
 }
 
 export interface IUserClaim extends IEntity {

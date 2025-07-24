@@ -1,7 +1,5 @@
 .profile-page {
-  max-width: 800px;
   margin: 0 auto;
-  padding: 2rem;
 }
 
 .profile-header {
@@ -63,7 +61,7 @@
   font-size: 1.1rem;
   cursor: "pointer";
   box-shadow: 0 4px 12px rgba(91, 192, 222, 0.3);
-  transition: 'background 0.2s';
+  transition: "background 0.2s";
   margin: 0 auto;
   cursor: pointer;
 }
@@ -102,4 +100,9 @@
 }
 .react-datepicker-wrapper {
   width: 100%;
+}
+
+.edit-icon {
+  right: 7px;
+  bottom: 5px;
 }
