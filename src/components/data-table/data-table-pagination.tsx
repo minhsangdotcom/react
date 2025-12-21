@@ -15,23 +15,34 @@ import {
   SelectValue,
 } from "@/src/components/ui/select";
 import { cn } from "@/src/lib/utils";
-
+import localStorageHelper from "@/src/utils/storages/localStorageHelper";
+import queryString from "query-string";
+import { Params } from "@/src/types/Params";
 interface DataTablePaginationProps<TData> extends React.ComponentProps<"div"> {
   table: Table<TData>;
   pageSizeOptions?: number[];
+  isCursorPaged?: boolean;
 }
 
 export function DataTablePagination<TData>({
   table,
   pageSizeOptions = [10, 20, 30, 40, 50],
   className,
+  isCursorPaged = false,
   ...props
 }: DataTablePaginationProps<TData>) {
+  let pageInfo = null;
+  let query = {} as Params | any;
+  if (isCursorPaged) {
+    query = queryString.parse(window.location.search) as Params | any;
+    pageInfo = getCursorPagedInfo();
+  }
+
   return (
     <div
       className={cn(
         "flex w-full flex-col-reverse items-center justify-between gap-4 overflow-auto p-1 sm:flex-row sm:gap-8",
-        className,
+        className
       )}
       {...props}
     >
@@ -61,27 +72,48 @@ export function DataTablePagination<TData>({
           </Select>
         </div>
         <div className="flex items-center justify-center font-medium text-sm">
-          Page {table.getState().pagination.pageIndex + 1} of{" "}
-          {table.getPageCount()}
+          Page{" "}
+          {isCursorPaged
+            ? (query.page ?? 1)
+            : table.getState().pagination.pageIndex + 1}{" "}
+          of {table.getPageCount()}
         </div>
         <div className="flex items-center space-x-2">
-          <Button
-            aria-label="Go to first page"
-            variant="outline"
-            size="icon"
-            className="hidden size-8 lg:flex"
-            onClick={() => table.setPageIndex(0)}
-            disabled={!table.getCanPreviousPage()}
-          >
-            <ChevronsLeft />
-          </Button>
+          {!isCursorPaged && (
+            <Button
+              aria-label="Go to first page"
+              variant="outline"
+              size="icon"
+              className="hidden size-8 lg:flex"
+              onClick={() => table.setPageIndex(0)}
+              disabled={!table.getCanPreviousPage()}
+            >
+              <ChevronsLeft />
+            </Button>
+          )}
           <Button
             aria-label="Go to previous page"
             variant="outline"
             size="icon"
             className="size-8"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+            onClick={() => {
+              if (!isCursorPaged) {
+                table.previousPage();
+                return;
+              }
+              const params = new URLSearchParams(window.location.search);
+              params.set("previous", pageInfo?.previous ?? "");
+              params.delete("next");
+              let currentPage = query.page ?? 1;
+              params.set("page", (currentPage - 1).toString());
+              const newUrl = `${window.location.pathname}?${params.toString()}`;
+              window.history.replaceState({}, "", newUrl);
+            }}
+            disabled={
+              isCursorPaged
+                ? !pageInfo?.hasPreviousPage
+                : !table.getCanPreviousPage()
+            }
           >
             <ChevronLeft />
           </Button>
@@ -90,23 +122,52 @@ export function DataTablePagination<TData>({
             variant="outline"
             size="icon"
             className="size-8"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
+            onClick={() => {
+              if (!isCursorPaged) {
+                table.nextPage();
+                return;
+              }
+              const params = new URLSearchParams(window.location.search);
+              const pageInfo = localStorageHelper.get<{
+                previous: string;
+                next: string;
+              }>("paginationInfo");
+              params.set("next", pageInfo?.next ?? "");
+              params.delete("previous");
+              let currentPage = query.page ?? 1;
+              params.set("page", (++currentPage).toString());
+              const newUrl = `${window.location.pathname}?${params.toString()}`;
+              window.history.replaceState({}, "", newUrl);
+            }}
+            disabled={
+              isCursorPaged ? !pageInfo?.hasNextPage : !table.getCanNextPage()
+            }
           >
             <ChevronRight />
           </Button>
-          <Button
-            aria-label="Go to last page"
-            variant="outline"
-            size="icon"
-            className="hidden size-8 lg:flex"
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-            disabled={!table.getCanNextPage()}
-          >
-            <ChevronsRight />
-          </Button>
+          {!isCursorPaged && (
+            <Button
+              aria-label="Go to last page"
+              variant="outline"
+              size="icon"
+              className="hidden size-8 lg:flex"
+              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+              disabled={!table.getCanNextPage()}
+            >
+              <ChevronsRight />
+            </Button>
+          )}
         </div>
       </div>
     </div>
   );
+}
+
+function getCursorPagedInfo() {
+  return localStorageHelper.get<{
+    previous: string;
+    next: string;
+    hasNextPage: number;
+    hasPreviousPage: number;
+  }>("paginationInfo");
 }

@@ -4,7 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import { useAuth } from "../../hooks/useAuth";
 import LoadingPage from "../../components/loading";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import { regionService } from "../../services/regions/regionService";
 import { ICommune, IDistrict, IProvince } from "../../types/regions/IRegion";
 import authService from "../../services/auth/authService";
@@ -12,6 +12,7 @@ import IUpdateProfileRequest from "../../types/user/IUpdateProfileRequest";
 import { IUser } from "../../types/user/IUser";
 import LoadingButton from "../../components/loadingButton";
 
+import { Tooltip } from "react-tooltip";
 type Region = {
   provinces: Array<IProvince>;
   districts: Array<IProvince>;
@@ -35,13 +36,13 @@ const toRequest = (user: IUser): IUpdateProfileRequest => ({
   lastName: user?.lastName!,
   dayOfBirth: user?.dayOfBirth!,
   email: user?.email!,
-  provinceId: user?.userAddress?.provinceId!,
-  districtId: user?.userAddress?.districtId!,
-  communeId: user?.userAddress?.communeId!,
-  province: user?.userAddress?.province,
-  district: user?.userAddress?.district,
-  commune: user?.userAddress?.commune,
-  street: user?.userAddress?.street,
+  provinceId: user?.address?.provinceId!,
+  districtId: user?.address?.districtId!,
+  communeId: user?.address?.communeId!,
+  province: user?.address?.province,
+  district: user?.address?.district,
+  commune: user?.address?.commune,
+  street: user?.address?.street,
   phoneNumber: user?.phoneNumber!,
   avatar: user?.avatar!,
 });
@@ -60,6 +61,16 @@ export default function profilePage() {
   const [userRequest, setUserRequest] = useState<IUpdateProfileRequest>({});
 
   const [avatar, setAvatar] = useState<File | null>(null);
+
+  const pRef = useRef<HTMLParagraphElement>(null);
+  const [isTruncated, setIsTruncated] = useState(false);
+
+  const fullAddress = getFullAddress(
+    userRequest.street!,
+    userRequest.commune!,
+    userRequest.district!,
+    userRequest.province!
+  );
 
   const onChangeProvince = (
     e: SingleValue<{ value: string | undefined; label: string | undefined }>
@@ -173,16 +184,14 @@ export default function profilePage() {
 
         let districts = [] as Array<IDistrict>;
         if (provinces.length > 0) {
-          const firstProvinceId =
-            user?.userAddress?.provinceId ?? provinces[0].id;
+          const firstProvinceId = user?.address?.provinceId ?? provinces[0].id;
           const distRes = await fetchDistrict(firstProvinceId);
           districts = (distRes.data?.results?.data ?? []) as IDistrict[];
           setRegion((prev) => ({ ...prev, districts }));
         }
 
         if (districts.length > 0) {
-          const firstDistrictId =
-            user?.userAddress?.districtId ?? districts[0].id;
+          const firstDistrictId = user?.address?.districtId ?? districts[0].id;
           const communeRes = await fetchCommune(firstDistrictId);
           const communes = (communeRes.data?.results?.data ?? []) as ICommune[];
           setRegion((prev) => ({ ...prev, communes }));
@@ -197,20 +206,34 @@ export default function profilePage() {
     fetchRegionData();
   }, [user]);
 
+  useEffect(() => {
+    const el = pRef.current as HTMLParagraphElement | null;
+    if (!el) return;
+
+    const checkTruncation = () => {
+      const truncated = el.scrollHeight > el.clientHeight;
+      setIsTruncated(truncated);
+    };
+
+    checkTruncation();
+    window.addEventListener("resize", checkTruncation);
+    return () => window.removeEventListener("resize", checkTruncation);
+  }, [fullAddress]);
+
   if (isLoading && currentLoading) {
     return <LoadingPage />;
   }
 
   return (
-    <div className="profile-page">
+    <div className="profile-page p-5 w-full md:w-6/10 lg:w-5/10">
       <div className="profile-header">
-        <div className="relative max-sm:w-2/10 mr-3">
+        <div className="relative flex-none">
           <img
             src={userRequest.avatar ?? "/images/default-avatar.png"}
             alt="Avatar"
-            className="rounded-full w-32 max-sm:w-60"
+            className="rounded-full w-30"
           />
-          <label className="absolute -bottom-1 -right-1 sm:bottom-0 sm:right-0 bg-blue-300 w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center cursor-pointer shadow-md">
+          <label className="edit-icon absolute sm:bottom-0 sm:right-0 bg-blue-300 w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center cursor-pointer shadow-md">
             <img
               src="/icons/edit-icon.png"
               alt="Edit"
@@ -224,14 +247,32 @@ export default function profilePage() {
             />
           </label>
         </div>
-        <div className="profile-info max-sm:w-8/10">
+        <div className="profile-info flex-1 min-w-0 pl-2 md:pl-1">
           <h2>
             {userRequest?.firstName} {userRequest?.lastName}
           </h2>
-          <p className="subheading">
-            {userRequest.street},{userRequest.commune},{userRequest.district},
-            {userRequest.province}
-          </p>
+          <div className="subheading line-clamp-3 text-sm">
+            <p
+              data-tooltip-id="address-tooltip"
+              ref={pRef}
+              {...(isTruncated && {
+                "data-tooltip-id": "address-tooltip",
+                "data-tooltip-content": fullAddress,
+              })}
+            >
+              {fullAddress && fullAddress}
+            </p>
+          </div>
+          <Tooltip
+            id="address-tooltip"
+            place="top"
+            className="address-tooltip whitespace-normal break-words max-w-xs rounded-lg shadow-lg"
+            border={"1px solid #fff"}
+            style={{
+              zIndex: 9999,
+              borderRadius: "14px",
+            }}
+          />
         </div>
       </div>
 
@@ -373,6 +414,13 @@ export default function profilePage() {
     </div>
   );
 }
+
+const getFullAddress = (
+  street: string,
+  commune: string,
+  district: string,
+  province: string
+) => [street, commune, district, province].join(", ");
 
 const customStyles = {
   control: (base: any) => ({

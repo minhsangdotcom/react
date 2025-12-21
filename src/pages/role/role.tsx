@@ -141,7 +141,7 @@ export default function RolePage() {
           <div>
             {dayjs
               .utc(row.getValue("createdAt"))
-              .tz("Asia/Bangkok")
+              .tz(dayjs.tz.guess())
               .format("DD/MM/YYYY")}
           </div>
         ),
@@ -232,7 +232,7 @@ export default function RolePage() {
     initialState: {
       pagination: {
         pageSize: defaultParams.perPage,
-        pageIndex: defaultParams.page,
+        pageIndex: defaultParams.page!,
       },
     },
     getRowId: (row: any) => row.id,

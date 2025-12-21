@@ -2,11 +2,21 @@
   background-color: white;
   border-collapse: collapse;
   width: 100%;
-  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .custom-table > div > div {
-  border-color: #5bc0de;
+  /* border-color: #5bc0de; */
+  background-color: white;
+  border-collapse: separate; /* Important for border-radius to work */
+  border-spacing: 0;
+  width: 100%;
+  border: none;
+  border-radius: 12px; /* Rounded corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  overflow: hidden; /* Ensures inner content doesn't overflow rounded edges */
 }
 
 .custom-table thead {
