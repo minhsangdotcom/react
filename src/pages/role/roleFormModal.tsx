@@ -6,105 +6,193 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../../components/ui/dialog";
-import authService from "@/src/services/auth/authService";
 import { ulid } from "ulidx";
 import { roleService } from "@/src/services/roles/roleService";
-import { IRoleClaim } from "@/src/types/role/IRole";
+import permissionService from "@/src/services/permission/permissionService";
+import {
+  IGroupPermissionResponse,
+  IPermission,
+  IPermissionGroup,
+  IPermissionResponse,
+} from "@/src/types/permission/IPermission";
+import { IRoleResponse } from "@/src/types/role/IRole";
 
-interface IPermission {
-  id: string;
-  label: string;
-  value: string;
-  children?: IPermission[];
-  roleId: string;
+function mapPermission(permission: any): IPermission {
+  return {
+    id: ulid(),
+    permissionId: permission.id,
+    code: permission.code,
+    label: permission.codeTranslation,
+    checked: false,
+    expanded: false,
+    children: permission.children?.map(mapPermission) ?? [],
+    createdAt: permission.createdAt,
+  };
 }
 
-const mapping = (
-  roleClaims: IRoleClaim[],
-  allPermissions: IPermission[]
-): IPermission[] =>
-  roleClaims.map((permissionClaim: any) => {
-    const id = permissionClaim.id;
-    const result = {
-      label: permissionClaim.claimValue,
-      value: permissionClaim.claimValue,
-      roleId: id,
-    } as IPermission;
+export function mapPermissionGroups(
+  response: IGroupPermissionResponse[]
+): IPermissionGroup[] {
+  return response.map((group) => ({
+    name: group.name,
+    label: group.nameTranslation,
+    permissions: group.permissions.map(mapPermission),
+  }));
+}
 
-    const parent = allPermissions.find(
-      (permission: IPermission) =>
-        permission.value == permissionClaim.claimValue
-    );
-    result.id = parent?.id!;
-    result.children = parent?.children;
-    return result;
-  }) ?? [];
+interface PermissionNodeProps {
+  node: IPermission;
+  level?: number;
+  onToggleCheck: (id: string, checked: boolean) => void;
+  onToggleExpand: (id: string) => void;
+}
 
-async function init(
-  setAvailablePermissions: any,
-  setName: any,
-  setDescription: any,
-  setSelectedPermissions: any,
-  roleId: string,
-  mode: "create" | "update"
-) {
-  const apiResults = await authService.listPermission();
+function PermissionNode({
+  node,
+  level = 0,
+  onToggleCheck,
+  onToggleExpand,
+}: PermissionNodeProps) {
+  const hasChildren = node.children.length > 0;
+  const indent = Math.min(level, 4) * 16;
 
-  if (apiResults?.data?.results?.length! <= 0) {
-    return;
-  }
+  return (
+    <div style={{ marginLeft: indent }}>
+      <div className="flex items-center gap-2 py-1 min-w-0">
+        {/* Expand / collapse */}
+        {hasChildren && (
+          <button
+            type="button"
+            onClick={() => onToggleExpand(node.id)}
+            className="w-4 text-xs text-gray-400 hover:text-black"
+          >
+            {node.expanded ? "▼" : "▶"}
+          </button>
+        )}
 
-  const listPermission = apiResults!.data!.results!;
-  const allPermissions = listPermission.map((permission) => {
-    const children = permission?.children?.map((x) => ({
-      id: ulid(),
-      label: x.claimValue,
-      value: x.claimValue,
-    }));
-    return {
-      id: ulid(),
-      label: permission.claimValue,
-      value: permission.claimValue,
-      children: children,
-    } as IPermission;
-  });
-  setAvailablePermissions(allPermissions);
+        {!hasChildren && <span className="w-4" />}
 
-  if (mode === "update") {
-    const apiResults = await roleService.getById(roleId);
+        {/* Checkbox */}
+        <input
+          type="checkbox"
+          checked={node.checked}
+          disabled={node.inherited}
+          onChange={(e) => onToggleCheck(node.id, e.target.checked)}
+          className="h-4 w-4 rounded border-gray-600 bg-gray-800 text-blue-500"
+        />
 
-    if (!apiResults.isSuccess) {
-      return;
+        {/* Label (truncate prevents overflow) */}
+        <span className="text-sm text-black truncate max-w-[240px]">
+          {node.label}
+        </span>
+      </div>
+
+      {/* Children */}
+      {hasChildren && node.expanded && (
+        <div className="space-y-1">
+          {node.children.map((child) => (
+            <PermissionNode
+              key={child.id}
+              node={child}
+              level={level + 1}
+              onToggleCheck={onToggleCheck}
+              onToggleExpand={onToggleExpand}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function toggleRecursive(node: IPermission, checked: boolean): IPermission {
+  return {
+    ...node,
+    checked,
+    inherited: false,
+    children: node.children.map((child) => ({
+      ...toggleRecursive(child, checked),
+      checked,
+      inherited: checked,
+    })),
+  };
+}
+
+function updatePermissions(
+  list: IPermission[],
+  uiId: string,
+  checked: boolean
+): IPermission[] {
+  return list.map((node) => {
+    if (node.id === uiId) {
+      return toggleRecursive(node, checked);
     }
 
-    const role = apiResults.data!.results;
-    setName(role?.name!);
-    setDescription(role?.description ?? "");
+    if (node.children.length > 0) {
+      return {
+        ...node,
+        children: updatePermissions(node.children, uiId, checked),
+      };
+    }
 
-    const roleClaims = [...(role!.roleClaims ?? [])];
-    const rolePermissions = mapping(roleClaims, allPermissions);
-
-    const initialSelected = rolePermissions.flatMap((p) => {
-      const selectedItem = [{ roleId: p.roleId, value: p.value, id: p.id }];
-      const childrenItem = p.children?.map((c: any) => ({
-        value: c.value,
-        id: c.id,
-      }));
-      return [...new Set(selectedItem), ...new Set(childrenItem)];
-    });
-    setSelectedPermissions(initialSelected);
-  }
+    return node;
+  });
 }
 
-export default function AddRoleModal({ onSubmit, setOpen, roleId, mode }: any) {
+function collectCheckedParents(list: IPermission[]): string[] {
+  return list.flatMap((p) => [
+    ...(p.checked && !p.inherited ? [p.permissionId] : []),
+  ]);
+}
+
+function flattenRolePermissions(list: IPermissionResponse[]): Set<string> {
+  const result = new Set<string>();
+
+  const walk = (p: IPermissionResponse) => {
+    result.add(p.code);
+    p.children?.forEach(walk);
+  };
+
+  list.forEach(walk);
+  return result;
+}
+
+function markCheckedFromRole(
+  list: IPermission[],
+  checkedCodes: Set<string>,
+  parentChecked = false
+): IPermission[] {
+  return list.map((node) => {
+    const isChecked = checkedCodes.has(node.code) || parentChecked;
+
+    return {
+      ...node,
+      checked: isChecked,
+      inherited: parentChecked,
+      children: markCheckedFromRole(node.children, checkedCodes, isChecked),
+    };
+  });
+}
+
+export default function AddRoleModal({
+  onSubmit,
+  setOpen,
+  roleId,
+  mode,
+}: {
+  onSubmit: (roleData: any) => Promise<void>;
+  setOpen: React.Dispatch<
+    React.SetStateAction<{
+      isCreateOpen: boolean;
+      isUpdateOpen: boolean;
+    }>
+  >;
+  roleId: string | undefined;
+  mode: "create" | "update";
+}) {
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string | undefined>("");
-  const [selectedPermissions, setSelectedPermissions] = useState<
-    { id: string; value: string; roleId: string }[]
-  >([]);
-  const [availablePermissions, setAvailablePermissions] = useState<
-    IPermission[]
-  >([]);
+  const [groups, setGroups] = useState<IPermissionGroup[]>([]);
 
   const didInit = useRef(false);
 
@@ -114,75 +202,96 @@ export default function AddRoleModal({ onSubmit, setOpen, roleId, mode }: any) {
     }
     didInit.current = true;
 
-    init(
-      setAvailablePermissions,
-      setName,
-      setDescription,
-      setSelectedPermissions,
-      roleId,
-      mode
-    );
+    init();
   }, []);
 
-  const handlePermissionToggle = (
-    { id, value, roleId }: { id: string; value: string; roleId: string },
-    children?: IPermission[]
-  ) => {
-    setSelectedPermissions((prev: any) => {
-      const isSelected = prev.some((x: any) => x.id == id);
+  async function init() {
+    const apiResults = await permissionService.listPermission();
+    if (!apiResults?.data?.results?.length) {
+      return;
+    }
 
-      if (isSelected) {
-        return prev.filter(
-          (v: any) =>
-            v.id !== id && !children?.some((child) => child.id === v.id)
-        );
-      }
+    const permissions = apiResults.data.results as IGroupPermissionResponse[];
 
-      const newItems = [{ id, value, roleId }];
-      return [...new Set([...prev, ...newItems])];
-    });
+    let groups = mapPermissionGroups(permissions);
+
+    if (mode === "update") {
+      const roleResponse = await roleService.getById(roleId!);
+      const role = roleResponse.data?.results as IRoleResponse;
+
+      setName(role?.name || "");
+      setDescription(role?.description || "");
+
+      const checkedCodes = flattenRolePermissions(role.permissions);
+
+      groups = groups.map((g) => ({
+        ...g,
+        permissions: markCheckedFromRole(g.permissions, checkedCodes),
+      }));
+    }
+
+    setGroups(groups);
+  }
+
+  const onToggleCheck = (id: string, checked: boolean) => {
+    setGroups((prev) =>
+      prev.map((g) => ({
+        ...g,
+        permissions: updatePermissions(g.permissions, id, checked),
+      }))
+    );
   };
 
-  const handleSubmit = () => {
-    const distinctByValue = (() => {
-      const m = new Map<string, (typeof selectedPermissions)[0]>();
-      for (const p of selectedPermissions) {
-        const existing = m.get(p.value);
-        if (
-          !existing ||
-          (existing.roleId === undefined && p.roleId !== undefined)
-        ) {
-          m.set(p.value, p);
-        }
+  function toggleExpand(list: IPermission[], id: string): IPermission[] {
+    return list.map((node) => {
+      if (node.id === id) {
+        return { ...node, expanded: !node.expanded };
       }
-      return [...m.values()];
-    })();
 
-    const roleClaims = distinctByValue.map((p) => ({
-      id: mode === "update" ? p.roleId : undefined,
-      claimType: "Permission",
-      claimValue: p.value,
-    }));
-    console.log("🚀 ~ roleClaims ~ roleClaims:", roleClaims);
+      if (node.children.length > 0) {
+        return {
+          ...node,
+          children: toggleExpand(node.children, id),
+        };
+      }
+
+      return node;
+    });
+  }
+
+  const onToggleExpand = (id: string) => {
+    setGroups((prev) =>
+      prev.map((g) => ({
+        ...g,
+        permissions: toggleExpand(g.permissions, id),
+      }))
+    );
+  };
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+
+    const permissionIds = collectCheckedParents(
+      groups.flatMap((g) => g.permissions)
+    );
+
     const payload = {
       name,
       description,
-      roleClaims,
+      permissionIds,
     };
     onSubmit(payload);
-    setSelectedPermissions([]);
   };
 
   return (
     <DialogContent className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl p-6 w-[800px] max-w-full shadow-lg">
+      <div className="bg-white rounded-xl p-6 w-[800px] max-w-full shadow-lg max-h-[90vh] flex flex-col">
         <DialogHeader className="mb-2">
           <DialogTitle className="text-lg font-semibold">
-            Create New Role
+            {roleId ? "Update Role" : "Create New Role"}
           </DialogTitle>
         </DialogHeader>
 
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 gap-6 flex-1 overflow-hidden">
           {/* Left side: Name & Description */}
           <div className="space-y-4">
             <input
@@ -203,13 +312,27 @@ export default function AddRoleModal({ onSubmit, setOpen, roleId, mode }: any) {
 
           {/* Right side: Permissions */}
           <div>
-            <h4 className="font-medium mb-2">Permissions</h4>
-            <div className="max-h-64 overflow-y-auto shadow-md rounded p-3 space-y-2 bg-white">
-              {RenderPermissions(
-                availablePermissions,
-                selectedPermissions,
-                handlePermissionToggle
-              )}
+            <h1 className="mb-3 text-lg font-semibold text-gray-800">
+              Permissions
+            </h1>
+
+            <div className="space-y-4 rounded overflow-auto max-h-[60vh] pr-2">
+              <div className="min-w-max">
+                {groups.map((group) => (
+                  <div key={group.name}>
+                    <h3 className="mb-1 font-medium">{group.label}</h3>
+
+                    {group.permissions.map((p) => (
+                      <PermissionNode
+                        key={p.id}
+                        node={p}
+                        onToggleCheck={onToggleCheck}
+                        onToggleExpand={onToggleExpand}
+                      />
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -225,10 +348,9 @@ export default function AddRoleModal({ onSubmit, setOpen, roleId, mode }: any) {
                   isCreateOpen: false,
                   isUpdateOpen: false,
                 }));
-                setSelectedPermissions([]);
                 setName("");
                 setDescription("");
-                setAvailablePermissions([]);
+                setGroups([]);
               }}
             >
               Cancel
@@ -244,56 +366,4 @@ export default function AddRoleModal({ onSubmit, setOpen, roleId, mode }: any) {
       </div>
     </DialogContent>
   );
-}
-
-function RenderPermissions(
-  availablePermissions: IPermission[],
-  selectedPermissions: { id: string; value: string }[],
-  handlePermissionToggle: any
-) {
-  return availablePermissions.map((perm: IPermission) => {
-    const parentChecked = selectedPermissions.some((x) => x.id === perm.id);
-    return (
-      <div key={perm.id}>
-        <label className="flex items-center space-x-2 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={parentChecked}
-            onChange={() =>
-              handlePermissionToggle(
-                { id: perm.id, value: perm.value, roleId: perm.roleId },
-                perm.children
-              )
-            }
-          />
-          <span>{perm.label}</span>
-        </label>
-
-        {/* If permission has children and is selected, show them */}
-        {perm.children && parentChecked && (
-          <div className="pl-6 mt-2 space-y-2">
-            {perm.children?.map((child: IPermission) => (
-              <label
-                key={child.id}
-                className="flex items-center space-x-2 cursor-pointer"
-              >
-                <input
-                  type="checkbox"
-                  checked={parentChecked}
-                  onChange={() =>
-                    handlePermissionToggle(
-                      { id: perm.id, value: perm.value, roleId: perm.roleId },
-                      perm.children
-                    )
-                  }
-                  disabled={true}
-                />
-                <span>{child.label}</span>
-              </label>
-            ))}
-          </div>
-        )}
-      </div>
-    );
-  });
 }

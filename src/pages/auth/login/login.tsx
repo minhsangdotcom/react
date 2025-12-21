@@ -10,7 +10,7 @@ import PasswordInput from "@/src/components/passwordInput";
 
 const loginPage = () => {
   const [form, setForm] = useState<ILoginRequest>({
-    username: "chloe.kim",
+    identifier: "chloe.kim",
     password: "Admin@123",
   });
   const navigate = useNavigate();
@@ -37,10 +37,10 @@ const loginPage = () => {
       <form onSubmit={onSubmit}>
         <NormalInput
           type="text"
-          value={form.username}
+          value={form.identifier}
           isRequired={true}
-          label="Username"
-          name="username"
+          label="Username or email"
+          name="identifier"
           onChange={onChange}
         />
 

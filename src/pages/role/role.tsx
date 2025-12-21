@@ -35,13 +35,19 @@ type PopUpOpen = {
   isUpdateOpen: boolean;
 };
 
-const Popup = React.memo(function({
+const Popup = React.memo(function ({
   popupOpen,
   setOpen,
   handleAddRole,
   handleUpdateRole,
   id,
-}: any) {
+}: {
+  popupOpen: PopUpOpen;
+  setOpen: React.Dispatch<React.SetStateAction<PopUpOpen>>;
+  handleAddRole: (roleData: ICreateRoleRequest) => Promise<void>;
+  handleUpdateRole: (roleData: IUpdateRoleRequest) => Promise<void>;
+  id: string | undefined;
+}) {
   console.log("Dialog component re-rendered");
   return (
     <Dialog open={popupOpen.isCreateOpen || popupOpen.isUpdateOpen}>
@@ -50,7 +56,6 @@ const Popup = React.memo(function({
           onSubmit={popupOpen.isCreateOpen ? handleAddRole : handleUpdateRole}
           setOpen={setOpen}
           roleId={popupOpen.isCreateOpen ? undefined : id}
-          isOpen={popupOpen.isCreateOpen || popupOpen.isUpdateOpen}
           mode={popupOpen.isCreateOpen ? "create" : "update"}
         />
       )}
@@ -113,21 +118,6 @@ export default function RolePage() {
           placeholder: "Search by description...",
           variant: "text",
           //icon: Text,
-        },
-        enableColumnFilter: true,
-      },
-      {
-        id: "guard",
-        accessorKey: "guard",
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Guard" />
-        ),
-        cell: ({ row }) => <div>{row.getValue("guard") ?? "__"}</div>,
-        meta: {
-          label: "Guard",
-          placeholder: "Search by description...",
-          variant: "text",
-          //icon: Text ,
         },
         enableColumnFilter: true,
       },

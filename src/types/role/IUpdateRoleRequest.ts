@@ -1,3 +1,3 @@
-import { IRole } from "./IRole";
+import { IRoleRequest } from "./IRole";
 
-export default interface IUpdateRoleRequest extends IRole {}
+export default interface IUpdateRoleRequest extends IRoleRequest {}

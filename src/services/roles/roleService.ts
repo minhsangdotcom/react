@@ -6,7 +6,7 @@ import {
 import IQueryParam from "@/src/types/IQueryParam";
 import IResponse from "@/src/types/IResponse";
 import ICreateRoleRequest from "@/src/types/role/ICreateRoleRequest";
-import { IRole } from "@/src/types/role/IRole";
+import { IRole, IRoleResponse } from "@/src/types/role/IRole";
 import IUpdateRoleRequest from "@/src/types/role/IUpdateRoleRequest";
 import { send } from "@/src/utils/api/client";
 import { IApiResult } from "@/src/utils/api/IApiResult";
@@ -26,7 +26,7 @@ export const roleService = {
     request: ICreateRoleRequest
   ): Promise<
     IApiResult<
-      IResponse<IRole>,
+      IResponse<IRoleResponse>,
       IBadRequestError | IUnauthorizedError | IForbiddenError
     >
   > {
@@ -43,7 +43,7 @@ export const roleService = {
     id: string
   ): Promise<
     IApiResult<
-      IResponse<IRole>,
+      IResponse<IRoleResponse>,
       IBadRequestError | IUnauthorizedError | IForbiddenError
     >
   > {
@@ -54,7 +54,7 @@ export const roleService = {
     request: IUpdateRoleRequest
   ): Promise<
     IApiResult<
-      IResponse<IRole>,
+      IResponse<IRoleResponse>,
       IBadRequestError | IUnauthorizedError | IForbiddenError
     >
   > {

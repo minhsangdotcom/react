@@ -1,7 +1,3 @@
-import { IRoleClaim } from "./IRole";
+import { IRoleRequest } from "./IRole";
 
-export default interface ICreateRoleRequest {
-  name: string;
-  description: string;
-  roleClaims: Array<IRoleClaim>;
-}
+export default interface ICreateRoleRequest extends IRoleRequest {}
