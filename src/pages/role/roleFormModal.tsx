@@ -16,6 +16,7 @@ import {
   IPermissionResponse,
 } from "@/src/types/permission/IPermission";
 import { IRoleResponse } from "@/src/types/role/IRole";
+import { is } from "date-fns/locale";
 
 function mapPermission(permission: any): IPermission {
   return {
@@ -145,31 +146,33 @@ function collectCheckedParents(list: IPermission[]): string[] {
   ]);
 }
 
-function flattenRolePermissions(list: IPermissionResponse[]): Set<string> {
-  const result = new Set<string>();
-
-  const walk = (p: IPermissionResponse) => {
-    result.add(p.code);
-    p.children?.forEach(walk);
-  };
-
-  list.forEach(walk);
-  return result;
+function getCheckedPermissions(
+  list: IPermissionResponse[],
+  permissions: IPermission[]
+): Array<{ id: string; permissionId: string }> {
+  return permissions
+    .flatMap((p) => ({
+      id: p.id,
+      permissionId: p.permissionId,
+    }))
+    .filter((p) => list.some((lp) => lp.id === p.permissionId));
 }
 
-function markCheckedFromRole(
+function markAsChecked(
   list: IPermission[],
-  checkedCodes: Set<string>,
-  parentChecked = false
+  checkedCodes: Array<{ id: string; permissionId: string }>,
+  isInherited = false
 ): IPermission[] {
   return list.map((node) => {
-    const isChecked = checkedCodes.has(node.code) || parentChecked;
-
+    let isChecked =
+      checkedCodes.some(
+        (c) => c.permissionId === node.permissionId && c.id === node.id
+      ) || isInherited;
     return {
       ...node,
       checked: isChecked,
-      inherited: parentChecked,
-      children: markCheckedFromRole(node.children, checkedCodes, isChecked),
+      inherited: isInherited,
+      children: markAsChecked(node.children, checkedCodes, isChecked),
     };
   });
 }
@@ -212,7 +215,6 @@ export default function AddRoleModal({
     }
 
     const permissions = apiResults.data.results as IGroupPermissionResponse[];
-
     let groups = mapPermissionGroups(permissions);
 
     if (mode === "update") {
@@ -222,12 +224,20 @@ export default function AddRoleModal({
       setName(role?.name || "");
       setDescription(role?.description || "");
 
-      const checkedCodes = flattenRolePermissions(role.permissions);
-
-      groups = groups.map((g) => ({
-        ...g,
-        permissions: markCheckedFromRole(g.permissions, checkedCodes),
-      }));
+      const checkedPermissions = getCheckedPermissions(
+        role.permissions,
+        groups.flatMap((g) => g.permissions)
+      );
+      groups = groups.map((g) => {
+        const updatedPermission = markAsChecked(
+          g.permissions,
+          checkedPermissions
+        );
+        return {
+          ...g,
+          permissions: updatedPermission,
+        };
+      });
     }
 
     setGroups(groups);
@@ -267,6 +277,7 @@ export default function AddRoleModal({
       }))
     );
   };
+
   const handleSubmit = (e: any) => {
     e.preventDefault();
 
