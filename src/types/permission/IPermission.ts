@@ -31,6 +31,7 @@ export interface IGroupPermissionResponse {
 
 export interface IPermissionResponse extends IEntity, IAuditable {
   code: string;
+  name: string;
   group: string;
   description: string; 
   children: IPermissionResponse[];

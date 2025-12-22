@@ -7,19 +7,19 @@ import {
   INotFoundError,
   IUnauthorizedError,
 } from "../../types/IError";
-import { IUser } from "../../types/user/IUser";
 import Configs from "../../config/authConfigs";
 import localStorageHelper from "../../utils/storages/localStorageHelper";
 import { ILoginResponse } from "@/src/types/Auth/ILoginResponse";
 import { ITokenResponse } from "@/src/types/Auth/ITokenResponse";
 import { ILoginRequest } from "@/src/types/Auth/ILoginRequest";
+import { IUserProfileResponse } from "@/src/types/user/IUserProfile";
 
 interface IAuthState extends IAuthInfo {
   isLoading: boolean;
   error: any;
 }
 interface IAuthInfo {
-  user?: IUser | null;
+  user?: IUserProfileResponse | null;
   token?: string | null;
   refreshToken?: string | null;
 }
@@ -150,7 +150,7 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(profileAsync.fulfilled, (state: IAuthState, action) => {
-        const result = action.payload.data as IResponse<IUser>;
+        const result = action.payload.data as IResponse<IUserProfileResponse>;
         const user = result?.results;
 
         const authInfo = localStorageHelper.get<IAuthInfo>(Configs.authInfoKey);

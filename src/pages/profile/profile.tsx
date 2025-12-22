@@ -1,135 +1,40 @@
 import "./profile.css";
-import Select, { SingleValue } from "react-select";
-import "react-datepicker/dist/react-datepicker.css";
-import DatePicker from "react-datepicker";
 import { useAuth } from "../../hooks/useAuth";
 import LoadingPage from "../../components/loading";
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
-import { regionService } from "../../services/regions/regionService";
-import { ICommune, IDistrict, IProvince } from "../../types/regions/IRegion";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import authService from "../../services/auth/authService";
-import IUpdateProfileRequest from "../../types/user/IUpdateProfileRequest";
-import { IUser } from "../../types/user/IUser";
 import LoadingButton from "../../components/loadingButton";
+import {
+  IUserProfile,
+  IUserProfileResponse,
+} from "@/src/types/user/IUserProfile";
+import Select from "react-select";
+import { Gender } from "@/src/types/user/gender";
+import { DateInput } from "@mantine/dates";
 
-import { Tooltip } from "react-tooltip";
-type Region = {
-  provinces: Array<IProvince>;
-  districts: Array<IProvince>;
-  communes: Array<IProvince>;
-};
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 
-async function fetchDistrict(id: string) {
-  return await regionService.listDistrict({
-    filter: { provinceId: { $eq: id } },
-  });
-}
+dayjs.extend(utc);
 
-async function fetchCommune(id: string) {
-  return await regionService.listCommune({
-    filter: { districtId: { $eq: id } },
-  });
-}
-
-const toRequest = (user: IUser): IUpdateProfileRequest => ({
+const toUserProfile = (user: IUserProfileResponse): IUserProfile => ({
   firstName: user?.firstName!,
   lastName: user?.lastName!,
-  dayOfBirth: user?.dayOfBirth!,
+  dateOfBirth: user?.dateOfBirth!,
   email: user?.email!,
-  provinceId: user?.address?.provinceId!,
-  districtId: user?.address?.districtId!,
-  communeId: user?.address?.communeId!,
-  province: user?.address?.province,
-  district: user?.address?.district,
-  commune: user?.address?.commune,
-  street: user?.address?.street,
   phoneNumber: user?.phoneNumber!,
   avatar: user?.avatar!,
+  gender: user?.gender!,
 });
 
 export default function profilePage() {
-  const currentDate = new Date();
-  const { user, isLoading } = useAuth();
+  const { currentUser, isLoading } = useAuth();
 
-  const [startDate, setStartDate] = useState<Date>(new Date("1990-01-01"));
   const [currentLoading, setCurrentLoading] = useState<boolean>(false);
-  const [region, setRegion] = useState<Region>({
-    provinces: [],
-    districts: [],
-    communes: [],
-  });
-  const [userRequest, setUserRequest] = useState<IUpdateProfileRequest>({});
-
-  const [avatar, setAvatar] = useState<File | null>(null);
-
-  const pRef = useRef<HTMLParagraphElement>(null);
-  const [isTruncated, setIsTruncated] = useState(false);
-
-  const fullAddress = getFullAddress(
-    userRequest.street!,
-    userRequest.commune!,
-    userRequest.district!,
-    userRequest.province!
+  const [userProfile, setUserProfile] = useState<IUserProfile>(
+    {} as IUserProfile
   );
-
-  const onChangeProvince = (
-    e: SingleValue<{ value: string | undefined; label: string | undefined }>
-  ) => {
-    setUserRequest((pre) => ({
-      ...pre,
-      provinceId: e?.value,
-      province: e?.label,
-    }));
-
-    fetchDistrict(e?.value!)
-      .then((result) => {
-        const districts = result.data?.results?.data as any as Array<IDistrict>;
-        setRegion((pre) => ({ ...pre, districts }));
-        setUserRequest((pre) => ({
-          ...pre,
-          districtId: districts[0]?.id,
-          district: districts[0]?.fullName,
-        }));
-      })
-      .catch((error) => {
-        console.log("🚀 ~ profilePage ~ error:", error);
-      });
-  };
-
-  const onChangeDistrict = (
-    e: SingleValue<{ value: string | undefined; label: string | undefined }>
-  ) => {
-    setUserRequest((pre) => ({
-      ...pre!,
-      districtId: e?.value,
-      district: e?.label,
-    }));
-    fetchCommune(e?.value!)
-      .then((result) => {
-        const communes = result.data?.results?.data as any as Array<ICommune>;
-        setRegion((pre) => ({ ...pre, communes }));
-        setUserRequest((pre) => ({
-          ...pre,
-          communeId: communes[0]?.id,
-          commune: communes[0]?.fullName,
-        }));
-      })
-      .catch((error) => {
-        console.log("🚀 ~ profilePage ~ error:", error);
-      });
-  };
-  const onChangeCommune = (
-    e: SingleValue<{
-      value: string | null | undefined;
-      label: string | null | undefined;
-    }>
-  ) => {
-    setUserRequest((pre) => ({
-      ...pre!,
-      communeId: e?.value,
-      commune: e?.label,
-    }));
-  };
+  const [avatar, setAvatar] = useState<File | null>(null);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const img = e.target.files?.[0];
@@ -138,16 +43,20 @@ export default function profilePage() {
       return;
     }
     setAvatar(img);
-    setUserRequest((pre) => ({ ...pre, avatar: URL.createObjectURL(img) }));
+    setUserProfile((pre) => ({ ...pre, avatar: URL.createObjectURL(img) }));
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const formData = new FormData();
 
-    Object.entries(userRequest).forEach(([key, val]) => {
+    Object.entries(userProfile).forEach(([key, val]) => {
       if (val == null) return;
       if (key === "avatar") return;
+      if (key === "dateOfBirth") {
+        formData.append(key, dayjs(val).utc().format());
+        return;
+      }
 
       formData.append(key, String(val));
     });
@@ -161,64 +70,27 @@ export default function profilePage() {
 
     if (result.isSuccess) {
       const data = result.data?.results;
-      setUserRequest((pre) => ({
+      setUserProfile((pre) => ({
         ...pre,
-        avatar: data?.avatar ? data?.avatar : "/images/default-avatar.png",
+        avatar: data?.avatar ? data.avatar : "/images/default-avatar.png",
       }));
     }
     setCurrentLoading(false);
   };
 
+  const genderOptions = Object.values(Gender)
+    .filter((v) => typeof v === "number")
+    .map((v) => ({
+      value: v as Gender,
+      label: Gender[v as Gender],
+    }));
+
   useEffect(() => {
-    if (!user) {
+    if (!currentUser) {
       return;
     }
-    setUserRequest(toRequest(user));
-    async function fetchRegionData() {
-      setCurrentLoading(true);
-      try {
-        const provRes = await regionService.listProvince({});
-        const provinces = (provRes.data?.results?.data ?? []) as IProvince[];
-
-        setRegion((prev) => ({ ...prev, provinces }));
-
-        let districts = [] as Array<IDistrict>;
-        if (provinces.length > 0) {
-          const firstProvinceId = user?.address?.provinceId ?? provinces[0].id;
-          const distRes = await fetchDistrict(firstProvinceId);
-          districts = (distRes.data?.results?.data ?? []) as IDistrict[];
-          setRegion((prev) => ({ ...prev, districts }));
-        }
-
-        if (districts.length > 0) {
-          const firstDistrictId = user?.address?.districtId ?? districts[0].id;
-          const communeRes = await fetchCommune(firstDistrictId);
-          const communes = (communeRes.data?.results?.data ?? []) as ICommune[];
-          setRegion((prev) => ({ ...prev, communes }));
-        }
-      } catch (err) {
-        console.error("Error fetching region data", err);
-      } finally {
-        setCurrentLoading(false);
-      }
-    }
-
-    fetchRegionData();
-  }, [user]);
-
-  useEffect(() => {
-    const el = pRef.current as HTMLParagraphElement | null;
-    if (!el) return;
-
-    const checkTruncation = () => {
-      const truncated = el.scrollHeight > el.clientHeight;
-      setIsTruncated(truncated);
-    };
-
-    checkTruncation();
-    window.addEventListener("resize", checkTruncation);
-    return () => window.removeEventListener("resize", checkTruncation);
-  }, [fullAddress]);
+    setUserProfile(toUserProfile(currentUser));
+  }, [currentUser]);
 
   if (isLoading && currentLoading) {
     return <LoadingPage />;
@@ -229,7 +101,7 @@ export default function profilePage() {
       <div className="profile-header">
         <div className="relative flex-none">
           <img
-            src={userRequest.avatar ?? "/images/default-avatar.png"}
+            src={userProfile.avatar ?? "/images/default-avatar.png"}
             alt="Avatar"
             className="rounded-full w-30"
           />
@@ -249,30 +121,8 @@ export default function profilePage() {
         </div>
         <div className="profile-info flex-1 min-w-0 pl-2 md:pl-1">
           <h2>
-            {userRequest?.firstName} {userRequest?.lastName}
+            {userProfile?.firstName} {userProfile?.lastName}
           </h2>
-          <div className="subheading line-clamp-3 text-sm">
-            <p
-              data-tooltip-id="address-tooltip"
-              ref={pRef}
-              {...(isTruncated && {
-                "data-tooltip-id": "address-tooltip",
-                "data-tooltip-content": fullAddress,
-              })}
-            >
-              {fullAddress && fullAddress}
-            </p>
-          </div>
-          <Tooltip
-            id="address-tooltip"
-            place="top"
-            className="address-tooltip whitespace-normal break-words max-w-xs rounded-lg shadow-lg"
-            border={"1px solid #fff"}
-            style={{
-              zIndex: 9999,
-              borderRadius: "14px",
-            }}
-          />
         </div>
       </div>
 
@@ -282,9 +132,9 @@ export default function profilePage() {
             <label>First Name</label>
             <input
               name="firstName"
-              value={userRequest?.firstName}
+              value={userProfile?.firstName}
               onChange={(e) =>
-                setUserRequest((pre) => ({ ...pre, firstName: e.target.value }))
+                setUserProfile((pre) => ({ ...pre, firstName: e.target.value }))
               }
             />
           </div>
@@ -292,9 +142,9 @@ export default function profilePage() {
             <label>Last Name</label>
             <input
               name="lastName"
-              value={userRequest?.lastName}
+              value={userProfile?.lastName}
               onChange={(e) =>
-                setUserRequest((pre) => ({ ...pre, lastName: e.target.value }))
+                setUserProfile((pre) => ({ ...pre, lastName: e.target.value }))
               }
             />
           </div>
@@ -306,9 +156,9 @@ export default function profilePage() {
             <input
               name="email"
               type="email"
-              value={userRequest?.email}
+              value={userProfile?.email}
               onChange={(e) =>
-                setUserRequest((pre) => ({ ...pre!, email: e.target.value }))
+                setUserProfile((pre) => ({ ...pre!, email: e.target.value }))
               }
             />
           </div>
@@ -316,9 +166,9 @@ export default function profilePage() {
             <label>Phone Number</label>
             <input
               name="phone"
-              value={user?.phoneNumber}
+              value={userProfile?.phoneNumber}
               onChange={(e) =>
-                setUserRequest((pre) => ({
+                setUserProfile((pre) => ({
                   ...pre!,
                   phoneNumber: e.target.value,
                 }))
@@ -329,77 +179,46 @@ export default function profilePage() {
 
         <div className="row">
           <div className="field">
-            <label>Day of Birth</label>
-            <DatePicker
-              selected={user?.dayOfBirth ?? startDate}
-              onChange={(date) => setStartDate(date!)}
-              dateFormat="dd-MM-yyyy"
-              placeholderText="DD-MM-yyyy"
-              minDate={new Date(currentDate.getFullYear() - 100, 0, 1)}
-              maxDate={new Date(currentDate.getFullYear() - 18, 11, 31)}
-              showMonthDropdown
-              showYearDropdown
-              dropdownMode="select"
-            />
-          </div>
-          <div className="field">
-            <label>Province</label>
-            <Select
-              name="province"
-              styles={customStyles}
-              options={region.provinces?.map((x) => ({
-                value: x.id,
-                label: x.fullName,
-              }))}
-              value={{
-                value: userRequest.provinceId,
-                label: userRequest.province,
+            <label>Date of Birth</label>
+            <DateInput
+              value={userProfile.dateOfBirth}
+              onChange={(date) => {
+                console.log("🚀 ~ profilePage ~ date:", date);
+
+                setUserProfile((pre) => ({
+                  ...pre,
+                  dateOfBirth: date ?? undefined,
+                }));
               }}
-              onChange={onChangeProvince}
+              allowDeselect
+              maxDate={new Date(new Date().getFullYear() - 18, 11, 31)}
+              minDate={new Date(new Date().getFullYear() - 100, 0, 1)}
+              valueFormat="DD/MM/YYYY"
+              placeholder="Date of Birth"
             />
           </div>
+
           <div className="field">
-            <label>District</label>
+            <label>Gender</label>
             <Select
-              name="district"
               styles={customStyles}
-              options={region.districts?.map((x) => ({
-                value: x.id,
-                label: x.fullName,
-              }))}
-              value={{
-                value: userRequest.districtId,
-                label: userRequest.district,
+              options={genderOptions}
+              value={
+                userProfile.gender
+                  ? {
+                      value: userProfile.gender,
+                      label: Gender[userProfile.gender],
+                    }
+                  : null
+              }
+              onChange={(option) => {
+                setUserProfile((prev) => ({
+                  ...prev,
+                  gender: option?.value as Gender,
+                }));
               }}
-              onChange={onChangeDistrict}
             />
           </div>
-          <div className="field">
-            <label>Commune</label>
-            <Select
-              name="commune"
-              styles={customStyles}
-              options={region.communes?.map((x) => ({
-                value: x.id,
-                label: x.fullName,
-              }))}
-              value={{
-                value: userRequest.communeId,
-                label: userRequest.commune,
-              }}
-              onChange={onChangeCommune}
-            />
-          </div>
-        </div>
-        <div className="full-row">
-          <label>Street</label>
-          <textarea
-            name="street"
-            value={userRequest.street}
-            onChange={(e) =>
-              setUserRequest((pre) => ({ ...pre!, street: e.target.value }))
-            }
-          />
         </div>
 
         <div className="btn-wrapper">
@@ -415,13 +234,6 @@ export default function profilePage() {
   );
 }
 
-const getFullAddress = (
-  street: string,
-  commune: string,
-  district: string,
-  province: string
-) => [street, commune, district, province].join(", ");
-
 const customStyles = {
   control: (base: any) => ({
     ...base,
@@ -431,7 +243,7 @@ const customStyles = {
     boxShadow: "none",
     background: "white",
     cursor: "pointer",
-    "&:hover": { borderColor: "#31A2C6" },
+    height: "47px",
   }),
   menu: (base: any) => ({
     ...base,

@@ -13,6 +13,7 @@ import IResetpasswordRequest from "@/src/types/Auth/IResetPasswordRequest";
 import { ILoginResponse } from "@/src/types/Auth/ILoginResponse";
 import { ITokenResponse } from "@/src/types/Auth/ITokenResponse";
 import { ILoginRequest } from "@/src/types/Auth/ILoginRequest";
+import { IUserProfile, IUserProfileResponse } from "@/src/types/user/IUserProfile";
 
 const authService = {
   login: async function (
@@ -24,7 +25,7 @@ const authService = {
   },
   getProfile: async function (): Promise<
     IApiResult<
-      IResponse<IUser>,
+      IResponse<IUserProfileResponse>,
       IBadRequestError | IForbiddenError | IUnauthorizedError
     >
   > {
@@ -34,7 +35,7 @@ const authService = {
     request: FormData
   ): Promise<
     IApiResult<
-      IResponse<IUser>,
+      IResponse<IUserProfileResponse>,
       IBadRequestError | IForbiddenError | IUnauthorizedError
     >
   > {

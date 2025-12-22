@@ -1,8 +1,8 @@
 import { useEffect, useLayoutEffect, useState } from "react";
 import { apiClient } from "../utils/api/client";
 import { logout, profileAsync, refreshAsync } from "../store/auth/authSlice";
-import { IUser } from "../types/user/IUser";
 import { useAppDispatch, useAppSelector } from "../store/hook";
+import { IUserProfileResponse } from "../types/user/IUserProfile";
 
 let refreshInProgress: Promise<string> | null = null;
 
@@ -14,7 +14,9 @@ export function useAuth() {
     user: initUser,
     isLoading,
   } = useAppSelector((s) => s.auth);
-  const [user, setUser] = useState<IUser | null>(initUser ?? null);
+  const [user, setUser] = useState<IUserProfileResponse | null>(
+    initUser ?? null
+  );
 
   useLayoutEffect(() => {
     const id1 = apiClient.interceptors.request.use((cfg: any) => {
@@ -86,7 +88,7 @@ export function useAuth() {
       return;
     }
     dispatch(profileAsync()).then((response: any) => {
-      const result = response.payload?.data?.results as IUser;
+      const result = response.payload?.data?.results as IUserProfileResponse;
       if (result) {
         setUser({ ...result });
       }
@@ -94,7 +96,7 @@ export function useAuth() {
   }, []);
 
   return {
-    user,
+    currentUser: user,
     setUser,
     token,
     refreshToken,

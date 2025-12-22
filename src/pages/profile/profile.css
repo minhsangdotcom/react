@@ -98,11 +98,24 @@
   outline: none;
   border-color: #5bc0de;
 }
-.react-datepicker-wrapper {
-  width: 100%;
-}
-
 .edit-icon {
   right: 7px;
   bottom: 5px;
+}
+
+.field .mantine-DatePicker-input,
+.field .mantine-Input-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #b4afaf;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.field .mantine-DatePicker-input:focus,
+.field .mantine-Input-input:focus {
+  outline: none;
+  border-color: #5bc0de;
 }
