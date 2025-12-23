@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Poppins:wght@400;600&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -113,11 +114,22 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+@theme {
+  --color-brand-primary: #18181b;
+  --color-brand-primary-hover: #27272a;
+
+  --radius-md: 0.375rem;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
+  }
+  :root {
+    --font-sans: "Inter", sans-serif;
+    --font-alt: "Poppins", sans-serif;
   }
 }

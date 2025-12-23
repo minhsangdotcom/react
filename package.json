@@ -9,7 +9,6 @@
     "lint:fix": "eslint 'src/**/*.{js,jsx,ts,tsx}' --fix"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.8",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^22.13.13",
     "@types/react": "^19.0.12",
@@ -52,6 +51,7 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tooltip": "^1.2.7",
     "@reduxjs/toolkit": "^2.8.2",
+    "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-table": "^8.21.3",
     "@vitejs/plugin-react": "^5.1.2",
     "axios": "^1.9.0",

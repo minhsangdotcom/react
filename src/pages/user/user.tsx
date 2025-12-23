@@ -32,7 +32,6 @@ import filterParser from "@/src/utils/queryParams/filterParser";
 import { DataTableFilterMenu } from "@/src/components/data-table/data-table-filter-menu";
 import { IPageInfo } from "@/src/types/IResponse";
 import { Checkbox } from "@/src/components/ui/checkbox";
-import IFilter from "@/src/types/IFilterType";
 import localStorageHelper from "@/src/utils/storages/localStorageHelper";
 import LoadingPage from "@/src/components/loading";
 dayjs.extend(utc);
@@ -129,55 +128,23 @@ export default function UserPage() {
         enableColumnFilter: true,
       },
       {
-        id: "dayOfBirth",
-        accessorKey: "dayOfBirth",
+        id: "dateOfBirth",
+        accessorKey: "dateOfBirth",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Day of birth" />
+          <DataTableColumnHeader column={column} title="Date of birth" />
         ),
         cell: ({ row }) => (
           <div>
             {dayjs
-              .utc(row.getValue("dayOfBirth"))
+              .utc(row.getValue("dateOfBirth"))
               .tz(dayjs.tz.guess())
               .format("DD/MM/YYYY")}
           </div>
         ),
         meta: {
-          label: "Day of birth",
-          placeholder: "Search by Day of birth...",
+          label: "Date of birth",
+          placeholder: "Search by Date of birth...",
           variant: "date",
-        },
-        enableColumnFilter: true,
-      },
-      {
-        id: "address",
-        accessorKey: "address",
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Address" />
-        ),
-        cell: ({ row }) => {
-          const address = row.getValue("address") as {
-            street?: string;
-            commune?: string;
-            district?: string;
-            province?: string;
-          };
-
-          const fullAddress = [
-            address?.street,
-            address?.commune,
-            address?.district,
-            address?.province,
-          ]
-            .filter(Boolean)
-            .join(", ");
-
-          return <div>{fullAddress}</div>;
-        },
-        meta: {
-          label: "Address",
-          placeholder: "Search by Day of userAddress...",
-          variant: "text",
         },
         enableColumnFilter: true,
       },
@@ -293,38 +260,6 @@ export default function UserPage() {
       return;
     }
     console.log("🚀 ~ useEffect ~ query:", query);
-    var address = query.filter.info?.find((x) => x.id == "address");
-
-    if (address) {
-      const addressFilter = [
-        {
-          id: "address.province",
-          value: address?.value,
-          operator: address?.operator,
-          variant: address?.variant,
-        },
-        {
-          id: "address.district",
-          value: address?.value,
-          operator: address?.operator,
-          variant: address?.variant,
-        },
-        {
-          id: "address.commune",
-          value: address?.value,
-          operator: address?.operator,
-          variant: address?.variant,
-        },
-        {
-          id: "address.street",
-          value: address?.value,
-          operator: address?.operator,
-          variant: address?.variant,
-        },
-      ] as IFilter[];
-      query["filter"]["info"] = addressFilter;
-      query["filter"]["logicalOperator"] = "$or";
-    }
 
     const params = filterParser.parse(query ?? {});
     setLoading(true);
@@ -365,7 +300,7 @@ export default function UserPage() {
         <div className="custom-table p-4 bg-white">
           {/* Add Button aligned to the right */}
           <div className="flex justify-end mb-4">
-            <button className="bg-blue-300 text-white font-medium px-8 py-2 rounded-lg shadow-sm hover:bg-blue-500 transition">
+            <button className="bg-brand-primary text-white font-medium px-8 py-2 rounded-lg shadow-sm hover:bg-brand-primary-hover transition">
               Add new
             </button>
           </div>

@@ -50,6 +50,29 @@
   --tw-ring-shadow: none;
   border-color: #00c3ff;
 }
+/* sort button*/
+div[data-slot="popover-content"]
+  > div.flex.w-full.items-center
+  > button[data-slot="button"] {
+  background-color: hsl(221 83% 53%);
+  color: white;
+}
+
+/* Hover */
+div[data-slot="popover-content"]
+  > div.flex.w-full.items-center
+  > button[data-slot="button"]:hover {
+  background-color: hsl(221 83% 45%);
+}
+
+/* Focus */
+div[data-slot="popover-content"]
+  > div.flex.w-full.items-center
+  > button[data-slot="button"]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(221 83% 70%);
+}
+
 
 /* [data-radix-popper-content-wrapper],
 [data-slot="popover-trigger"],

@@ -2,10 +2,12 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import { createHtmlPlugin } from "vite-plugin-html";
+import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [
     react(),
+    tailwindcss(),
     createHtmlPlugin({
       entry: "src/main.tsx",
       template: "index.html",

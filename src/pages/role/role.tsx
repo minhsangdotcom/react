@@ -6,7 +6,6 @@ import { roleService } from "@/src/services/roles/roleService";
 import { IRole } from "@/src/types/role/IRole";
 import { useAuth } from "@/src/hooks/useAuth";
 import { DataTable } from "@/src/components/data-table/data-table";
-import "./role.css";
 
 import LoadingPage from "@/src/components/loading";
 import { defaultParams } from "@/src/types/Params";
@@ -274,7 +273,7 @@ export default function RolePage() {
           {/* Add Button aligned to the right */}
           <div className="flex justify-end mb-4">
             <button
-              className="bg-blue-300 text-white font-medium px-8 py-2 rounded-lg shadow-sm hover:bg-blue-500 transition"
+              className="bg-brand-primary text-white font-medium px-8 py-2 rounded-lg shadow-sm hover:bg-brand-primary-hover transition"
               onClick={(_) => {
                 setOpen({ isUpdateOpen: false, isCreateOpen: true });
                 setId(undefined);

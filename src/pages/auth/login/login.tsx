@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/src/store/hook";
 import { loginAsync } from "@/src/store/auth/authSlice";
 import NormalInput from "@/src/components/normalInput";
 import PasswordInput from "@/src/components/passwordInput";
+import LoadingButton from "@/src/components/loadingButton";
 
 const loginPage = () => {
   const [form, setForm] = useState<ILoginRequest>({
@@ -18,16 +19,21 @@ const loginPage = () => {
   const dispatch = useAppDispatch();
   const data = useAppSelector((store) => store.auth);
 
+  const isLoading = data.isLoading;
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isLoading) {
+      return;
+    }
     try {
       await dispatch(loginAsync(form)).unwrap();
       navigate("/");
     } catch (error) {
-      console.log("🚀 ~ onSubmit ~ error:", error)
+      console.log("🚀 ~ onSubmit ~ error:", error);
     }
   };
 
@@ -51,13 +57,15 @@ const loginPage = () => {
           name="password"
           onChange={onChange}
         />
-        <button type="submit" className="login-form-button">
-          Sign In
-        </button>
-        <Link
-          to={"/forgot-password"}
-          className="text-blue-600 forget-password-text"
-        >
+
+        <LoadingButton
+          loading={isLoading}
+          text="Sign In"
+          type="submit"
+          className="w-full p-3 text-base font-semibold text-white bg-brand-primary hover:bg-brand-primary-hover rounded cursor-pointer mb-[5px] disabled:opacity-50 disabled:cursor-not-allowed"
+        />
+
+        <Link to={"/forgot-password"} className="text-600 forget-password-text">
           Forget password
         </Link>
         {data.error?.en && <p className="error">* {data.error?.en}</p>}

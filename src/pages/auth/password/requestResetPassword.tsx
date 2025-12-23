@@ -23,6 +23,10 @@ export default function RequestResetPassword() {
       onSubmit={handleSubmit}
       className="p-5 max-sm:w-9/10 max-md:w-7/10 max-lg:w-5/10 max-xl:w-lg max-2xl:w-md rounded-lg shadow  mt-10 mx-auto p-10"
     >
+      <h2 className="text-xl font-semibold mb-2">Forgot your password?</h2>
+      <p className="text-muted-foreground mb-6">
+        Enter your email address and we’ll send you a reset link.
+      </p>
       <NormalInput
         label="Email"
         type="email"
