@@ -269,7 +269,7 @@ export default function RolePage() {
         </div>
 
         {/* Table Container */}
-        <div className="custom-table p-4 bg-white">
+        <div className="p-4 bg-white">
           {/* Add Button aligned to the right */}
           <div className="flex justify-end mb-4">
             <button

@@ -297,7 +297,7 @@ export default function UserPage() {
         </div>
 
         {/* Table Container */}
-        <div className="custom-table p-4 bg-white">
+        <div className="p-4 bg-white">
           {/* Add Button aligned to the right */}
           <div className="flex justify-end mb-4">
             <button className="bg-brand-primary text-white font-medium px-8 py-2 rounded-lg shadow-sm hover:bg-brand-primary-hover transition">

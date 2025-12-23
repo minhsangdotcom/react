@@ -1,4 +1,4 @@
-.custom-table table {
+/* .custom-table table {
   background-color: white;
   border-collapse: collapse;
   width: 100%;
@@ -8,15 +8,14 @@
 }
 
 .custom-table > div > div {
-  /* border-color: #5bc0de; */
   background-color: white;
-  border-collapse: separate; /* Important for border-radius to work */
+  border-collapse: separate;
   border-spacing: 0;
   width: 100%;
   border: none;
-  border-radius: 12px; /* Rounded corners */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Soft shadow */
-  overflow: hidden; /* Ensures inner content doesn't overflow rounded edges */
+  border-radius: 12px; 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
 .custom-table thead {
@@ -32,15 +31,15 @@
 .custom-table th {
   padding: 0.75rem;
   border-bottom: 1px solid #e5e7eb;
-}
+} */
 
-.custom-table thead tr,
+/* .custom-table thead tr,
 .custom-table thead tr th button {
   background-color: #5bc0de;
   color: #e5e7eb;
-}
+} */
 
-.custom-toolbar button,
+/* .custom-toolbar button,
 .custom-toolbar button,
 .custom-toolbar input {
   border-color: #5bc0de;
@@ -49,29 +48,29 @@
 .custom-toolbar input:focus-visible {
   --tw-ring-shadow: none;
   border-color: #00c3ff;
-}
+} */
 /* sort button*/
-div[data-slot="popover-content"]
+/* div[data-slot="popover-content"]
   > div.flex.w-full.items-center
   > button[data-slot="button"] {
   background-color: hsl(221 83% 53%);
   color: white;
-}
+} */
 
 /* Hover */
-div[data-slot="popover-content"]
+/* div[data-slot="popover-content"]
   > div.flex.w-full.items-center
   > button[data-slot="button"]:hover {
   background-color: hsl(221 83% 45%);
-}
+} */
 
 /* Focus */
-div[data-slot="popover-content"]
+/* div[data-slot="popover-content"]
   > div.flex.w-full.items-center
   > button[data-slot="button"]:focus-visible {
   outline: none;
   box-shadow: 0 0 0 2px hsl(221 83% 70%);
-}
+} */
 
 
 /* [data-radix-popper-content-wrapper],
@@ -118,3 +117,36 @@ div[data-slot="popover-content"]
   color: #000;
   border-color: #5bc0de;
 } */
+
+
+/* ===== TABLE HEADER SORT BUTTON UX FIX ===== */
+/* Remove focus ring */
+table thead th button[data-slot="dropdown-menu-trigger"]:focus,
+table thead th button[data-slot="dropdown-menu-trigger"]:focus-visible,
+table thead th button[data-slot="dropdown-menu-trigger"]:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+
+
+/* Remove hover background */
+table thead th button[data-slot="dropdown-menu-trigger"]:hover {
+  background-color: transparent;
+}
+
+/* Remove active / open background */
+table thead th button[data-slot="dropdown-menu-trigger"][data-state="open"] {
+  background-color: transparent;
+}
+
+/* Remove focus ring (mouse only) */
+table thead th button[data-slot="dropdown-menu-trigger"]:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Optional: smoother interaction */
+table thead th button[data-slot="dropdown-menu-trigger"] {
+  transition: color 0.15s ease;
+}

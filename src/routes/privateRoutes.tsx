@@ -5,6 +5,8 @@ import Home from "../pages/home/home";
 import RolePage from "../pages/role/role";
 import UserPage from "../pages/user/user";
 
+import "@/src/styles/tableStyle.css";
+
 const privateRoutes: RouteObject = {
   element: <PrivateRoute />,
   children: [
