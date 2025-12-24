@@ -1,18 +1,11 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import authService from "../../services/auth/authService";
+import { createSlice } from "@reduxjs/toolkit";
 import IResponse from "../../types/IResponse";
-import {
-  IBadRequestError,
-  IForbiddenError,
-  INotFoundError,
-  IUnauthorizedError,
-} from "../../types/IError";
 import Configs from "../../config/authConfigs";
 import localStorageHelper from "../../utils/storages/localStorageHelper";
 import { ILoginResponse } from "@/src/types/Auth/ILoginResponse";
 import { ITokenResponse } from "@/src/types/Auth/ITokenResponse";
-import { ILoginRequest } from "@/src/types/Auth/ILoginRequest";
 import { IUserProfileResponse } from "@/src/types/user/IUserProfile";
+import { loginAsync, profileAsync, refreshAsync } from "./authAction";
 
 interface IAuthState extends IAuthInfo {
   isLoading: boolean;
@@ -36,72 +29,12 @@ const initialState: IAuthState = {
   refreshToken,
 };
 
-export const loginAsync = createAsyncThunk(
-  "user/login",
-  async (credentials: ILoginRequest, thunkAPI) => {
-    const response = await authService.login(credentials);
-
-    if (response.error?.status === 400) {
-      const badRequestResponse = response.error as IBadRequestError;
-      return thunkAPI.rejectWithValue(badRequestResponse.errorDetails);
-    }
-
-    if (response.error?.status == 404) {
-      const notFoundResponse = response.error as INotFoundError;
-      return thunkAPI.rejectWithValue(notFoundResponse.errorDetails);
-    }
-
-    return response;
-  }
-);
-
-export const profileAsync = createAsyncThunk(
-  "user/profile",
-  async (_, thunkApi) => {
-    const response = await authService.getProfile();
-    if (response?.error?.status == 400) {
-      const badRequestError = response.error as IBadRequestError;
-      return thunkApi.rejectWithValue(badRequestError.errorDetails);
-    }
-
-    if (response?.error?.status == 403) {
-      const forbiddenError = response.error as IForbiddenError;
-      return thunkApi.rejectWithValue(forbiddenError.errorDetails);
-    }
-
-    if (response?.error?.status == 401) {
-      const forbiddenError = response.error as IUnauthorizedError;
-      return thunkApi.rejectWithValue(forbiddenError.errorDetails);
-    }
-
-    return response;
-  }
-);
-
-export const refreshAsync = createAsyncThunk(
-  "user/refreshToken",
-  async (token: string, thunkApi) => {
-    const response = await authService.refresh(token);
-    if (response?.error?.status == 400) {
-      const badRequestError = response.error as IBadRequestError;
-      return thunkApi.rejectWithValue(badRequestError.errorDetails);
-    }
-
-    if (response?.error?.status == 401) {
-      const unauthorizedRequestError = response.error as IUnauthorizedError;
-      return thunkApi.rejectWithValue(unauthorizedRequestError.errorDetails);
-    }
-
-    return response;
-  }
-);
-
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
     logout: (state: IAuthState) => {
-     localStorageHelper.remove(Configs.authInfoKey);
+      localStorageHelper.remove(Configs.authInfoKey);
       return {
         ...state,
         user: null,
