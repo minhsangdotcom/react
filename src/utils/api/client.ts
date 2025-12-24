@@ -91,7 +91,7 @@ async function send<TRequest, TResult, TError>(
     const result = (await apiClient(params)).data as TResult;
     return { isSuccess: true, data: result, error: null };
   } catch (error: any) {
-    const err = error.response.data as TError;
+    const err = error?.response?.data as TError;
     return { isSuccess: false, data: null, error: err };
   }
 }
