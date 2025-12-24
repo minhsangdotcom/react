@@ -7,13 +7,12 @@ import {
   IForbiddenError,
   IUnauthorizedError,
 } from "../../types/IError";
-import { IUser } from "../../types/user/IUser";
 import { IApiResult } from "../../utils/api/IApiResult";
 import IResetpasswordRequest from "@/src/types/Auth/IResetPasswordRequest";
 import { ILoginResponse } from "@/src/types/Auth/ILoginResponse";
 import { ITokenResponse } from "@/src/types/Auth/ITokenResponse";
 import { ILoginRequest } from "@/src/types/Auth/ILoginRequest";
-import { IUserProfile, IUserProfileResponse } from "@/src/types/user/IUserProfile";
+import { IUserProfileResponse } from "@/src/types/user/IUserProfile";
 
 const authService = {
   login: async function (
@@ -52,7 +51,7 @@ const authService = {
     IApiResult<IResponse<ITokenResponse>, IBadRequestError | IUnauthorizedError>
   > {
     return await send({
-      url: "users/refreshToken",
+      url: "users/refresh-token",
       method: "POST",
       data: { refreshToken },
     });
@@ -61,7 +60,7 @@ const authService = {
     email: string
   ): Promise<IApiResult<void, IBadRequestError | INotFoundError>> {
     return await send({
-      url: "users/requestResetPassword",
+      url: "users/request-reset-password",
       method: "POST",
       data: { email },
     });
@@ -71,11 +70,11 @@ const authService = {
     request: IResetpasswordRequest
   ): Promise<IApiResult<void, IBadRequestError | INotFoundError>> {
     return await send({
-      url: `users/${userId}/resetPassword`,
+      url: `users/${userId}/reset-password`,
       method: "PUT",
       data: { ...request },
     });
-  }
+  },
 };
 
 export default authService;

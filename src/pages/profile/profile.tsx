@@ -1,5 +1,4 @@
 import "./profile.css";
-import { useAuth } from "../../hooks/useAuth";
 import LoadingPage from "../../components/loading";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import authService from "../../services/auth/authService";
@@ -14,6 +13,8 @@ import { DateInput } from "@mantine/dates";
 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import { useAppDispatch } from "@/src/store/hook";
+import { profileAsync } from "@/src/features/auth/authAction";
 
 dayjs.extend(utc);
 
@@ -28,9 +29,8 @@ const toUserProfile = (user: IUserProfileResponse): IUserProfile => ({
 });
 
 export default function profilePage() {
-  const { currentUser, isLoading } = useAuth();
-
-  const [currentLoading, setCurrentLoading] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState<boolean>(false);
   const [userProfile, setUserProfile] = useState<IUserProfile>(
     {} as IUserProfile
   );
@@ -65,7 +65,7 @@ export default function profilePage() {
       formData.append("avatar", avatar, avatar.name);
     }
 
-    setCurrentLoading(true);
+    setLoading(true);
     var result = await authService.updateProfile(formData);
 
     if (result.isSuccess) {
@@ -75,7 +75,7 @@ export default function profilePage() {
         avatar: data?.avatar ? data.avatar : "/images/default-avatar.png",
       }));
     }
-    setCurrentLoading(false);
+    setLoading(false);
   };
 
   const genderOptions = Object.values(Gender)
@@ -86,13 +86,21 @@ export default function profilePage() {
     }));
 
   useEffect(() => {
-    if (!currentUser) {
-      return;
-    }
-    setUserProfile(toUserProfile(currentUser));
-  }, [currentUser]);
+    setLoading(true);
+    dispatch(profileAsync())
+      .then((response: any) => {
+        const profileResponse = response.payload?.data
+          ?.results as IUserProfileResponse;
+        if (profileResponse) {
+          setUserProfile(toUserProfile(profileResponse));
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
 
-  if (isLoading && currentLoading) {
+  if (loading) {
     return <LoadingPage />;
   }
 
@@ -223,7 +231,7 @@ export default function profilePage() {
 
         <div className="btn-wrapper">
           <LoadingButton
-            loading={currentLoading}
+            loading={loading}
             text="Save Changes"
             type="submit"
             className="save-btn"

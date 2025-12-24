@@ -11,7 +11,6 @@ import {
   DropdownMenuTrigger,
 } from "@/src/components/ui/dropdown-menu";
 import { useDataTable } from "@/src/hooks/use-data-table";
-import { useAuth } from "@/src/hooks/useAuth";
 import { defaultParams } from "@/src/types/Params";
 import { IUser } from "@/src/types/user/IUser";
 import { UserStatus } from "@/src/types/user/userStatus";
@@ -34,10 +33,11 @@ import { IPageInfo } from "@/src/types/IResponse";
 import { Checkbox } from "@/src/components/ui/checkbox";
 import localStorageHelper from "@/src/utils/storages/localStorageHelper";
 import LoadingPage from "@/src/components/loading";
+import { useAppSelector } from "@/src/store/hook";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 export default function UserPage() {
-  const { isLoading } = useAuth();
+  const { isLoading  } = useAppSelector((store) => store.auth);
   const { query } = useQueryParam();
 
   const [user, setUser] = useState<Array<IUser>>([]);

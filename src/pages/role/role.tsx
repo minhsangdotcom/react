@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { roleService } from "@/src/services/roles/roleService";
 import { IRole } from "@/src/types/role/IRole";
-import { useAuth } from "@/src/hooks/useAuth";
 import { DataTable } from "@/src/components/data-table/data-table";
 
 import LoadingPage from "@/src/components/loading";
@@ -26,6 +25,7 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import IUpdateRoleRequest from "@/src/types/role/IUpdateRoleRequest";
 import React from "react";
+import { useAppSelector } from "@/src/store/hook";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -63,7 +63,7 @@ const Popup = React.memo(function ({
 });
 
 export default function RolePage() {
-  const { isLoading } = useAuth();
+  const { isLoading  } = useAppSelector((store) => store.auth);
   const [role, setRole] = useState<Array<IRole>>();
 
   const [loading, setLoading] = useState<boolean>(false);

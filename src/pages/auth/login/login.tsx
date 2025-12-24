@@ -4,10 +4,10 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ILoginRequest } from "@/src/types/Auth/ILoginRequest";
 import { useAppDispatch, useAppSelector } from "@/src/store/hook";
-import { loginAsync } from "@/src/store/auth/authSlice";
 import NormalInput from "@/src/components/normalInput";
 import PasswordInput from "@/src/components/passwordInput";
 import LoadingButton from "@/src/components/loadingButton";
+import { loginAsync } from "@/src/features/auth/authAction";
 
 const loginPage = () => {
   const [form, setForm] = useState<ILoginRequest>({
