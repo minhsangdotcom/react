@@ -5,9 +5,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "../../components/ui/dialog";
+} from "../../components/shadcn/ui/dialog";
 import { ulid } from "ulidx";
-import { roleService } from "@/src/services/roles/roleService";
+import { roleService } from "@/src/services/role/roleService";
 import permissionService from "@/src/services/permission/permissionService";
 import {
   IGroupPermissionResponse,

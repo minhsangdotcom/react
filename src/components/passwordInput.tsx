@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./passwordInput.css";
+import "./password-input.css";
 
 type PasswordInputProps = {
   value: string;
@@ -7,7 +7,7 @@ type PasswordInputProps = {
   name?: string | undefined;
   label?: string;
   placeholder?: string;
-  isRequired : boolean
+  isRequired: boolean;
 };
 
 export default function PasswordInput(inputProps: PasswordInputProps) {
@@ -22,7 +22,7 @@ export default function PasswordInput(inputProps: PasswordInputProps) {
         type={isHidden ? "password" : "text"}
         value={value}
         onChange={onChange}
-        required = {isRequired}
+        required={isRequired}
         placeholder={placeholder}
       />
 

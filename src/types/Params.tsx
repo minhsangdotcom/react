@@ -1,4 +1,4 @@
-import IFilter from "./IFilterType";
+import IFilter from "./IFilter";
 
 export type Params = {
   filter: IFilterParam;

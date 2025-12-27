@@ -1,7 +1,7 @@
 import IResponse from "@/src/types/IResponse";
 import { IGroupPermissionResponse } from "@/src/types/permission/IPermission";
-import { send } from "@/src/utils/api/client";
-import { IApiResult } from "@/src/utils/api/IApiResult";
+import { send } from "@/src/utils/http/api";
+import { IApiResult } from "@/src/utils/http/IApiResult";
 
 const permissionService = {
   listPermission: async function (): Promise<

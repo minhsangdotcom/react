@@ -2,8 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import IResponse from "../../types/IResponse";
 import Configs from "../../config/authConfigs";
 import localStorageHelper from "../../utils/storages/localStorageHelper";
-import { ILoginResponse } from "@/src/types/Auth/ILoginResponse";
-import { ITokenResponse } from "@/src/types/Auth/ITokenResponse";
+import { ILoginResponse } from "@/src/types/auth/ILoginResponse";
+import { ITokenResponse } from "@/src/types/auth/ITokenResponse";
 import { IUserProfileResponse } from "@/src/types/user/IUserProfile";
 import { loginAsync, profileAsync, refreshAsync } from "./authAction";
 

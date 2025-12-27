@@ -6,8 +6,8 @@ import {
 import IQueryParam from "@/src/types/IQueryParam";
 import IResponse, { IPagination } from "@/src/types/IResponse";
 import { IUser } from "@/src/types/user/IUser";
-import { send } from "@/src/utils/api/client";
-import { IApiResult } from "@/src/utils/api/IApiResult";
+import { send } from "@/src/utils/http/api";
+import { IApiResult } from "@/src/utils/http/IApiResult";
 
 export const userService = {
   list: async function (

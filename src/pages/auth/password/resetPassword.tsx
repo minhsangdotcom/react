@@ -2,10 +2,9 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import authService from "../../../services/auth/authService";
 
-import LoadingButton from "../../../components/loadingButton";
+import LoadingButton from "../../../components/LoadingButton";
 
-import "./resetPassword.css";
-import PasswordInput from "../../../components/passwordInput";
+import PasswordInput from "../../../components/PasswordInput";
 
 export default function ResetPassword() {
   const [search] = useSearchParams();

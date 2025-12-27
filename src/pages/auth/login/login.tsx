@@ -2,14 +2,14 @@ import "./login.css";
 import { useState } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
-import { ILoginRequest } from "@/src/types/Auth/ILoginRequest";
+import { ILoginRequest } from "@/src/types/auth/ILoginRequest";
 import { useAppDispatch, useAppSelector } from "@/src/store/hook";
-import NormalInput from "@/src/components/normalInput";
-import PasswordInput from "@/src/components/passwordInput";
-import LoadingButton from "@/src/components/loadingButton";
+import NormalInput from "@/src/components/NormalInput";
+import PasswordInput from "@/src/components/PasswordInput";
+import LoadingButton from "@/src/components/LoadingButton";
 import { loginAsync } from "@/src/features/auth/authAction";
 
-const loginPage = () => {
+export default function Login() {
   const [form, setForm] = useState<ILoginRequest>({
     identifier: "chloe.kim",
     password: "Admin@123",
@@ -72,6 +72,4 @@ const loginPage = () => {
       </form>
     </div>
   );
-};
-
-export default loginPage;
+}

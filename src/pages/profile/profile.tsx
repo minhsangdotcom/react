@@ -1,14 +1,14 @@
 import "./profile.css";
-import LoadingPage from "../../components/loading";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { Loading } from "../../components/Loading";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import authService from "../../services/auth/authService";
-import LoadingButton from "../../components/loadingButton";
+import LoadingButton from "../../components/LoadingButton";
 import {
   IUserProfile,
   IUserProfileResponse,
 } from "@/src/types/user/IUserProfile";
 import Select from "react-select";
-import { Gender } from "@/src/types/user/gender";
+import { Gender } from "@/src/types/user/Gender";
 import { DateInput } from "@mantine/dates";
 
 import dayjs from "dayjs";
@@ -23,16 +23,23 @@ const toUserProfile = (user: IUserProfileResponse): IUserProfile => ({
   dateOfBirth: user?.dateOfBirth!,
   email: user?.email!,
   phoneNumber: user?.phoneNumber!,
-  avatar: user?.avatar!,
+  avatar: user?.avatar && user.avatar,
   gender: user?.gender!,
 });
 
-export default function profilePage() {
-  const { isLoading, user } = useAppSelector((store) => store.auth);
+export default function Profile() {
+  const { user, isLoading } = useAppSelector((store) => store.auth);
+
   const [loading, setLoading] = useState<boolean>(false);
-  const [userProfile, setUserProfile] = useState<IUserProfile>(
-    user ? toUserProfile(user) : ({} as IUserProfile)
-  );
+  const [userProfile, setUserProfile] = useState<IUserProfile>({
+    firstName: "",
+    lastName: "",
+    dateOfBirth: null,
+    email: "",
+    phoneNumber: "",
+    avatar: "/images/default-avatar.png",
+    gender: Gender.Male,
+  } as IUserProfile);
   const [avatar, setAvatar] = useState<File | null>(null);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -84,8 +91,15 @@ export default function profilePage() {
       label: Gender[v as Gender],
     }));
 
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+    setUserProfile(toUserProfile(user));
+  }, [user]);
+
   if (isLoading || loading) {
-    return <LoadingPage />;
+    return <Loading />;
   }
 
   return (
@@ -93,7 +107,7 @@ export default function profilePage() {
       <div className="profile-header">
         <div className="relative flex-none">
           <img
-            src={userProfile.avatar ?? "/images/default-avatar.png"}
+            src={userProfile?.avatar!}
             alt="Avatar"
             className="rounded-full w-30"
           />
@@ -173,7 +187,7 @@ export default function profilePage() {
           <div className="field">
             <label>Date of Birth</label>
             <DateInput
-              value={userProfile.dateOfBirth}
+              value={userProfile?.dateOfBirth}
               onChange={(date) => {
                 console.log("🚀 ~ profilePage ~ date:", date);
 

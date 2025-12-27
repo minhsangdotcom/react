@@ -1,25 +1,25 @@
-import { DataTableColumnHeader } from "@/src/components/data-table/data-table-column-header";
-import { useDataTable } from "@/src/hooks/use-data-table";
+import { DataTableColumnHeader } from "@/src/components/shadcn/data-table/data-table-column-header";
+import { useDataTable } from "@/src/hooks/shadcn/use-data-table";
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { roleService } from "@/src/services/roles/roleService";
+import { roleService } from "@/src/services/role/roleService";
 import { IRole } from "@/src/types/role/IRole";
-import { DataTable } from "@/src/components/data-table/data-table";
+import { DataTable } from "@/src/components/shadcn/data-table/data-table";
 
-import LoadingPage from "@/src/components/loading";
+import { Loading } from "@/src/components/Loading";
 import { defaultParams } from "@/src/types/Params";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/src/components/ui/dropdown-menu";
+} from "@/src/components/shadcn/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
-import { Button } from "@/src/components/ui/button";
-import RolePopup from "./rolePopup";
-import { Dialog } from "@/src/components/ui/dialog";
+import { Button } from "@/src/components/shadcn/ui/button";
+import RolePopup from "./RolePopup";
+import { Dialog } from "@/src/components/shadcn/ui/dialog";
 import ICreateRoleRequest from "@/src/types/role/ICreateRoleRequest";
-import { ConfirmDialog } from "@/src/components/confirmDialog";
+import { ConfirmDialog } from "@/src/components/ConfirmDialog";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
@@ -61,7 +61,7 @@ async function fetchRole() {
   return await roleService.list({});
 }
 
-export default function RolePage() {
+export default function Role() {
   const { isLoading } = useAppSelector((store) => store.auth);
   const [role, setRole] = useState<Array<IRole>>();
 
@@ -230,8 +230,6 @@ export default function RolePage() {
 
   useEffect(() => {
     if (!open && !dialogOpen) {
-      console.log("ssss");
-
       setLoading(true);
       fetchRole()
         .then((result) => {
@@ -249,7 +247,7 @@ export default function RolePage() {
   }, [open, dialogOpen]);
 
   if (loading || isLoading) {
-    return <LoadingPage />;
+    return <Loading />;
   }
 
   return (

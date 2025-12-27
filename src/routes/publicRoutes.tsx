@@ -1,8 +1,8 @@
 import { RouteObject } from "react-router-dom";
-import Login from "../pages/auth/login/login";
-import RequestResetPassword from "../pages/auth/password/requestResetPassword";
-import ResetPassword from "../pages/auth/password/resetPassword";
-import RequireGuest from "@/src/components/requireGuest";
+import Login from "../pages/auth/login/Login";
+import RequestResetPassword from "../pages/auth/password/RequestResetPassword";
+import ResetPassword from "../pages/auth/password/ResetPassword";
+import RequireGuest from "@/src/components/RequireGuest";
 
 const publicRoutes: RouteObject[] = [
   {

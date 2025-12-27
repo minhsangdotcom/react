@@ -1,17 +1,17 @@
-import React from "react";
 import { motion } from "framer-motion";
 
-const LoadingPage: React.FC = () => {
+export function Loading() {
   return (
     <motion.div
-      className="fixed inset-0 flex items-center justify-center bg-black z-[150]"
+      className="fixed inset-0 z-[150] flex items-center justify-center bg-black"
       initial={{ opacity: 0 }}
       animate={{ opacity: 0.4 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
       <div className="flex flex-col items-center space-y-4">
-        <div className="h-16 w-16 border-4 border-t-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+        <div className="h-16 w-16 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" />
+
         <motion.span
           className="text-xl font-medium text-gray-200"
           initial={{ y: 8, opacity: 0 }}
@@ -23,6 +23,4 @@ const LoadingPage: React.FC = () => {
       </div>
     </motion.div>
   );
-};
-
-export default LoadingPage;
+}

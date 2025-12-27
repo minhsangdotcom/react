@@ -1,4 +1,4 @@
-import IFilter from "@/src/types/IFilterType";
+import IFilter from "@/src/types/IFilter";
 import { IFilterParam } from "@/src/types/Params";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";

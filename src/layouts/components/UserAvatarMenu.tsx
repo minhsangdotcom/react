@@ -4,9 +4,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-} from "@/src/components/ui/dropdown-menu";
+} from "@/src/components/shadcn/ui/dropdown-menu";
 
-import { Avatar, AvatarImage } from "@/src/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/src/components/shadcn/ui/avatar";
 
 import { useNavigate } from "react-router-dom";
 import { logout } from "@/src/features/auth/authSlice";

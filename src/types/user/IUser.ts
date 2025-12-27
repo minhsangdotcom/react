@@ -1,9 +1,8 @@
 import { IAuditable } from "../IAuditable";
 import IEntity from "../IEntity";
 import { IRole } from "../role/IRole";
-import { Gender } from "./gender";
-import IAddress from "./IAddress";
-import { UserStatus } from "./userStatus";
+import { Gender } from "./Gender";
+import { UserStatus } from "./UserStatus";
 
 export interface IUser extends IAuditable, IEntity {
   firstName: string;
@@ -11,14 +10,11 @@ export interface IUser extends IAuditable, IEntity {
   username: string;
   email: string;
   phoneNumber: string;
-  dayOfBirth: Date;
+  dateOfBirth: Date;
   gender: Gender;
-  address: IAddress;
   avatar: string | null;
   status: UserStatus;
-  userClaims: Array<IUserClaim>;
   roles: Array<IRole>;
-  fullAddress: string;
 }
 
 export interface IUserClaim extends IEntity {

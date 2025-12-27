@@ -4,7 +4,7 @@ interface INestedFilterMap {
   [key: string]: NestedFilterValue;
 }
 
-export default interface IQueryParams {
+export default interface IQueryParam {
   page?: number;
   pageSize?: number;
   before?: string;

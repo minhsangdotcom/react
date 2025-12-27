@@ -1,4 +1,4 @@
-import "./normalInput.css";
+import "./normal-input.css";
 export default function NormalInput({
   value,
   onChange,

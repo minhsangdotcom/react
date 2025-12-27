@@ -1,5 +1,5 @@
 import IResponse from "../../types/IResponse";
-import { send } from "../../utils/api/client";
+import { send } from "../../utils/http/api";
 
 import {
   IBadRequestError,
@@ -7,11 +7,11 @@ import {
   IForbiddenError,
   IUnauthorizedError,
 } from "../../types/IError";
-import { IApiResult } from "../../utils/api/IApiResult";
-import IResetpasswordRequest from "@/src/types/Auth/IResetPasswordRequest";
-import { ILoginResponse } from "@/src/types/Auth/ILoginResponse";
-import { ITokenResponse } from "@/src/types/Auth/ITokenResponse";
-import { ILoginRequest } from "@/src/types/Auth/ILoginRequest";
+import { IApiResult } from "../../utils/http/IApiResult";
+import IResetpasswordRequest from "@/src/types/auth/IResetPasswordRequest";
+import { ILoginResponse } from "@/src/types/auth/ILoginResponse";
+import { ITokenResponse } from "@/src/types/auth/ITokenResponse";
+import { ILoginRequest } from "@/src/types/auth/ILoginRequest";
 import { IUserProfileResponse } from "@/src/types/user/IUserProfile";
 
 const authService = {

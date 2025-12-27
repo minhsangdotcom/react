@@ -1,7 +1,7 @@
 import { useLayoutEffect, useState } from "react";
 import { IFilterParam, Params, defaultParams } from "../types/Params";
 import queryString from "query-string";
-import IFilter from "../types/IFilterType";
+import IFilter from "../types/IFilter";
 
 function getFilterItems(filters: any): IFilterParam {
   if (!filters) {

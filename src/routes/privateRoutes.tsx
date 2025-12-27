@@ -1,11 +1,11 @@
 import { RouteObject } from "react-router-dom";
-import Profile from "../pages/profile/profile";
+import Profile from "../pages/profile/Profile";
 import PrivateRoute from "./privateRoute";
 import Home from "../pages/home/home";
-import RolePage from "../pages/role/role";
-import UserPage from "../pages/user/user";
+import RolePage from "../pages/role/Role";
+import UserPage from "../pages/user/User";
 
-import "@/src/styles/tableStyle.css";
+import "@/src/styles/table.css";
 import AdminLayout from "../layouts/AdminLayout";
 
 const privateRoutes: RouteObject = {
