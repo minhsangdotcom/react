@@ -7,6 +7,7 @@ import App from "./App";
 import { MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
+import { NuqsAdapter } from "nuqs/adapters/react";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -15,7 +16,9 @@ root.render(
   <Provider store={store}>
     <React.StrictMode>
       <MantineProvider>
+        <NuqsAdapter>
           <App />
+        </NuqsAdapter>
       </MantineProvider>
     </React.StrictMode>
   </Provider>

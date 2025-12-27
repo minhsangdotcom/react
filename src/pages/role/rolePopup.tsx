@@ -16,7 +16,8 @@ import {
   IPermissionResponse,
 } from "@/src/types/permission/IPermission";
 import { IRoleResponse } from "@/src/types/role/IRole";
-import { is } from "date-fns/locale";
+import ICreateRoleRequest from "@/src/types/role/ICreateRoleRequest";
+import IUpdateRoleRequest from "@/src/types/role/IUpdateRoleRequest";
 
 function mapPermission(permission: any): IPermission {
   return {
@@ -177,24 +178,19 @@ function markAsChecked(
   });
 }
 
-export default function AddRoleModal({
-  onSubmit,
+export default function RolePopup({
+  onCreate,
+  onUpdate,
   setOpen,
   roleId,
-  mode,
 }: {
-  onSubmit: (roleData: any) => Promise<void>;
-  setOpen: React.Dispatch<
-    React.SetStateAction<{
-      isCreateOpen: boolean;
-      isUpdateOpen: boolean;
-    }>
-  >;
-  roleId: string | undefined;
-  mode: "create" | "update";
+  onCreate: (roleData: ICreateRoleRequest) => Promise<void>;
+  onUpdate: (roleData: IUpdateRoleRequest) => Promise<void>;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  roleId: string | null;
 }) {
   const [name, setName] = useState<string>("");
-  const [description, setDescription] = useState<string | undefined>("");
+  const [description, setDescription] = useState<string>("");
   const [groups, setGroups] = useState<IPermissionGroup[]>([]);
 
   const didInit = useRef(false);
@@ -217,7 +213,7 @@ export default function AddRoleModal({
     const permissions = apiResults.data.results as IGroupPermissionResponse[];
     let groups = mapPermissionGroups(permissions);
 
-    if (mode === "update") {
+    if (roleId) {
       const roleResponse = await roleService.getById(roleId!);
       const role = roleResponse.data?.results as IRoleResponse;
 
@@ -290,7 +286,12 @@ export default function AddRoleModal({
       description,
       permissionIds,
     };
-    onSubmit(payload);
+
+    if (roleId) {
+      onUpdate(payload as IUpdateRoleRequest);
+    } else {
+      onCreate(payload as ICreateRoleRequest);
+    }
   };
 
   return (
@@ -353,12 +354,8 @@ export default function AddRoleModal({
           <DialogClose asChild>
             <button
               className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
-              onClick={(_) => {
-                setOpen((pre: any) => ({
-                  ...pre,
-                  isCreateOpen: false,
-                  isUpdateOpen: false,
-                }));
+              onClick={() => {
+                setOpen(false);
                 setName("");
                 setDescription("");
                 setGroups([]);

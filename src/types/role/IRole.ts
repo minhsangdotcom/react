@@ -10,7 +10,7 @@ export interface IRole extends IEntity, IAuditable {
 export interface IRoleRequest {
   name: string;
   description: string;
-  permissions: Array<IPermissionResponse>;
+  permissionIds: Array<string>;
 }
 
 export interface IRoleResponse extends IRole {

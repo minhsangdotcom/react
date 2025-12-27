@@ -1,6 +1,6 @@
 import { DataTableColumnHeader } from "@/src/components/data-table/data-table-column-header";
 import { useDataTable } from "@/src/hooks/use-data-table";
-import { useEffect, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { roleService } from "@/src/services/roles/roleService";
 import { IRole } from "@/src/types/role/IRole";
@@ -16,7 +16,7 @@ import {
 } from "@/src/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
-import AddRoleModal from "@/src/pages/role/roleFormModal";
+import RolePopup from "./rolePopup";
 import { Dialog } from "@/src/components/ui/dialog";
 import ICreateRoleRequest from "@/src/types/role/ICreateRoleRequest";
 import { ConfirmDialog } from "@/src/components/confirmDialog";
@@ -29,50 +29,46 @@ import { useAppSelector } from "@/src/store/hook";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-type PopUpOpen = {
-  isCreateOpen: boolean;
-  isUpdateOpen: boolean;
-};
-
 const Popup = React.memo(function ({
-  popupOpen,
+  isOpen,
   setOpen,
   handleAddRole,
   handleUpdateRole,
   id,
 }: {
-  popupOpen: PopUpOpen;
-  setOpen: React.Dispatch<React.SetStateAction<PopUpOpen>>;
+  isOpen: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
   handleAddRole: (roleData: ICreateRoleRequest) => Promise<void>;
   handleUpdateRole: (roleData: IUpdateRoleRequest) => Promise<void>;
-  id: string | undefined;
+  id: string | null;
 }) {
-  console.log("Dialog component re-rendered");
+  console.log("Popup component re-rendered");
   return (
-    <Dialog open={popupOpen.isCreateOpen || popupOpen.isUpdateOpen}>
-      {(popupOpen.isCreateOpen || popupOpen.isUpdateOpen) && (
-        <AddRoleModal
-          onSubmit={popupOpen.isCreateOpen ? handleAddRole : handleUpdateRole}
+    <Dialog open={isOpen}>
+      {isOpen && (
+        <RolePopup
+          onCreate={handleAddRole}
+          onUpdate={handleUpdateRole}
           setOpen={setOpen}
-          roleId={popupOpen.isCreateOpen ? undefined : id}
-          mode={popupOpen.isCreateOpen ? "create" : "update"}
+          roleId={id}
         />
       )}
     </Dialog>
   );
 });
 
+async function fetchRole() {
+  return await roleService.list({});
+}
+
 export default function RolePage() {
-  const { isLoading  } = useAppSelector((store) => store.auth);
+  const { isLoading } = useAppSelector((store) => store.auth);
   const [role, setRole] = useState<Array<IRole>>();
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [popupOpen, setOpen] = useState<PopUpOpen>({
-    isCreateOpen: false,
-    isUpdateOpen: false,
-  });
-  const [isOpenConfirm, setOpenConfirm] = useState(false);
-  const [id, setId] = useState<string | undefined>("");
+  const [open, setOpen] = useState<boolean>(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [id, setId] = useState<string | null>(null);
   const columns = useMemo<ColumnDef<IRole>[]>(
     () => [
       {
@@ -166,7 +162,7 @@ export default function RolePage() {
                 <DropdownMenuItem
                   onClick={(_) => {
                     setId(row.getValue("id"));
-                    setOpen({ isUpdateOpen: true, isCreateOpen: false });
+                    setOpen(true);
                   }}
                 >
                   Edit
@@ -176,7 +172,7 @@ export default function RolePage() {
                   variant="destructive"
                   onClick={(_) => {
                     setId(row.getValue("id"));
-                    setOpenConfirm(true);
+                    setDialogOpen(true);
                   }}
                 >
                   Delete
@@ -190,29 +186,6 @@ export default function RolePage() {
     ],
     []
   );
-
-  useEffect(() => {
-    if (
-      (!popupOpen.isCreateOpen && popupOpen.isUpdateOpen) ||
-      (!popupOpen.isUpdateOpen && popupOpen.isCreateOpen) ||
-      !isOpenConfirm
-    ) {
-      async function fetchRole() {
-        return await roleService.list({});
-      }
-      setLoading(true);
-      fetchRole().then((result) => {
-        if (result?.data?.results) {
-          const sortedRoles = result?.data?.results.sort(
-            (a, b) =>
-              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          );
-          setRole([...sortedRoles]);
-        }
-      });
-      setLoading(false);
-    }
-  }, [popupOpen, isOpenConfirm]);
 
   const { table } = useDataTable({
     data: role ?? [],
@@ -232,9 +205,9 @@ export default function RolePage() {
     const result = await roleService.create(roleData);
     setLoading(false);
     if (!result.isSuccess) {
-      console.log("abc:" + result.error);
+      console.log("create error:" + result.error);
     }
-    setOpen({ isCreateOpen: false, isUpdateOpen: false });
+    setOpen(false);
   };
 
   const handleUpdateRole = async (roleData: IUpdateRoleRequest) => {
@@ -242,17 +215,38 @@ export default function RolePage() {
     const result = await roleService.update(id!, roleData);
     setLoading(false);
     if (!result.isSuccess) {
-      console.log("abc:" + result.error);
+      console.log("update error:" + result.error);
     }
-    setOpen({ isCreateOpen: false, isUpdateOpen: false });
+    setOpen(false);
   };
 
   const handleDelete = async () => {
     const result = await roleService.delete(id!);
-    if (result.isSuccess) {
-      setOpenConfirm(false);
+    if (!result.isSuccess) {
+      console.log("delete error:" + result.error);
     }
+    setDialogOpen(false);
   };
+
+  useEffect(() => {
+    if (!open && !dialogOpen) {
+      console.log("ssss");
+
+      setLoading(true);
+      fetchRole()
+        .then((result) => {
+          if (result?.data?.results) {
+            const sortedRoles = result?.data?.results.sort(
+              (a, b) =>
+                new Date(b.createdAt).getTime() -
+                new Date(a.createdAt).getTime()
+            );
+            setRole([...sortedRoles]);
+          }
+        })
+        .finally(() => setLoading(false));
+    }
+  }, [open, dialogOpen]);
 
   if (loading || isLoading) {
     return <LoadingPage />;
@@ -264,7 +258,7 @@ export default function RolePage() {
         {/* Header with Title */}
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold text-gray-800 mt-5 ml-5">
-            ROLE MANAGEMENT
+            Role
           </h2>
         </div>
 
@@ -274,12 +268,11 @@ export default function RolePage() {
           <div className="flex justify-end mb-4">
             <button
               className="bg-brand-primary text-white font-medium px-8 py-2 rounded-lg shadow-sm hover:bg-brand-primary-hover transition"
-              onClick={(_) => {
-                setOpen({ isUpdateOpen: false, isCreateOpen: true });
-                setId(undefined);
+              onClick={() => {
+                setOpen(true);
               }}
             >
-              Add new
+              Create new
             </button>
           </div>
 
@@ -293,7 +286,7 @@ export default function RolePage() {
       </div>
 
       <Popup
-        popupOpen={popupOpen}
+        isOpen={open}
         id={id}
         setOpen={setOpen}
         handleAddRole={handleAddRole}
@@ -301,11 +294,11 @@ export default function RolePage() {
       />
 
       <ConfirmDialog
-        isOpen={isOpenConfirm}
+        isOpen={dialogOpen}
         title="Delete Item"
         message="Are you sure you want to delete this item?"
         onConfirm={handleDelete}
-        onCancel={() => setOpenConfirm(false)}
+        onCancel={() => setDialogOpen(false)}
       />
     </div>
   );

@@ -1,6 +1,6 @@
 import "./profile.css";
 import LoadingPage from "../../components/loading";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import authService from "../../services/auth/authService";
 import LoadingButton from "../../components/loadingButton";
 import {
@@ -13,8 +13,7 @@ import { DateInput } from "@mantine/dates";
 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { useAppDispatch } from "@/src/store/hook";
-import { profileAsync } from "@/src/features/auth/authAction";
+import { useAppSelector } from "@/src/store/hook";
 
 dayjs.extend(utc);
 
@@ -29,10 +28,10 @@ const toUserProfile = (user: IUserProfileResponse): IUserProfile => ({
 });
 
 export default function profilePage() {
-  const dispatch = useAppDispatch();
+  const { isLoading, user } = useAppSelector((store) => store.auth);
   const [loading, setLoading] = useState<boolean>(false);
   const [userProfile, setUserProfile] = useState<IUserProfile>(
-    {} as IUserProfile
+    user ? toUserProfile(user) : ({} as IUserProfile)
   );
   const [avatar, setAvatar] = useState<File | null>(null);
 
@@ -85,22 +84,7 @@ export default function profilePage() {
       label: Gender[v as Gender],
     }));
 
-  useEffect(() => {
-    setLoading(true);
-    dispatch(profileAsync())
-      .then((response: any) => {
-        const profileResponse = response.payload?.data
-          ?.results as IUserProfileResponse;
-        if (profileResponse) {
-          setUserProfile(toUserProfile(profileResponse));
-        }
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) {
+  if (isLoading || loading) {
     return <LoadingPage />;
   }
 

@@ -292,7 +292,7 @@ export default function UserPage() {
         {/* Header with Title */}
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold text-gray-800 mt-5 ml-5">
-            USER MANAGEMENT
+            User
           </h2>
         </div>
 
@@ -301,7 +301,7 @@ export default function UserPage() {
           {/* Add Button aligned to the right */}
           <div className="flex justify-end mb-4">
             <button className="bg-brand-primary text-white font-medium px-8 py-2 rounded-lg shadow-sm hover:bg-brand-primary-hover transition">
-              Add new
+              Create new
             </button>
           </div>
 
