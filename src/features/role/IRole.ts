@@ -1,6 +1,6 @@
-import { IAuditable } from "../IAuditable";
-import IEntity from "../IEntity";
-import { IPermissionResponse } from "../permission/IPermission";
+import { IAuditable } from "@/types/IAuditable";
+import IEntity from "@/types/IEntity";
+import { IPermissionResponse } from "../../types/permission/IPermission";
 
 export interface IRole extends IEntity, IAuditable {
   name: string;

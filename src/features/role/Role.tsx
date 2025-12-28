@@ -2,8 +2,8 @@ import { DataTableColumnHeader } from "@dscn/components/data-table/data-table-co
 import { useDataTable } from "@dscn/hooks/use-data-table";
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { roleService } from "@services/role/roleService";
-import { IRole } from "@/types/role/IRole";
+import { roleService } from "@/features/role/roleService";
+import { IRole } from "@/features/role/IRole";
 import { DataTable } from "@dscn/components/data-table/data-table";
 
 import { Loading } from "@components/Loading";
@@ -18,12 +18,12 @@ import { MoreHorizontal } from "lucide-react";
 import { Button } from "@dscn/components/ui/button";
 import RolePopup from "./RolePopup";
 import { Dialog } from "@dscn/components/ui/dialog";
-import ICreateRoleRequest from "@/types/role/ICreateRoleRequest";
+import ICreateRoleRequest from "@/features/role/ICreateRoleRequest";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
-import IUpdateRoleRequest from "@/types/role/IUpdateRoleRequest";
+import IUpdateRoleRequest from "@/features/role/IUpdateRoleRequest";
 import React from "react";
 import { useAppSelector } from "@/store/hook";
 dayjs.extend(utc);

@@ -1,6 +1,6 @@
 import { IAuditable } from "../IAuditable";
 import IEntity from "../IEntity";
-import { IRole } from "../role/IRole";
+import { IRole } from "../../features/role/IRole";
 import { Gender } from "./Gender";
 import { UserStatus } from "./UserStatus";
 

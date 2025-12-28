@@ -5,9 +5,9 @@ import {
 } from "@/types/IError";
 import IQueryParam from "@/types/IQueryParam";
 import IResponse from "@/types/IResponse";
-import ICreateRoleRequest from "@/types/role/ICreateRoleRequest";
-import { IRole, IRoleResponse } from "@/types/role/IRole";
-import IUpdateRoleRequest from "@/types/role/IUpdateRoleRequest";
+import ICreateRoleRequest from "@/features/role/ICreateRoleRequest";
+import { IRole, IRoleResponse } from "@/features/role/IRole";
+import IUpdateRoleRequest from "@/features/role/IUpdateRoleRequest";
 import { send } from "@utils/http/api";
 import { IApiResult } from "@utils/http/IApiResult";
 

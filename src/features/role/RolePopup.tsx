@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@dscn/components/ui/dialog";
 import { ulid } from "ulidx";
-import { roleService } from "@services/role/roleService";
+import { roleService } from "@/features/role/roleService";
 import permissionService from "@services/permission/permissionService";
 import {
   IGroupPermissionResponse,
@@ -15,9 +15,9 @@ import {
   IPermissionGroup,
   IPermissionResponse,
 } from "@/types/permission/IPermission";
-import { IRoleResponse } from "@/types/role/IRole";
-import ICreateRoleRequest from "@/types/role/ICreateRoleRequest";
-import IUpdateRoleRequest from "@/types/role/IUpdateRoleRequest";
+import { IRoleResponse } from "@/features/role/IRole";
+import ICreateRoleRequest from "@/features/role/ICreateRoleRequest";
+import IUpdateRoleRequest from "@/features/role/IUpdateRoleRequest";
 
 function mapPermission(permission: any): IPermission {
   return {
