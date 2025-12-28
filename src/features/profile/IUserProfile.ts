@@ -1,8 +1,8 @@
-import { IAuditable } from "../IAuditable";
-import IEntity from "../IEntity";
-import { IPermissionResponse } from "../permission/IPermission";
-import { IRoleResponse } from "../role/IRole";
-import { Gender } from "./Gender";
+import { IAuditable } from "@/types/IAuditable";
+import IEntity from "@/types/IEntity";
+import { IPermissionResponse } from "@/types/permission/IPermission";
+import { IRoleResponse } from "@/types/role/IRole";
+import { Gender } from "../../types/user/Gender";
 
 export interface IUserProfile {
   firstName: string;

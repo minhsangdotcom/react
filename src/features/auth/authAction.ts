@@ -1,6 +1,6 @@
 import authService from "@/features/auth/authService";
 import { ILoginRequest } from "@features/auth/ILoginRequest";
-import { IBadRequestError, IForbiddenError, INotFoundError, IUnauthorizedError } from "@/types/IError";
+import { IBadRequestError, INotFoundError, IUnauthorizedError } from "@/types/IError";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const loginAsync = createAsyncThunk(
@@ -16,29 +16,6 @@ export const loginAsync = createAsyncThunk(
     if (response.error?.status == 404) {
       const notFoundResponse = response.error as INotFoundError;
       return thunkAPI.rejectWithValue(notFoundResponse.errorDetails);
-    }
-
-    return response;
-  }
-);
-
-export const profileAsync = createAsyncThunk(
-  "user/profile",
-  async (_, thunkApi) => {
-    const response = await authService.getProfile();
-    if (response?.error?.status == 400) {
-      const badRequestError = response.error as IBadRequestError;
-      return thunkApi.rejectWithValue(badRequestError.errorDetails);
-    }
-
-    if (response?.error?.status == 403) {
-      const forbiddenError = response.error as IForbiddenError;
-      return thunkApi.rejectWithValue(forbiddenError.errorDetails);
-    }
-
-    if (response?.error?.status == 401) {
-      const forbiddenError = response.error as IUnauthorizedError;
-      return thunkApi.rejectWithValue(forbiddenError.errorDetails);
     }
 
     return response;

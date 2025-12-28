@@ -1,5 +1,5 @@
 import { SidebarTrigger } from "@dscn/components/ui/sidebar";
-import { profileAsync } from "@features/auth/authAction";
+import { profileAsync } from "@features/profile/profileAction";
 import { useAppDispatch } from "@/store/hook";
 import { useEffect, useState } from "react";
 import { UserAvatarMenu } from "./UserAvatarMenu";

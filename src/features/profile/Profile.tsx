@@ -1,12 +1,12 @@
 import "./profile.css";
-import { Loading } from "../../components/Loading";
+import { Loading } from "@components/Loading";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import authService from "../../features/auth/authService";
-import LoadingButton from "../../components/LoadingButton";
+import profileService from "@features/profile/profileService";
+import LoadingButton from "@components/LoadingButton";
 import {
   IUserProfile,
   IUserProfileResponse,
-} from "@/types/user/IUserProfile";
+} from "@/features/profile/IUserProfile";
 import Select from "react-select";
 import { Gender } from "@/types/user/Gender";
 import { DateInput } from "@mantine/dates";
@@ -28,7 +28,7 @@ const toUserProfile = (user: IUserProfileResponse): IUserProfile => ({
 });
 
 export default function Profile() {
-  const { user, isLoading } = useAppSelector((store) => store.auth);
+  const { user, isLoading } = useAppSelector((store) => store.profile);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [userProfile, setUserProfile] = useState<IUserProfile>({
@@ -72,7 +72,7 @@ export default function Profile() {
     }
 
     setLoading(true);
-    var result = await authService.updateProfile(formData);
+    var result = await profileService.updateProfile(formData);
 
     if (result.isSuccess) {
       const data = result.data?.results;
@@ -96,7 +96,7 @@ export default function Profile() {
       return;
     }
     setUserProfile(toUserProfile(user));
-  }, [user]);
+  }, [isLoading]);
 
   if (isLoading || loading) {
     return <Loading />;

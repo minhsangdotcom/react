@@ -4,7 +4,6 @@ import { send } from "@utils/http/api";
 import {
   IBadRequestError,
   INotFoundError,
-  IForbiddenError,
   IUnauthorizedError,
 } from "@/types/IError";
 import { IApiResult } from "@utils/http/IApiResult";
@@ -12,7 +11,6 @@ import IResetpasswordRequest from "@/features/auth/IResetPasswordRequest";
 import { ILoginResponse } from "@features/auth/ILoginResponse";
 import { ITokenResponse } from "@features/auth/ITokenResponse";
 import { ILoginRequest } from "@features/auth/ILoginRequest";
-import { IUserProfileResponse } from "@/types/user/IUserProfile";
 
 const authService = {
   login: async function (
@@ -21,29 +19,6 @@ const authService = {
     IApiResult<IResponse<ILoginResponse>, IBadRequestError | INotFoundError>
   > {
     return await send({ url: "users/login", method: "POST", data: request });
-  },
-  getProfile: async function (): Promise<
-    IApiResult<
-      IResponse<IUserProfileResponse>,
-      IBadRequestError | IForbiddenError | IUnauthorizedError
-    >
-  > {
-    return await send({ url: "users/profile", method: "GET" });
-  },
-  updateProfile: async function (
-    request: FormData
-  ): Promise<
-    IApiResult<
-      IResponse<IUserProfileResponse>,
-      IBadRequestError | IForbiddenError | IUnauthorizedError
-    >
-  > {
-    return await send({
-      url: "users/profile",
-      method: "PUT",
-      data: request,
-      headers: { "Content-Type": "multipart/form-data" },
-    });
   },
   refresh: async function (
     refreshToken: string
