@@ -1,91 +1,18 @@
-import { store } from "@/store/store";
-import { logout } from "@features/auth/authSlice";
-import { refreshAsync } from "@features/auth/authAction";
-
-import type {
-  AxiosError,
-  AxiosInstance,
-  AxiosRequestConfig,
-  InternalAxiosRequestConfig,
-} from "axios";
-
-export interface AxiosRetryRequestConfig extends AxiosRequestConfig {
-  _retry?: boolean;
-}
-
-let refreshInProgress: Promise<string> | null = null;
-
+import type { AxiosInstance, InternalAxiosRequestConfig } from "axios";
+import {
+  refreshTokenHandler,
+  tokenHandler,
+} from "@features/auth/auth-interceptor";
 export function requestHandler(
   config: InternalAxiosRequestConfig<any>
 ): InternalAxiosRequestConfig<any> {
-  const token = store.getState().auth.token;
-
-  if (token && config.headers) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-
-  return config;
+  // put bearer token to header
+  return tokenHandler(config);
 }
 export async function errorResponseHandler(
   error: any,
   api: AxiosInstance
 ): Promise<any> {
-  await authenticationHandler(error, api);
-}
-
-async function authenticationHandler(
-  error: AxiosError,
-  api: AxiosInstance
-): Promise<any> {
-  const status = error.response?.status;
-  const originalRequest = error.config as AxiosRetryRequestConfig;
-
-  if (status !== 401 || !originalRequest) {
-    return Promise.reject(error);
-  }
-
-  // ❗ If refresh-token API itself fails → logout
-  if (originalRequest.url?.includes("users/refresh-token")) {
-    console.warn("Refresh token failed → logout");
-    store.dispatch(logout());
-    return Promise.reject(error);
-  }
-
-  const refreshToken = store.getState().auth.refreshToken;
-
-  if (!refreshToken || originalRequest._retry) {
-    return Promise.reject(error);
-  }
-
-  originalRequest._retry = true;
-
-  if (!refreshInProgress) {
-    console.warn("Access token expired → refreshing...");
-
-    refreshInProgress = store
-      .dispatch(refreshAsync(refreshToken))
-      .unwrap()
-      .then((res) => res.data?.results?.token!)
-      .catch((err) => {
-        store.dispatch(logout());
-        throw err;
-      })
-      .finally(() => {
-        refreshInProgress = null;
-      });
-  }
-
-  try {
-    const newToken = await refreshInProgress;
-
-    originalRequest.headers = {
-      ...originalRequest.headers,
-      Authorization: `Bearer ${newToken}`,
-    };
-
-    // 🔁 Retry failed request with new token
-    return api(originalRequest);
-  } catch (err) {
-    return Promise.reject(err);
-  }
+  // handle refreshing token
+  await refreshTokenHandler(error, api);
 }

@@ -1,7 +1,7 @@
 import "./profile.css";
 import { Loading } from "../../components/Loading";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import authService from "../../services/auth/authService";
+import authService from "../../features/auth/authService";
 import LoadingButton from "../../components/LoadingButton";
 import {
   IUserProfile,

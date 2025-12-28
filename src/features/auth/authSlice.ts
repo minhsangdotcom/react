@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import IResponse from "../../types/IResponse";
-import Configs from "../../config/authConfigs";
-import localStorageHelper from "../../utils/storages/localStorageHelper";
-import { ILoginResponse } from "@/src/types/auth/ILoginResponse";
-import { ITokenResponse } from "@/src/types/auth/ITokenResponse";
-import { IUserProfileResponse } from "@/src/types/user/IUserProfile";
+import IResponse from "@/types/IResponse";
+import Configs from "@config/authConfigs";
+import localStorageHelper from "@utils/storages/localStorageHelper";
+import { ILoginResponse } from "@features/auth/ILoginResponse";
+import { ITokenResponse } from "@features/auth/ITokenResponse";
+import { IUserProfileResponse } from "@/types/user/IUserProfile";
 import { loginAsync, profileAsync, refreshAsync } from "./authAction";
 
 interface IAuthState extends IAuthInfo {

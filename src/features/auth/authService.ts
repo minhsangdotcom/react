@@ -1,18 +1,18 @@
-import IResponse from "../../types/IResponse";
-import { send } from "../../utils/http/api";
+import IResponse from "@/types/IResponse";
+import { send } from "@utils/http/api";
 
 import {
   IBadRequestError,
   INotFoundError,
   IForbiddenError,
   IUnauthorizedError,
-} from "../../types/IError";
-import { IApiResult } from "../../utils/http/IApiResult";
-import IResetpasswordRequest from "@/src/types/auth/IResetPasswordRequest";
-import { ILoginResponse } from "@/src/types/auth/ILoginResponse";
-import { ITokenResponse } from "@/src/types/auth/ITokenResponse";
-import { ILoginRequest } from "@/src/types/auth/ILoginRequest";
-import { IUserProfileResponse } from "@/src/types/user/IUserProfile";
+} from "@/types/IError";
+import { IApiResult } from "@utils/http/IApiResult";
+import IResetpasswordRequest from "@/features/auth/IResetPasswordRequest";
+import { ILoginResponse } from "@features/auth/ILoginResponse";
+import { ITokenResponse } from "@features/auth/ITokenResponse";
+import { ILoginRequest } from "@features/auth/ILoginRequest";
+import { IUserProfileResponse } from "@/types/user/IUserProfile";
 
 const authService = {
   login: async function (

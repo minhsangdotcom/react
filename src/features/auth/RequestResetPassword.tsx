@@ -1,7 +1,7 @@
 import { FormEvent, useState } from "react";
-import authService from "../../../services/auth/authService";
-import NormalInput from "../../../components/NormalInput";
-import LoadingButton from "../../../components/LoadingButton";
+import authService from "@features/auth/authService";
+import NormalInput from "@components/NormalInput";
+import LoadingButton from "@components/LoadingButton";
 
 export default function RequestResetPassword() {
   const [email, setEmail] = useState<string>("");

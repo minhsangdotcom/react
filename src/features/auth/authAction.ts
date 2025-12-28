@@ -1,6 +1,6 @@
-import authService from "@services/auth/authService";
-import { ILoginRequest } from "@/src/types/auth/ILoginRequest";
-import { IBadRequestError, IForbiddenError, INotFoundError, IUnauthorizedError } from "@/src/types/IError";
+import authService from "@/features/auth/authService";
+import { ILoginRequest } from "@features/auth/ILoginRequest";
+import { IBadRequestError, IForbiddenError, INotFoundError, IUnauthorizedError } from "@/types/IError";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const loginAsync = createAsyncThunk(

@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import authService from "../../../services/auth/authService";
+import authService from "@features/auth/authService";
 
-import LoadingButton from "../../../components/LoadingButton";
+import LoadingButton from "@components/LoadingButton";
 
-import PasswordInput from "../../../components/PasswordInput";
+import PasswordInput from "@components/PasswordInput";
 
 export default function ResetPassword() {
   const [search] = useSearchParams();
@@ -15,7 +15,6 @@ export default function ResetPassword() {
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  //const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

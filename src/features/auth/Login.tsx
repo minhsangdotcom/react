@@ -1,8 +1,8 @@
-import "./login.css";
+import "@features/auth/login.css";
 import { useState } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
-import { ILoginRequest } from "@/types/auth/ILoginRequest";
+import { ILoginRequest } from "@features/auth/ILoginRequest";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import NormalInput from "@components/NormalInput";
 import PasswordInput from "@components/PasswordInput";
