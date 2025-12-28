@@ -1,18 +1,18 @@
 import { RouteObject } from "react-router-dom";
-import Profile from "../pages/profile/Profile";
-import PrivateRoute from "./privateRoute";
-import Home from "../pages/home/home";
-import RolePage from "../pages/role/Role";
-import UserPage from "../pages/user/User";
+import Profile from "@/pages/profile/Profile";
+import PrivateRoute from "@/routes/RequiredAuth";
+import Home from "@/pages/home/home";
+import RolePage from "@/pages/role/Role";
+import UserPage from "@/pages/user/User";
 
 import "@/styles/table.css";
-import AdminLayout from "../layouts/AdminLayout";
+import AdminLayout from "@/layouts/AdminLayout";
 
-const privateRoutes: RouteObject = {
+const PrivateRoutes: RouteObject = {
   element: <PrivateRoute />,
   children: [
     {
-      element: <AdminLayout />, // 🧱 layout
+      element: <AdminLayout />,
       children: [
         { path: "/", element: <Home /> },
         { path: "/profile", element: <Profile /> },
@@ -23,4 +23,4 @@ const privateRoutes: RouteObject = {
   ],
 };
 
-export default privateRoutes;
+export default PrivateRoutes;

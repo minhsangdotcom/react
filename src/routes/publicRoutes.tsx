@@ -2,9 +2,9 @@ import { RouteObject } from "react-router-dom";
 import Login from "../pages/auth/login/Login";
 import RequestResetPassword from "../pages/auth/password/RequestResetPassword";
 import ResetPassword from "../pages/auth/password/ResetPassword";
-import RequireGuest from "@components/RequireGuest";
+import RequireGuest from "@/routes/RequireGuest";
 
-const publicRoutes: RouteObject[] = [
+const PublicRoutes: RouteObject[] = [
   {
     path: "/login",
     element: (
@@ -17,4 +17,4 @@ const publicRoutes: RouteObject[] = [
   { path: "/reset-password", element: <ResetPassword /> },
 ];
 
-export default publicRoutes;
+export default PublicRoutes;
