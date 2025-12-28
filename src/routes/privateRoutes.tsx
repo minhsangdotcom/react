@@ -1,7 +1,7 @@
 import { RouteObject } from "react-router-dom";
 import Profile from "@/features/profile/Profile";
 import PrivateRoute from "@/routes/RequiredAuth";
-import Home from "@/pages/home/home";
+import Home from "@/features/home/Home";
 import RolePage from "@/features/role/Role";
 import UserPage from "@/features/user/User";
 

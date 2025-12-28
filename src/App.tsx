@@ -1,5 +1,5 @@
 import AppRouter from "@/routes/router";
-import "@/styles/globals.css";
+import "@/styles/global.css";
 
 const App = () => {
   return (
