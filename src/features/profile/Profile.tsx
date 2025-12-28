@@ -29,6 +29,7 @@ const toUserProfile = (user: IUserProfileResponse): IUserProfile => ({
 
 export default function Profile() {
   const { user, isLoading } = useAppSelector((store) => store.profile);
+  const defaultAvatarPath = "/images/avatar-boy.png";
 
   const [loading, setLoading] = useState<boolean>(false);
   const [userProfile, setUserProfile] = useState<IUserProfile>({
@@ -37,7 +38,7 @@ export default function Profile() {
     dateOfBirth: null,
     email: "",
     phoneNumber: "",
-    avatar: "/images/default-avatar.png",
+    avatar: defaultAvatarPath,
     gender: Gender.Male,
   } as IUserProfile);
   const [avatar, setAvatar] = useState<File | null>(null);
@@ -74,11 +75,11 @@ export default function Profile() {
     setLoading(true);
     var result = await profileService.updateProfile(formData);
 
-    if (result.isSuccess) {
-      const data = result.data?.results;
+    const data = result.data?.results;
+    if (result.isSuccess && data) {
       setUserProfile((pre) => ({
         ...pre,
-        avatar: data?.avatar ? data.avatar : "/images/default-avatar.png",
+        avatar: data.avatar != null ? data.avatar : pre.avatar,
       }));
     }
     setLoading(false);
@@ -107,7 +108,7 @@ export default function Profile() {
       <div className="profile-header">
         <div className="relative flex-none">
           <img
-            src={userProfile?.avatar!}
+            src={userProfile?.avatar! ?? defaultAvatarPath}
             alt="Avatar"
             className="rounded-full w-30"
           />

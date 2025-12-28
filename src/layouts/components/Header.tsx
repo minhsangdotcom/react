@@ -20,7 +20,7 @@ export default function AdminLayout() {
       </div>
 
       {!loading ? (
-        <UserAvatarMenu avatarUrl="/images/default-avatar.png" />
+        <UserAvatarMenu avatarUrl="/images/avatar-boy.png" />
       ) : (
         "Loading..."
       )}
