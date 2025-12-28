@@ -295,7 +295,7 @@ export default function RolePopup({
   };
 
   return (
-    <DialogContent className="fixed inset-0 flex items-center justify-center z-50">
+    <DialogContent aria-describedby={ roleId ? "update-role" : "create-role"} className="fixed inset-0 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl p-6 w-[800px] max-w-full shadow-lg max-h-[90vh] flex flex-col">
         <DialogHeader className="mb-2">
           <DialogTitle className="text-lg font-semibold">

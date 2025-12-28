@@ -42,7 +42,6 @@ const Popup = React.memo(function ({
   handleUpdateRole: (roleData: IUpdateRoleRequest) => Promise<void>;
   id: string | null;
 }) {
-  console.log("Popup component re-rendered");
   return (
     <Dialog open={isOpen}>
       {isOpen && (

@@ -2,7 +2,7 @@ import { IAuditable } from "@/types/IAuditable";
 import IEntity from "@/types/IEntity";
 import { IPermissionResponse } from "@/types/permission/IPermission";
 import { IRoleResponse } from "@/features/role/IRole";
-import { Gender } from "../../types/user/Gender";
+import { Gender } from "../user/Gender";
 
 export interface IUserProfile {
   firstName: string;

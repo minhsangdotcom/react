@@ -5,7 +5,7 @@ import {
 } from "@/types/IError";
 import IQueryParam from "@/types/IQueryParam";
 import IResponse, { IPagination } from "@/types/IResponse";
-import { IUser } from "@/types/user/IUser";
+import { IUser } from "@/features/user/IUser";
 import { send } from "@utils/http/api";
 import { IApiResult } from "@utils/http/IApiResult";
 

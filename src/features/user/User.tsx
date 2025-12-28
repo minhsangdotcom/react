@@ -12,8 +12,8 @@ import {
 } from "@dscn/components/ui/dropdown-menu";
 import { useDataTable } from "@dscn/hooks/use-data-table";
 import { defaultParams } from "@/types/Params";
-import { IUser } from "@/types/user/IUser";
-import { UserStatus } from "@/types/user/UserStatus";
+import { IUser } from "@/features/user/IUser";
+import { UserStatus } from "@/features/user/UserStatus";
 import { Column, ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useQueryParam } from "@/hooks/useQueyParam";
-import { userService } from "@services/user/userService";
+import { userService } from "@/features/user/userService";
 import filterParser from "@utils/queryParams/filterParser";
 import { DataTableFilterMenu } from "@dscn/components/data-table/data-table-filter-menu";
 import { IPageInfo } from "@/types/IResponse";

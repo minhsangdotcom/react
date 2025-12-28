@@ -1,5 +1,5 @@
-import { IAuditable } from "../IAuditable";
-import IEntity from "../IEntity";
+import { IAuditable } from "../../types/IAuditable";
+import IEntity from "../../types/IEntity";
 
 export default interface IUserResponse extends IAuditable, IEntity {
   firstName: string;

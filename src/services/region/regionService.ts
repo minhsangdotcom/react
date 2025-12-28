@@ -2,12 +2,12 @@ import {
   IBadRequestError,
   IForbiddenError,
   IUnauthorizedError,
-} from "../../types/IError";
-import IResponse from "../../types/IResponse";
-import { ICommune, IDistrict, IProvince } from "../../types/region/IRegion";
-import { send } from "../../utils/http/api";
-import { IApiResult } from "../../utils/http/IApiResult";
-import IQueryParam from "../../types/IQueryParam";
+} from "@/types/IError";
+import IResponse from "@/types/IResponse";
+import { ICommune, IDistrict, IProvince } from "@/types/region/IRegion";
+import { send } from "@utils/http/api";
+import { IApiResult } from "@utils/http/IApiResult";
+import IQueryParam from "@/types/IQueryParam";
 
 export const regionService = {
   listProvince: async function (

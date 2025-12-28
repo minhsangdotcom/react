@@ -1,6 +1,7 @@
-import { IAuditable } from "../IAuditable";
-import IEntity from "../IEntity";
-import { IRole } from "../../features/role/IRole";
+import { IPermissionResponse } from "@/types/permission/IPermission";
+import { IAuditable } from "../../types/IAuditable";
+import IEntity from "../../types/IEntity";
+import { IRole } from "../role/IRole";
 import { Gender } from "./Gender";
 import { UserStatus } from "./UserStatus";
 
@@ -15,10 +16,5 @@ export interface IUser extends IAuditable, IEntity {
   avatar: string | null;
   status: UserStatus;
   roles: Array<IRole>;
-}
-
-export interface IUserClaim extends IEntity {
-  id: string;
-  claimType: string;
-  claimValue: string;
+  permissions: Array<IPermissionResponse>
 }

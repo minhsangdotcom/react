@@ -38,7 +38,6 @@ const groupedItems = [
 
 export function AppSidebar() {
   const { state } = useSidebar();
-  console.log("🚀 ~ AppSidebar ~ state:", state);
   return (
     <Sidebar
       side="left"

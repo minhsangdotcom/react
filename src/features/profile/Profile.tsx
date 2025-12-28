@@ -8,7 +8,7 @@ import {
   IUserProfileResponse,
 } from "@/features/profile/IUserProfile";
 import Select from "react-select";
-import { Gender } from "@/types/user/Gender";
+import { Gender } from "@/features/user/Gender";
 import { DateInput } from "@mantine/dates";
 
 import dayjs from "dayjs";
