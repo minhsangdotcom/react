@@ -1,6 +1,6 @@
-import { store } from "@/src/store/store";
-import { logout } from "@/src/features/auth/authSlice";
-import { refreshAsync } from "@/src/features/auth/authAction";
+import { store } from "@/store/store";
+import { logout } from "@features/auth/authSlice";
+import { refreshAsync } from "@features/auth/authAction";
 
 import type {
   AxiosError,

@@ -1,19 +1,19 @@
-import { DataTable } from "@/src/components/shadcn/data-table/data-table";
-import { DataTableAdvancedToolbar } from "@/src/components/shadcn/data-table/data-table-advanced-toolbar";
-import { DataTableColumnHeader } from "@/src/components/shadcn/data-table/data-table-column-header";
-import { DataTableSortList } from "@/src/components/shadcn/data-table/data-table-sort-list";
-import { Badge } from "@/src/components/shadcn/ui/badge";
-import { Button } from "@/src/components/shadcn/ui/button";
+import { DataTable } from "@dscn/components/data-table/data-table";
+import { DataTableAdvancedToolbar } from "@dscn/components/data-table/data-table-advanced-toolbar";
+import { DataTableColumnHeader } from "@dscn/components/data-table/data-table-column-header";
+import { DataTableSortList } from "@dscn/components/data-table/data-table-sort-list";
+import { Badge } from "@dscn/components/ui/badge";
+import { Button } from "@dscn/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/src/components/shadcn/ui/dropdown-menu";
-import { useDataTable } from "@/src/hooks/shadcn/use-data-table";
-import { defaultParams } from "@/src/types/Params";
-import { IUser } from "@/src/types/user/IUser";
-import { UserStatus } from "@/src/types/user/UserStatus";
+} from "@dscn/components/ui/dropdown-menu";
+import { useDataTable } from "@dscn/hooks/use-data-table";
+import { defaultParams } from "@/types/Params";
+import { IUser } from "@/types/user/IUser";
+import { UserStatus } from "@/types/user/UserStatus";
 import { Column, ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -25,15 +25,15 @@ import {
   XCircle,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { useQueryParam } from "@/src/hooks/useQueyParam";
-import { userService } from "@/src/services/user/userService";
-import filterParser from "@/src/utils/queryParams/filterParser";
-import { DataTableFilterMenu } from "@/src/components/shadcn/data-table/data-table-filter-menu";
-import { IPageInfo } from "@/src/types/IResponse";
-import { Checkbox } from "@/src/components/shadcn/ui/checkbox";
-import localStorageHelper from "@/src/utils/storages/localStorageHelper";
-import { Loading } from "@/src/components/Loading";
-import { useAppSelector } from "@/src/store/hook";
+import { useQueryParam } from "@/hooks/useQueyParam";
+import { userService } from "@services/user/userService";
+import filterParser from "@utils/queryParams/filterParser";
+import { DataTableFilterMenu } from "@dscn/components/data-table/data-table-filter-menu";
+import { IPageInfo } from "@/types/IResponse";
+import { Checkbox } from "@dscn/components/ui/checkbox";
+import localStorageHelper from "@utils/storages/localStorageHelper";
+import { Loading } from "@components/Loading";
+import { useAppSelector } from "@/store/hook";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 export default function UserPage() {

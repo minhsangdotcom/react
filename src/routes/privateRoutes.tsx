@@ -5,7 +5,7 @@ import Home from "../pages/home/home";
 import RolePage from "../pages/role/Role";
 import UserPage from "../pages/user/User";
 
-import "@/src/styles/table.css";
+import "@/styles/table.css";
 import AdminLayout from "../layouts/AdminLayout";
 
 const privateRoutes: RouteObject = {

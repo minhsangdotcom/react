@@ -9,7 +9,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
   useSidebar,
-} from "@/src/components/shadcn/ui/sidebar";
+} from "@dscn/components/ui/sidebar";
 import {
   Collapsible,
   CollapsibleContent,

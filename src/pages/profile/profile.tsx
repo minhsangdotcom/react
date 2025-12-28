@@ -6,14 +6,14 @@ import LoadingButton from "../../components/LoadingButton";
 import {
   IUserProfile,
   IUserProfileResponse,
-} from "@/src/types/user/IUserProfile";
+} from "@/types/user/IUserProfile";
 import Select from "react-select";
-import { Gender } from "@/src/types/user/Gender";
+import { Gender } from "@/types/user/Gender";
 import { DateInput } from "@mantine/dates";
 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { useAppSelector } from "@/src/store/hook";
+import { useAppSelector } from "@/store/hook";
 
 dayjs.extend(utc);
 

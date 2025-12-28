@@ -1,31 +1,31 @@
-import { DataTableColumnHeader } from "@/src/components/shadcn/data-table/data-table-column-header";
-import { useDataTable } from "@/src/hooks/shadcn/use-data-table";
+import { DataTableColumnHeader } from "@dscn/components/data-table/data-table-column-header";
+import { useDataTable } from "@dscn/hooks/use-data-table";
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { roleService } from "@/src/services/role/roleService";
-import { IRole } from "@/src/types/role/IRole";
-import { DataTable } from "@/src/components/shadcn/data-table/data-table";
+import { roleService } from "@services/role/roleService";
+import { IRole } from "@/types/role/IRole";
+import { DataTable } from "@dscn/components/data-table/data-table";
 
-import { Loading } from "@/src/components/Loading";
-import { defaultParams } from "@/src/types/Params";
+import { Loading } from "@components/Loading";
+import { defaultParams } from "@/types/Params";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/src/components/shadcn/ui/dropdown-menu";
+} from "@dscn/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
-import { Button } from "@/src/components/shadcn/ui/button";
+import { Button } from "@dscn/components/ui/button";
 import RolePopup from "./RolePopup";
-import { Dialog } from "@/src/components/shadcn/ui/dialog";
-import ICreateRoleRequest from "@/src/types/role/ICreateRoleRequest";
-import { ConfirmDialog } from "@/src/components/ConfirmDialog";
+import { Dialog } from "@dscn/components/ui/dialog";
+import ICreateRoleRequest from "@/types/role/ICreateRoleRequest";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
-import IUpdateRoleRequest from "@/src/types/role/IUpdateRoleRequest";
+import IUpdateRoleRequest from "@/types/role/IUpdateRoleRequest";
 import React from "react";
-import { useAppSelector } from "@/src/store/hook";
+import { useAppSelector } from "@/store/hook";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -235,7 +235,7 @@ export default function Role() {
         .then((result) => {
           if (result?.data?.results) {
             const sortedRoles = result?.data?.results.sort(
-              (a, b) =>
+              (a : any, b : any) =>
                 new Date(b.createdAt).getTime() -
                 new Date(a.createdAt).getTime()
             );

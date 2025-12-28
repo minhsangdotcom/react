@@ -2,12 +2,12 @@ import {
   IBadRequestError,
   IForbiddenError,
   IUnauthorizedError,
-} from "@/src/types/IError";
-import IQueryParam from "@/src/types/IQueryParam";
-import IResponse, { IPagination } from "@/src/types/IResponse";
-import { IUser } from "@/src/types/user/IUser";
-import { send } from "@/src/utils/http/api";
-import { IApiResult } from "@/src/utils/http/IApiResult";
+} from "@/types/IError";
+import IQueryParam from "@/types/IQueryParam";
+import IResponse, { IPagination } from "@/types/IResponse";
+import { IUser } from "@/types/user/IUser";
+import { send } from "@utils/http/api";
+import { IApiResult } from "@utils/http/IApiResult";
 
 export const userService = {
   list: async function (

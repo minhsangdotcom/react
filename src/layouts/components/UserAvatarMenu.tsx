@@ -4,13 +4,13 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-} from "@/src/components/shadcn/ui/dropdown-menu";
+} from "@dscn/components/ui/dropdown-menu";
 
-import { Avatar, AvatarImage } from "@/src/components/shadcn/ui/avatar";
+import { Avatar, AvatarImage } from "@dscn/components/ui/avatar";
 
 import { useNavigate } from "react-router-dom";
-import { logout } from "@/src/features/auth/authSlice";
-import { useAppDispatch } from "@/src/store/hook";
+import { logout } from "@features/auth/authSlice";
+import { useAppDispatch } from "@/store/hook";
 
 export function UserAvatarMenu({ avatarUrl }: { avatarUrl?: string }) {
   const navigate = useNavigate();

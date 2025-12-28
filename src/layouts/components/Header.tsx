@@ -1,6 +1,6 @@
-import { SidebarTrigger } from "@/src/components/shadcn/ui/sidebar";
-import { profileAsync } from "@/src/features/auth/authAction";
-import { useAppDispatch } from "@/src/store/hook";
+import { SidebarTrigger } from "@dscn/components/ui/sidebar";
+import { profileAsync } from "@features/auth/authAction";
+import { useAppDispatch } from "@/store/hook";
 import { useEffect, useState } from "react";
 import { UserAvatarMenu } from "./UserAvatarMenu";
 

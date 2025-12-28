@@ -1,7 +1,7 @@
-import { defaultParams, Params } from "@/src/types/Params";
-import IQueryParam from "@/src/types/IQueryParam";
-import parseFilter from "./filter";
-import parseSort from "./sort";
+import { defaultParams, Params } from "@/types/Params";
+import IQueryParam from "@/types/IQueryParam";
+import parseFilter from "@utils/queryParams/filter";
+import parseSort from "@utils/queryParams/sort";
 
 const filterParser = {
   parse: function (query: Params): IQueryParam {

@@ -5,19 +5,19 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "../../components/shadcn/ui/dialog";
+} from "@dscn/components/ui/dialog";
 import { ulid } from "ulidx";
-import { roleService } from "@/src/services/role/roleService";
-import permissionService from "@/src/services/permission/permissionService";
+import { roleService } from "@services/role/roleService";
+import permissionService from "@services/permission/permissionService";
 import {
   IGroupPermissionResponse,
   IPermission,
   IPermissionGroup,
   IPermissionResponse,
-} from "@/src/types/permission/IPermission";
-import { IRoleResponse } from "@/src/types/role/IRole";
-import ICreateRoleRequest from "@/src/types/role/ICreateRoleRequest";
-import IUpdateRoleRequest from "@/src/types/role/IUpdateRoleRequest";
+} from "@/types/permission/IPermission";
+import { IRoleResponse } from "@/types/role/IRole";
+import ICreateRoleRequest from "@/types/role/ICreateRoleRequest";
+import IUpdateRoleRequest from "@/types/role/IUpdateRoleRequest";
 
 function mapPermission(permission: any): IPermission {
   return {

@@ -2,12 +2,12 @@ import "./login.css";
 import { useState } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
-import { ILoginRequest } from "@/src/types/auth/ILoginRequest";
-import { useAppDispatch, useAppSelector } from "@/src/store/hook";
-import NormalInput from "@/src/components/NormalInput";
-import PasswordInput from "@/src/components/PasswordInput";
-import LoadingButton from "@/src/components/LoadingButton";
-import { loginAsync } from "@/src/features/auth/authAction";
+import { ILoginRequest } from "@/types/auth/ILoginRequest";
+import { useAppDispatch, useAppSelector } from "@/store/hook";
+import NormalInput from "@components/NormalInput";
+import PasswordInput from "@components/PasswordInput";
+import LoadingButton from "@components/LoadingButton";
+import { loginAsync } from "@features/auth/authAction";
 
 export default function Login() {
   const [form, setForm] = useState<ILoginRequest>({

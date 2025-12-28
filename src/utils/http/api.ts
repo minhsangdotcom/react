@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
-import { env } from "../../config/env";
+import { env } from "@config/env";
 import { IApiResult } from "./IApiResult";
 import IApiRequest from "./IApiRequest";
 import { requestHandler, errorResponseHandler } from "./interceptor";

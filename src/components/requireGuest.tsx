@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { useAppSelector } from "@/src/store/hook";
+import { useAppSelector } from "@/store/hook";
 import { JSX } from "react";
 
 const RequireGuest = ({ children }: { children: JSX.Element }) => {

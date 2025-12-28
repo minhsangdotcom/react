@@ -2,14 +2,14 @@ import {
   IBadRequestError,
   IForbiddenError,
   IUnauthorizedError,
-} from "@/src/types/IError";
-import IQueryParam from "@/src/types/IQueryParam";
-import IResponse from "@/src/types/IResponse";
-import ICreateRoleRequest from "@/src/types/role/ICreateRoleRequest";
-import { IRole, IRoleResponse } from "@/src/types/role/IRole";
-import IUpdateRoleRequest from "@/src/types/role/IUpdateRoleRequest";
-import { send } from "@/src/utils/http/api";
-import { IApiResult } from "@/src/utils/http/IApiResult";
+} from "@/types/IError";
+import IQueryParam from "@/types/IQueryParam";
+import IResponse from "@/types/IResponse";
+import ICreateRoleRequest from "@/types/role/ICreateRoleRequest";
+import { IRole, IRoleResponse } from "@/types/role/IRole";
+import IUpdateRoleRequest from "@/types/role/IUpdateRoleRequest";
+import { send } from "@utils/http/api";
+import { IApiResult } from "@utils/http/IApiResult";
 
 export const roleService = {
   list: async function (
