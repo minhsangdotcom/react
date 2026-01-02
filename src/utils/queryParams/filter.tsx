@@ -1,5 +1,5 @@
-import IFilter from "@/src/types/IFilter";
-import { IFilterParam } from "@/src/types/Params";
+import IFilter from "@/types/IFilter";
+import { IFilterParam } from "@/types/Params";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 dayjs.extend(utc);
