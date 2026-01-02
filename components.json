@@ -10,6 +10,7 @@
     "cssVariables": true,
     "prefix": ""
   },
+  "iconLibrary": "lucide",
   "aliases": {
     "components": "@dscn/components",
     "utils": "@dscn/lib/utils",
@@ -17,5 +18,7 @@
     "lib": "@dscn/lib",
     "hooks": "@dscn/hooks"
   },
-  "iconLibrary": "lucide"
+  "registries": {
+    "@diceui": "https://diceui.com/r/{name}.json"
+  }
 }

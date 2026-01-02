@@ -36,6 +36,11 @@ const filterOperators = new Map<string, string>([
   ["inArray", "$in"],
 ]);
 
+const logicalOperators = new Map<string, string>([
+  ["or", "$or"],
+  ["and", "$and"],
+]);
+
 function parseValue(
   value: Array<string> | string,
   variant: string
@@ -75,7 +80,6 @@ function parseValue(
 
 function createFilterItem(filter: IFilter) {
   const value = parseValue(filter.value, filter.variant);
-  console.log("🚀 ~ createFilterItem ~ value:", value);
   const operator = filterOperators.get(filter.operator) ?? "$eq";
   const parts = filter.id.trim().split(".");
 
@@ -104,10 +108,9 @@ export default function parseFilter(filters: IFilterParam) {
     const filter = infoFilter[index] as IFilter;
     logicalOperator.push(createFilterItem(filter));
   }
-
+  const join = logicalOperators.get(filters.logicalOperator!) as string;
   result = {
-    [filters.logicalOperator ? filters.logicalOperator : "$and"]:
-      logicalOperator,
+    [join]: logicalOperator,
   } as any;
   return result;
 }

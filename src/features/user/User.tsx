@@ -25,7 +25,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { useQueryParam } from "@/hooks/useQueyParam";
+import { useQueryParam } from "@/features/user/useQueyParam";
 import { userService } from "@/features/user/userService";
 import filterParser from "@utils/queryParams/filterParser";
 import { DataTableFilterMenu } from "@dscn/components/data-table/data-table-filter-menu";
@@ -34,6 +34,7 @@ import { Checkbox } from "@dscn/components/ui/checkbox";
 import localStorageHelper from "@utils/storages/localStorageHelper";
 import { Loading } from "@components/Loading";
 import { useAppSelector } from "@/store/hook";
+import { DataTableFilterList } from "@/design-system/cn/components/data-table/data-table-filter-list";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 export default function UserPage() {
@@ -146,7 +147,6 @@ export default function UserPage() {
           placeholder: "Search by Date of birth...",
           variant: "date",
         },
-        enableColumnFilter: true,
       },
       {
         id: "status",
@@ -181,7 +181,6 @@ export default function UserPage() {
             },
           ],
         },
-        enableColumnFilter: true,
       },
       {
         id: "createdAt",
@@ -203,7 +202,7 @@ export default function UserPage() {
           variant: "dateRange",
           //icon: Text ,
         },
-        enableColumnFilter: true,
+        enableColumnFilter: false,
       },
       {
         id: "actions",
@@ -271,8 +270,8 @@ export default function UserPage() {
         setUser([...new Set(data)]);
         setPageInfo({ ...paging });
         localStorageHelper.set("paginationInfo", {
-          previous: paging.before,
-          next: paging.after,
+          previous: paging?.before ?? "",
+          next: paging?.after ?? "",
           hasNextPage: paging.hasNextPage,
           hasPreviousPage: paging.hasPreviousPage,
         });
@@ -307,7 +306,7 @@ export default function UserPage() {
 
           <DataTable table={table} isCursorPaged={true}>
             <DataTableAdvancedToolbar table={table}>
-              <DataTableFilterMenu table={table} />
+              <DataTableFilterList table={table} />
               <DataTableSortList table={table} />
             </DataTableAdvancedToolbar>
           </DataTable>
