@@ -5,6 +5,7 @@ import parseSort from "@utils/queryParams/sort";
 
 const filterParser = {
   parse: function (query: Params): IQueryParam {
+    query.filter.info = query.filter.info?.filter((x) => x.value !== "");
     const params = {
       page: query.page,
       before: query.pre,

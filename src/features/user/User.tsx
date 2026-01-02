@@ -24,17 +24,17 @@ import {
   MoreHorizontal,
   XCircle,
 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useQueryParam } from "@/features/user/useQueyParam";
 import { userService } from "@/features/user/userService";
 import filterParser from "@utils/queryParams/filterParser";
-import { DataTableFilterMenu } from "@dscn/components/data-table/data-table-filter-menu";
 import { IPageInfo } from "@/types/IResponse";
 import { Checkbox } from "@dscn/components/ui/checkbox";
 import localStorageHelper from "@utils/storages/localStorageHelper";
 import { Loading } from "@components/Loading";
 import { useAppSelector } from "@/store/hook";
 import { DataTableFilterList } from "@/design-system/cn/components/data-table/data-table-filter-list";
+import IFilter from "@/types/IFilter";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 export default function UserPage() {
@@ -147,6 +147,7 @@ export default function UserPage() {
           placeholder: "Search by Date of birth...",
           variant: "date",
         },
+        enableColumnFilter: true,
       },
       {
         id: "status",
@@ -181,6 +182,7 @@ export default function UserPage() {
             },
           ],
         },
+        enableColumnFilter: true,
       },
       {
         id: "createdAt",
@@ -253,11 +255,55 @@ export default function UserPage() {
     },
     getRowId: (row: any) => row.id,
   });
+  const prevInfoRef = useRef<IFilter[]>([]);
+  const preJoinOperator = useRef<string>("");
+
+  function hasNotInfoValueChanged(prev: IFilter[], next: IFilter[]): boolean {
+    const filterItems = next.filter((x) =>
+      prev.some((p) => p.filterId === x.filterId)
+    );
+    for (let index = 0; index < filterItems.length; index++) {
+      const newItem = filterItems[index];
+      const current = prev.find((x) => x.filterId == newItem.filterId);
+
+      if (
+        current &&
+        JSON.stringify(current.value) != JSON.stringify(newItem.value)
+      ) {
+        return false;
+      }
+    }
+
+    const newItems = next.filter(
+      (x) => !prev.some((p) => p.filterId === x.filterId)
+    );
+
+    return newItems.filter((x) => x.value === "").length === newItems.length;
+  }
 
   useEffect(() => {
     if (query == undefined) {
       return;
     }
+
+    if (query.filter?.info == null || prevInfoRef?.current == undefined) {
+      prevInfoRef.current = [];
+    }
+
+    if (preJoinOperator?.current === undefined) {
+      preJoinOperator.current = "and";
+    }
+
+    if (
+      query.filter.info?.length > 0 &&
+      hasNotInfoValueChanged(prevInfoRef.current, query.filter.info) &&
+      preJoinOperator.current === query.filter.logicalOperator
+    ) {
+      return;
+    }
+    prevInfoRef.current = query.filter.info;
+    preJoinOperator.current = query.filter.logicalOperator as string;
+
     console.log("🚀 ~ useEffect ~ query:", query);
 
     const params = filterParser.parse(query ?? {});
@@ -272,8 +318,8 @@ export default function UserPage() {
         localStorageHelper.set("paginationInfo", {
           previous: paging?.before ?? "",
           next: paging?.after ?? "",
-          hasNextPage: paging.hasNextPage,
-          hasPreviousPage: paging.hasPreviousPage,
+          hasNextPage: paging?.hasNextPage,
+          hasPreviousPage: paging?.hasPreviousPage,
         });
       })
       .finally(() => {

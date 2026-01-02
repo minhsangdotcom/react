@@ -31,8 +31,8 @@ const profileSlice = createSlice({
         state.error = null;
       })
       .addCase(profileAsync.fulfilled, (state: IProfileState, action) => {
-        const result = action.payload.data as IResponse<IUserProfileResponse>;
-        const user = result.results as IUserProfileResponse | undefined;
+        const result = action.payload.data as IResponse<IUserProfileResponse> | undefined;
+        const user = result?.results as IUserProfileResponse | undefined;
 
         localStorageHelper.set<IProfileInfo>(keyConfig.profileInfoKey, {
           user,

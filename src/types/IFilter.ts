@@ -3,4 +3,5 @@ export default interface IFilter {
   value: Array<string> | string;
   operator: string;
   variant: string;
+  filterId: string;
 }

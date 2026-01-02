@@ -1,22 +1,25 @@
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { IFilterParam, Params, defaultParams } from "@/types/Params";
 import queryString from "query-string";
 import IFilter from "@/types/IFilter";
 
-function getFilterItems(filters: string, joinOperator: string | undefined = "and"): IFilterParam {
+function getFilterItems(
+  filters: string,
+  joinOperator: string | undefined = "and"
+): IFilterParam {
   if (!filters) {
     return {} as IFilterParam;
   }
   const filterObj = JSON.parse(filters) as Array<IFilter>;
-  console.log("🚀 ~ getFilterItems ~ filterObj:", filterObj)
   return {
     info: filterObj.map((filter) => ({
       id: filter.id,
       value: filter.value,
       operator: filter.operator,
       variant: filter.variant,
+      filterId: filter.filterId,
     })),
-    logicalOperator: joinOperator
+    logicalOperator: joinOperator,
   };
 }
 
@@ -25,10 +28,14 @@ export function useQueryParam() {
 
   const updateQuery = () => {
     const queryParams = queryString.parse(window.location.search);
-    const { filters, sort, page, perPage, previous, next, joinOperator } = queryParams;
+    const { filters, sort, page, perPage, previous, next, joinOperator } =
+      queryParams;
 
     setQuery({
-      filter: getFilterItems(filters as string, joinOperator as string | undefined),
+      filter: getFilterItems(
+        filters as string,
+        joinOperator as string | undefined
+      ),
       sort: sort
         ? JSON.parse(sort as string)
         : [{ id: "createdAt", desc: true }],
