@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@dscn/components/ui/dropdown-menu";
 import { useDataTable } from "@dscn/hooks/use-data-table";
-import { defaultParams } from "@/types/Params";
+import { defaultParams, Params } from "@/types/Params";
 import { IUser } from "@/features/user/IUser";
 import { UserStatus } from "@/features/user/UserStatus";
 import { Column, ColumnDef } from "@tanstack/react-table";
@@ -24,26 +24,25 @@ import {
   MoreHorizontal,
   XCircle,
 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQueryParam } from "@/features/user/useQueyParam";
 import { userService } from "@/features/user/userService";
 import filterParser from "@utils/queryParams/filterParser";
 import { IPageInfo } from "@/types/IResponse";
 import { Checkbox } from "@dscn/components/ui/checkbox";
 import localStorageHelper from "@utils/storages/localStorageHelper";
-import { Loading } from "@components/Loading";
-import { useAppSelector } from "@/store/hook";
-import { DataTableFilterList } from "@/design-system/cn/components/data-table/data-table-filter-list";
-import IFilter from "@/types/IFilter";
+import { DataTableFilterMenu } from "@/design-system/cn/components/data-table/data-table-filter-menu";
+import SearchBar from "../../components/SearchBar";
 dayjs.extend(utc);
 dayjs.extend(timezone);
-export default function UserPage() {
-  const { isLoading } = useAppSelector((store) => store.auth);
+
+export default function User() {
   const { query } = useQueryParam();
 
   const [user, setUser] = useState<Array<IUser>>([]);
   const [pageInfo, setPageInfo] = useState<IPageInfo>();
-  const [loading, setLoading] = useState<boolean>();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>("");
 
   const columns = useMemo<ColumnDef<IUser>[]>(
     () => [
@@ -255,58 +254,44 @@ export default function UserPage() {
     },
     getRowId: (row: any) => row.id,
   });
-  const prevInfoRef = useRef<IFilter[]>([]);
-  const preJoinOperator = useRef<string>("");
 
-  function hasNotInfoValueChanged(prev: IFilter[], next: IFilter[]): boolean {
-    const filterItems = next.filter((x) =>
-      prev.some((p) => p.filterId === x.filterId)
-    );
-    for (let index = 0; index < filterItems.length; index++) {
-      const newItem = filterItems[index];
-      const current = prev.find((x) => x.filterId == newItem.filterId);
-
-      if (
-        current &&
-        JSON.stringify(current.value) != JSON.stringify(newItem.value)
-      ) {
-        return false;
-      }
-    }
-
-    const newItems = next.filter(
-      (x) => !prev.some((p) => p.filterId === x.filterId)
-    );
-
-    return newItems.filter((x) => x.value === "").length === newItems.length;
-  }
+  // useDataFilterList(
+  //   query,
+  //   () => {
+  //     const params = filterParser.parse(query as Params);
+  //     if (search !== "") {
+  //       params.keyword = search;
+  //     }
+  //     setLoading(true);
+  //     userService
+  //       .list(params)
+  //       .then((result) => {
+  //         const data = result?.data?.results?.data as Array<IUser>;
+  //         const paging = result?.data?.results?.paging as IPageInfo;
+  //         setUser([...new Set(data)]);
+  //         setPageInfo({ ...paging });
+  //         localStorageHelper.set("paginationInfo", {
+  //           previous: paging?.before ?? "",
+  //           next: paging?.after ?? "",
+  //           hasNextPage: paging?.hasNextPage,
+  //           hasPreviousPage: paging?.hasPreviousPage,
+  //         });
+  //       })
+  //       .finally(() => {
+  //         setLoading(false);
+  //       });
+  //   },
+  //   [search]
+  // );
 
   useEffect(() => {
-    if (query == undefined) {
+    if (query === undefined) {
       return;
     }
-
-    if (query.filter?.info == null || prevInfoRef?.current == undefined) {
-      prevInfoRef.current = [];
+    const params = filterParser.parse(query as Params);
+    if (search !== "") {
+      params.keyword = search;
     }
-
-    if (preJoinOperator?.current === undefined) {
-      preJoinOperator.current = "and";
-    }
-
-    if (
-      query.filter.info?.length > 0 &&
-      hasNotInfoValueChanged(prevInfoRef.current, query.filter.info) &&
-      preJoinOperator.current === query.filter.logicalOperator
-    ) {
-      return;
-    }
-    prevInfoRef.current = query.filter.info;
-    preJoinOperator.current = query.filter.logicalOperator as string;
-
-    console.log("🚀 ~ useEffect ~ query:", query);
-
-    const params = filterParser.parse(query ?? {});
     setLoading(true);
     userService
       .list(params)
@@ -325,34 +310,37 @@ export default function UserPage() {
       .finally(() => {
         setLoading(false);
       });
-  }, [query]);
-
-  if (isLoading || loading) {
-    return <Loading />;
-  }
+  }, [query, search]);
 
   return (
     <div>
       <div className="space-y-4">
         {/* Header with Title */}
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-gray-800 mt-5 ml-5">
+          <h2 className="text-xl font-semibold text-gray-800 mt-5 ml-2">
             User
           </h2>
         </div>
 
         {/* Table Container */}
-        <div className="p-4 bg-white">
+        <div className="relative overflow-x-auto">
           {/* Add Button aligned to the right */}
           <div className="flex justify-end mb-4">
             <button className="bg-brand-primary text-white font-medium px-8 py-2 rounded-lg shadow-sm hover:bg-brand-primary-hover transition">
               Create new
             </button>
           </div>
-
-          <DataTable table={table} isCursorPaged={true}>
+          <DataTable table={table} isCursorPaged={true} isloading={loading}>
             <DataTableAdvancedToolbar table={table}>
-              <DataTableFilterList table={table} />
+              <SearchBar
+                value={search}
+                onChange={setSearch}
+                placeholder="Search anything..."
+                className="w-full max-w-xs"
+                inputClassName="h-9 py-1.5 text-sm border border-gray-200 bg-white hover:bg-gray-100 focus:bg-gray-100"
+              />
+
+              <DataTableFilterMenu table={table} />
               <DataTableSortList table={table} />
             </DataTableAdvancedToolbar>
           </DataTable>

@@ -61,7 +61,6 @@ async function fetchRole() {
 }
 
 export default function Role() {
-  const { isLoading } = useAppSelector((store) => store.auth);
   const [role, setRole] = useState<Array<IRole>>();
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -234,7 +233,7 @@ export default function Role() {
         .then((result) => {
           if (result?.data?.results) {
             const sortedRoles = result?.data?.results.sort(
-              (a : any, b : any) =>
+              (a: any, b: any) =>
                 new Date(b.createdAt).getTime() -
                 new Date(a.createdAt).getTime()
             );
@@ -245,22 +244,18 @@ export default function Role() {
     }
   }, [open, dialogOpen]);
 
-  if (loading || isLoading) {
-    return <Loading />;
-  }
-
   return (
     <div>
       <div className="space-y-4">
         {/* Header with Title */}
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-gray-800 mt-5 ml-5">
+          <h2 className="text-xl font-semibold text-gray-800 mt-5 ml-2">
             Role
           </h2>
         </div>
 
         {/* Table Container */}
-        <div className="p-4 bg-white">
+        <div className="relative overflow-x-auto">
           {/* Add Button aligned to the right */}
           <div className="flex justify-end mb-4">
             <button
@@ -278,6 +273,7 @@ export default function Role() {
             className="w-full text-sm text-left text-gray-700"
             hasPagination={false}
             aria-sort="none"
+            isloading={loading}
           />
         </div>
       </div>
