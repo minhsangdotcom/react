@@ -1,7 +1,12 @@
 import { store } from "@/store/store";
 import { logout } from "@features/auth/authSlice";
 import { refreshAsync } from "@features/auth/authAction";
-import { AxiosError, AxiosInstance, AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
+import {
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  InternalAxiosRequestConfig,
+} from "axios";
 
 export interface AxiosRetryRequestConfig extends AxiosRequestConfig {
   _retry?: boolean;
@@ -9,16 +14,12 @@ export interface AxiosRetryRequestConfig extends AxiosRequestConfig {
 
 let refreshInProgress: Promise<string> | null = null;
 
-export function tokenHandler(
-  config: InternalAxiosRequestConfig<any>
-): InternalAxiosRequestConfig<any> {
+export function tokenHandler(config: InternalAxiosRequestConfig<any>) {
   const token = store.getState().auth.token;
 
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
   }
-
-  return config;
 }
 
 export async function refreshTokenHandler(
@@ -53,7 +54,10 @@ export async function refreshTokenHandler(
     refreshInProgress = store
       .dispatch(refreshAsync(refreshToken))
       .unwrap()
-      .then((res) => res.data?.results?.token!)
+      .then((res) => {
+        console.warn("Token's refreshed sucessfully!.");
+        return res.data!.results!.token;
+      })
       .catch((err) => {
         store.dispatch(logout());
         throw err;

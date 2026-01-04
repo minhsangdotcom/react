@@ -7,7 +7,9 @@ export function requestHandler(
   config: InternalAxiosRequestConfig<any>
 ): InternalAxiosRequestConfig<any> {
   // put bearer token to header
-  return tokenHandler(config);
+  tokenHandler(config);
+
+  return config;
 }
 export async function errorResponseHandler(
   error: any,
