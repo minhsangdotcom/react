@@ -38,38 +38,43 @@ export default function Login() {
   };
 
   return (
-    <div className="login-form-container p-5 max-sm:w-9/10 max-md:w-8/10 max-lg:w-5/10 max-xl:w-lg max-2xl:w-md">
-      <h2 className="login-form-title">Login</h2>
-      <form onSubmit={onSubmit}>
-        <NormalInput
-          type="text"
-          value={form.identifier}
-          isRequired={true}
-          label="Username or email"
-          name="identifier"
-          onChange={onChange}
-        />
+    <div className="display-flex items-center justify-items-center h-screen">
+      <div className="login-form-container p-5 mt-20 w-full sm:w-2/3 lg:w-1/3 xl:max-w-lg">
+        <h2 className="login-form-title">Login</h2>
+        <form onSubmit={onSubmit}>
+          <NormalInput
+            type="text"
+            value={form.identifier}
+            isRequired={true}
+            label="Username or email"
+            name="identifier"
+            onChange={onChange}
+          />
 
-        <PasswordInput
-          value={form.password}
-          isRequired={true}
-          label="Password"
-          name="password"
-          onChange={onChange}
-        />
+          <PasswordInput
+            value={form.password}
+            isRequired={true}
+            label="Password"
+            name="password"
+            onChange={onChange}
+          />
 
-        <LoadingButton
-          loading={isLoading}
-          text="Sign In"
-          type="submit"
-          className="w-full p-3 text-base font-semibold text-white bg-brand-primary hover:bg-brand-primary-hover rounded cursor-pointer mb-[5px] disabled:opacity-50 disabled:cursor-not-allowed"
-        />
+          <LoadingButton
+            loading={isLoading}
+            text="Sign In"
+            type="submit"
+            className="w-full p-3 text-base font-semibold text-white bg-brand-primary hover:bg-brand-primary-hover rounded cursor-pointer mb-[5px] disabled:opacity-50 disabled:cursor-not-allowed"
+          />
 
-        <Link to={"/forgot-password"} className="text-600 forget-password-text">
-          Forget password
-        </Link>
-        {data.error?.en && <p className="error">* {data.error?.en}</p>}
-      </form>
+          <Link
+            to={"/forgot-password"}
+            className="text-600 forget-password-text"
+          >
+            Forget password
+          </Link>
+          {data.error?.en && <p className="error">* {data.error?.en}</p>}
+        </form>
+      </div>
     </div>
   );
 }

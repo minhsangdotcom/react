@@ -3,7 +3,6 @@ import { useSearchParams } from "react-router-dom";
 import authService from "@features/auth/authService";
 
 import LoadingButton from "@components/LoadingButton";
-
 import PasswordInput from "@components/PasswordInput";
 
 export default function ResetPassword() {
@@ -36,7 +35,7 @@ export default function ResetPassword() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="p-5 max-sm:w-9/10 max-md:w-7/10 max-lg:w-5/10 max-xl:w-lg max-2xl:w-md rounded-lg shadow  mt-10 mx-auto p-10"
+      className="p-5 rounded-lg shadow mt-10 mx-auto w-full sm:w-2/3 lg:w-1/3 xl:max-w-lg"
     >
       <h2 className="text-xl font-semibold mb-2">Reset your password</h2>
       <PasswordInput

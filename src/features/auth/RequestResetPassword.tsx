@@ -21,7 +21,7 @@ export default function RequestResetPassword() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="p-5 max-sm:w-9/10 max-md:w-7/10 max-lg:w-5/10 max-xl:w-lg max-2xl:w-md rounded-lg shadow  mt-10 mx-auto p-10"
+      className="rounded-lg shadow  mt-10 mx-auto p-10  w-full sm:w-2/3 lg:w-1/3 xl:max-w-lg"
     >
       <h2 className="text-xl font-semibold mb-2">Forgot your password?</h2>
       <p className="text-muted-foreground mb-6">

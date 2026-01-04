@@ -2,7 +2,6 @@
   display: flex;
   justify-content: center;
   flex-direction: column;
-  margin: auto;
 }
 .login-form-group label {
   margin-bottom: 0.5rem;
