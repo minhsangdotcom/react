@@ -84,7 +84,7 @@ function PermissionNode({
         />
 
         {/* Label (truncate prevents overflow) */}
-        <span className="text-sm text-black truncate max-w-[240px]">
+        <span className="text-sm text-black truncate max-w-60">
           {node.label}
         </span>
       </div>
@@ -182,11 +182,13 @@ export default function RolePopup({
   onCreate,
   onUpdate,
   setOpen,
+  setRoleId,
   roleId,
 }: {
   onCreate: (roleData: ICreateRoleRequest) => Promise<void>;
   onUpdate: (roleData: IUpdateRoleRequest) => Promise<void>;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setRoleId: React.Dispatch<React.SetStateAction<string | null>>;
   roleId: string | null;
 }) {
   const [name, setName] = useState<string>("");
@@ -295,15 +297,18 @@ export default function RolePopup({
   };
 
   return (
-    <DialogContent aria-describedby={ roleId ? "update-role" : "create-role"} className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl p-6 w-[800px] max-w-full shadow-lg max-h-[90vh] flex flex-col">
+    <DialogContent
+      aria-describedby={roleId ? "update-role" : "create-role"}
+      className="fixed inset-0 flex items-center justify-center z-50"
+    >
+      <div className="bg-white rounded-xl p-6 w-200 max-w-full shadow-lg max-h-[90vh] flex flex-col">
         <DialogHeader className="mb-2">
           <DialogTitle className="text-lg font-semibold">
             {roleId ? "Update Role" : "Create New Role"}
           </DialogTitle>
         </DialogHeader>
 
-        <div className="grid grid-cols-2 gap-6 flex-1 overflow-hidden">
+        <div className="grid max-sm:grid-cols-1 grid-cols-2 gap-6 flex-1 overflow-hidden">
           {/* Left side: Name & Description */}
           <div className="space-y-4">
             <input
@@ -323,29 +328,25 @@ export default function RolePopup({
           </div>
 
           {/* Right side: Permissions */}
-          <div>
+          <div className="space-y-4 rounded p-2 overflow-auto">
             <h1 className="mb-3 text-lg font-semibold text-gray-800">
               Permissions
             </h1>
 
-            <div className="space-y-4 rounded overflow-auto max-h-[60vh] pr-2">
-              <div className="min-w-max">
-                {groups.map((group) => (
-                  <div key={group.name}>
-                    <h3 className="mb-1 font-medium">{group.label}</h3>
+            {groups.map((group) => (
+              <div key={group.name}>
+                <h3 className="mb-1 font-medium">{group.label}</h3>
 
-                    {group.permissions.map((p) => (
-                      <PermissionNode
-                        key={p.id}
-                        node={p}
-                        onToggleCheck={onToggleCheck}
-                        onToggleExpand={onToggleExpand}
-                      />
-                    ))}
-                  </div>
+                {group.permissions.map((p) => (
+                  <PermissionNode
+                    key={p.id}
+                    node={p}
+                    onToggleCheck={onToggleCheck}
+                    onToggleExpand={onToggleExpand}
+                  />
                 ))}
               </div>
-            </div>
+            ))}
           </div>
         </div>
 
@@ -353,19 +354,20 @@ export default function RolePopup({
         <DialogFooter className="flex justify-end space-x-2 pt-6">
           <DialogClose asChild>
             <button
-              className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300"
+              className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
               onClick={() => {
                 setOpen(false);
                 setName("");
                 setDescription("");
                 setGroups([]);
+                setRoleId(null);
               }}
             >
               Cancel
             </button>
           </DialogClose>
           <button
-            className="px-4 py-2 rounded bg-brand-primary text-white hover:bg-brand-primary-hover"
+            className="px-4 py-2 rounded bg-brand-primary text-white hover:bg-brand-primary-hover cursor-pointer"
             onClick={handleSubmit}
           >
             {roleId ? "Update" : "Create"}

@@ -6,7 +6,6 @@ import { roleService } from "@/features/role/roleService";
 import { IRole } from "@/features/role/IRole";
 import { DataTable } from "@dscn/components/data-table/data-table";
 
-import { Loading } from "@components/Loading";
 import { defaultParams } from "@/types/Params";
 import {
   DropdownMenu,
@@ -25,13 +24,13 @@ import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import IUpdateRoleRequest from "@/features/role/IUpdateRoleRequest";
 import React from "react";
-import { useAppSelector } from "@/store/hook";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const Popup = React.memo(function ({
   isOpen,
   setOpen,
+  setRoleId,
   handleAddRole,
   handleUpdateRole,
   id,
@@ -40,6 +39,7 @@ const Popup = React.memo(function ({
   setOpen: Dispatch<SetStateAction<boolean>>;
   handleAddRole: (roleData: ICreateRoleRequest) => Promise<void>;
   handleUpdateRole: (roleData: IUpdateRoleRequest) => Promise<void>;
+  setRoleId: Dispatch<SetStateAction<string | null>>;
   id: string | null;
 }) {
   return (
@@ -50,6 +50,7 @@ const Popup = React.memo(function ({
           onUpdate={handleUpdateRole}
           setOpen={setOpen}
           roleId={id}
+          setRoleId={setRoleId}
         />
       )}
     </Dialog>
@@ -216,6 +217,7 @@ export default function Role() {
       console.log("update error:" + result.error);
     }
     setOpen(false);
+    setId(null);
   };
 
   const handleDelete = async () => {
@@ -288,6 +290,7 @@ export default function Role() {
         setOpen={setOpen}
         handleAddRole={handleAddRole}
         handleUpdateRole={handleUpdateRole}
+        setRoleId={setId}
       />
 
       <ConfirmDialog
