@@ -245,37 +245,41 @@ export default function Role() {
   }, [open, dialogOpen]);
 
   return (
-    <div>
-      <div className="space-y-4">
+    <>
+      <div className="p-3 h-screen md:h-[calc(100vh-64px)]">
         {/* Header with Title */}
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-gray-800 mt-5 ml-2">
-            Role
-          </h2>
-        </div>
+        <h2 className="text-xl font-semibold text-gray-800 mt-5 ml-2">Role</h2>
 
-        {/* Table Container */}
-        <div className="relative overflow-x-auto">
-          {/* Add Button aligned to the right */}
-          <div className="flex justify-end mb-4">
-            <button
-              className="bg-brand-primary text-white font-medium px-8 py-2 rounded-lg shadow-sm hover:bg-brand-primary-hover transition"
-              onClick={() => {
-                setOpen(true);
-              }}
-            >
-              Create new
-            </button>
-          </div>
+        {/* Add Button aligned to the right */}
+        <button
+          className="float-right my-3 cursor-pointer
+          rounded-lg shadow-sm
+          bg-brand-primary text-white font-medium
+          px-6 py-2
+          transition-colors duration-200
+          hover:bg-brand-primary-hover
+          focus-visible:outline-none
+          focus-visible:ring-2
+          focus-visible:ring-brand-primary/50
+          active:scale-[0.98]
+          max-sm:w-full
+          max-sm:py-3
+          max-sm:text-base
+          "
+          onClick={() => {
+            setOpen(true);
+          }}
+        >
+          Create new
+        </button>
 
-          <DataTable
-            table={table}
-            className="w-full text-sm text-left text-gray-700"
-            hasPagination={false}
-            aria-sort="none"
-            isloading={loading}
-          />
-        </div>
+        <DataTable
+          table={table}
+          className="w-full text-sm text-left text-gray-700"
+          hasPagination={false}
+          aria-sort="none"
+          isloading={loading}
+        />
       </div>
 
       <Popup
@@ -293,6 +297,6 @@ export default function Role() {
         onConfirm={handleDelete}
         onCancel={() => setDialogOpen(false)}
       />
-    </div>
+    </>
   );
 }
