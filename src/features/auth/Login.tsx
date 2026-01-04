@@ -38,8 +38,8 @@ export default function Login() {
   };
 
   return (
-    <div className="display-flex items-center justify-items-center h-screen">
-      <div className="login-form-container p-5 mt-20 w-full sm:w-2/3 lg:w-1/3 xl:max-w-lg">
+    <div className="flex items-center justify-center h-screen">
+      <div className="login-form-container p-5 w-full md:w-md">
         <h2 className="login-form-title">Login</h2>
         <form onSubmit={onSubmit}>
           <NormalInput

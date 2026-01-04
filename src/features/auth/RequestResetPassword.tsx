@@ -17,26 +17,27 @@ export default function RequestResetPassword() {
     }
     setLoading(false);
   };
-
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="rounded-lg shadow  mt-10 mx-auto p-10  w-full sm:w-2/3 lg:w-1/3 xl:max-w-lg"
-    >
-      <h2 className="text-xl font-semibold mb-2">Forgot your password?</h2>
-      <p className="text-muted-foreground mb-6">
-        Enter your email address and we’ll send you a reset link.
-      </p>
-      <NormalInput
-        label="Email"
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        name="email"
-        isRequired={true}
-      />
-      <LoadingButton loading={loading} text="Send Reset Link" type="submit" />
-      {error && <p>{error}</p>}
-    </form>
+    <div className="flex justify-center items-center h-screen">
+      <form
+        onSubmit={handleSubmit}
+        className="rounded-lg shadow p-5 w-full md:w-md"
+      >
+        <h2 className="text-xl font-semibold mb-2">Forgot your password?</h2>
+        <p className="text-muted-foreground mb-6">
+          Enter your email address and we’ll send you a reset link.
+        </p>
+        <NormalInput
+          label="Email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          name="email"
+          isRequired={true}
+        />
+        <LoadingButton loading={loading} text="Send Reset Link" type="submit" />
+        {error && <p>{error}</p>}
+      </form>
+    </div>
   );
 }

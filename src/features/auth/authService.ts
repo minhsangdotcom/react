@@ -41,11 +41,10 @@ const authService = {
     });
   },
   resetPassword: async function (
-    userId: string,
     request: IResetpasswordRequest
   ): Promise<IApiResult<void, IBadRequestError | INotFoundError>> {
     return await send({
-      url: `users/${userId}/reset-password`,
+      url: `users/reset-password`,
       method: "PUT",
       data: { ...request },
     });

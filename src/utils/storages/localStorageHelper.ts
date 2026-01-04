@@ -1,6 +1,6 @@
 import { IStorage, ICookieOptions } from "./IStorage";
 
-import { env } from "../../config/env";
+import { env } from "@config/env";
 
 const localStorageHelper: IStorage = {
   set: function <T>(key: string, value: T, options?: ICookieOptions): void {

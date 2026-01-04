@@ -1,6 +1,6 @@
 import { IStorage, ICookieOptions } from "./IStorage";
 
-import { env } from "../../config/env";
+import { env } from "@config/env";
 import Cookies from "js-cookie";
 
 const cookieStorageHelper: IStorage = {

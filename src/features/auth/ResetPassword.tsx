@@ -8,7 +8,7 @@ import PasswordInput from "@components/PasswordInput";
 export default function ResetPassword() {
   const [search] = useSearchParams();
   const token = search.get("token") ?? "";
-  const id = search.get("id") ?? "";
+  const email = search.get("email") ?? "";
 
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -22,9 +22,10 @@ export default function ResetPassword() {
       return;
     }
     setLoading(true);
-    const result = await authService.resetPassword(id, {
+    const result = await authService.resetPassword({
       token,
       password,
+      email,
     });
     if (!result.isSuccess) {
       setError(result.error?.errorDetails.en!);
@@ -33,26 +34,28 @@ export default function ResetPassword() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="p-5 rounded-lg shadow mt-10 mx-auto w-full sm:w-2/3 lg:w-1/3 xl:max-w-lg"
-    >
-      <h2 className="text-xl font-semibold mb-2">Reset your password</h2>
-      <PasswordInput
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        label="New password"
-        isRequired={true}
-      />
+    <div className="flex justify-center items-center h-screen">
+      <form
+        onSubmit={handleSubmit}
+        className="p-5 rounded-lg shadow w-full md:w-md"
+      >
+        <h2 className="text-xl font-semibold mb-2">Reset your password</h2>
+        <PasswordInput
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          label="New password"
+          isRequired={true}
+        />
 
-      <PasswordInput
-        value={confirm}
-        onChange={(e) => setConfirm(e.target.value)}
-        label="Confirm password"
-        isRequired={true}
-      />
-      <LoadingButton loading={loading} text="Reset Password" type="submit" />
-      {error && <p className="text-red-600 pt-2">{error}</p>}
-    </form>
+        <PasswordInput
+          value={confirm}
+          onChange={(e) => setConfirm(e.target.value)}
+          label="Confirm password"
+          isRequired={true}
+        />
+        <LoadingButton loading={loading} text="Reset Password" type="submit" />
+        {error && <p className="text-red-600 pt-2">{error}</p>}
+      </form>
+    </div>
   );
 }
