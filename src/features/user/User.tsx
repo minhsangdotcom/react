@@ -316,7 +316,7 @@ export default function User() {
     <>
       <div className="p-3 h-screen md:h-[calc(100vh-64px)]">
         {/*Title */}
-        <h2 className="text-xl font-semibold text-gray-800 mt-3 ml-2">User</h2>
+        <h1 className="text-xl font-semibold text-gray-800 mt-3 ml-2">User</h1>
 
         {/* Actions */}
         <button

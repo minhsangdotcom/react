@@ -250,7 +250,7 @@ export default function Role() {
     <>
       <div className="p-3 h-screen md:h-[calc(100vh-64px)]">
         {/* Header with Title */}
-        <h2 className="text-xl font-semibold text-gray-800 mt-5 ml-2">Role</h2>
+        <h1 className="text-xl font-semibold text-gray-800 mt-5 ml-2">Role</h1>
 
         {/* Add Button aligned to the right */}
         <button
@@ -277,7 +277,6 @@ export default function Role() {
 
         <DataTable
           table={table}
-          className="w-full text-sm text-left text-gray-700"
           hasPagination={false}
           aria-sort="none"
           isloading={loading}

@@ -80,11 +80,11 @@ function PermissionNode({
           checked={node.checked}
           disabled={node.inherited}
           onChange={(e) => onToggleCheck(node.id, e.target.checked)}
-          className="h-4 w-4 rounded border-gray-600 bg-gray-800 text-blue-500"
+          className="h-4 w-4 rounded border-gray-600 bg-gray-800"
         />
 
         {/* Label (truncate prevents overflow) */}
-        <span className="text-sm text-black truncate max-w-60">
+        <span className="text-sm truncate max-w-60">
           {node.label}
         </span>
       </div>
@@ -301,14 +301,14 @@ export default function RolePopup({
       aria-describedby={roleId ? "update-role" : "create-role"}
       className="fixed inset-0 flex items-center justify-center z-50"
     >
-      <div className="bg-white rounded-xl p-6 w-200 max-w-full shadow-lg max-h-[90vh] flex flex-col">
+      <div className="bg-white rounded-xl p-6 w-200 max-w-full shadow-lg max-h-[90vh] flex flex-col border border:grey-100">
         <DialogHeader className="mb-2">
           <DialogTitle className="text-lg font-semibold">
             {roleId ? "Update Role" : "Create New Role"}
           </DialogTitle>
         </DialogHeader>
 
-        <div className="grid max-sm:grid-cols-1 grid-cols-2 gap-6 flex-1 overflow-hidden">
+        <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6 flex-1 overflow-hidden">
           {/* Left side: Name & Description */}
           <div className="space-y-4">
             <input
@@ -329,13 +329,13 @@ export default function RolePopup({
 
           {/* Right side: Permissions */}
           <div className="space-y-4 rounded p-2 overflow-auto">
-            <h1 className="mb-3 text-lg font-semibold text-gray-800">
+            <h3 className="mb-3 text-lg font-semibold text-gray-800">
               Permissions
-            </h1>
+            </h3>
 
             {groups.map((group) => (
               <div key={group.name}>
-                <h3 className="mb-1 font-medium">{group.label}</h3>
+                <h4 className="mb-1 text-md font-medium">{group.label}</h4>
 
                 {group.permissions.map((p) => (
                   <PermissionNode
