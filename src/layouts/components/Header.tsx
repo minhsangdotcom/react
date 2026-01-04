@@ -14,9 +14,9 @@ export default function AdminLayout() {
     });
   }, []);
   return (
-    <header className="relative flex h-14 items-center justify-between px-4">
+    <header className="relative flex items-center justify-between h-14 md:h-16  px-4">
       <div className="flex items-center gap-2">
-        <SidebarTrigger />
+        <SidebarTrigger/>
       </div>
 
       {!loading ? (

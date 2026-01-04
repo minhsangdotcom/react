@@ -5,15 +5,11 @@ import Header from "./components/Header";
 
 export default function AdminLayout() {
   return (
-    <SidebarProvider defaultOpen={true}>
+    <SidebarProvider defaultOpen>
       <AppSidebar />
-
       <SidebarInset>
         <Header />
-        {/* CONTENT */}
-        <main className="flex-1 p-4">
-          <Outlet />
-        </main>
+        <Outlet />
       </SidebarInset>
     </SidebarProvider>
   );

@@ -19,7 +19,7 @@ export function UserAvatarMenu({ avatarUrl }: { avatarUrl?: string }) {
     <DropdownMenu>
       {/* TRIGGER */}
       <DropdownMenuTrigger asChild>
-        <Avatar className="h-8 w-8 cursor-pointer">
+        <Avatar className="h-8 w-8 md:h-10 md:w-10 cursor-pointer">
           <AvatarImage src={avatarUrl} alt="User avatar" />
         </Avatar>
       </DropdownMenuTrigger>
