@@ -313,39 +313,47 @@ export default function User() {
   }, [query, search]);
 
   return (
-    <div>
-      <div className="space-y-4">
-        {/* Header with Title */}
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-gray-800 mt-5 ml-2">
-            User
-          </h2>
-        </div>
+    <>
+      <div className="p-3 h-screen md:h-[calc(100vh-64px)]">
+        {/*Title */}
+        <h2 className="text-xl font-semibold text-gray-800 mt-3 ml-2">User</h2>
 
-        {/* Table Container */}
-        <div className="relative overflow-x-auto">
-          {/* Add Button aligned to the right */}
-          <div className="flex justify-end mb-4">
-            <button className="bg-brand-primary text-white font-medium px-8 py-2 rounded-lg shadow-sm hover:bg-brand-primary-hover transition">
-              Create new
-            </button>
-          </div>
-          <DataTable table={table} isCursorPaged={true} isloading={loading}>
-            <DataTableAdvancedToolbar table={table}>
-              <SearchBar
-                value={search}
-                onChange={setSearch}
-                placeholder="Search anything..."
-                className="w-full max-w-xs"
-                inputClassName="h-9 py-1.5 text-sm border border-gray-200 bg-white hover:bg-gray-100 focus:bg-gray-100"
-              />
+        {/* Actions */}
+        <button
+          className="float-right my-3 cursor-pointer
+          rounded-lg shadow-sm
+          bg-brand-primary text-white font-medium
+          px-6 py-2
+          transition-colors duration-200
+          hover:bg-brand-primary-hover
+          focus-visible:outline-none
+          focus-visible:ring-2
+          focus-visible:ring-brand-primary/50
+          active:scale-[0.98]
+          max-sm:w-full
+          max-sm:py-3
+          max-sm:text-base
+          "
+        >
+          Create new
+        </button>
 
-              <DataTableFilterMenu table={table} />
-              <DataTableSortList table={table} />
-            </DataTableAdvancedToolbar>
-          </DataTable>
-        </div>
+        {/* {table} */}
+        <DataTable table={table} isCursorPaged={true} isloading={loading}>
+          <DataTableAdvancedToolbar table={table}>
+            <SearchBar
+              value={search}
+              onChange={setSearch}
+              placeholder="Search anything..."
+              className="w-full sm:max-w-xs"
+              inputClassName="max-sm:h-11 h-9 py-2 text-sm border border-gray-200 bg-white hover:bg-gray-100 focus:bg-gray-100"
+            />
+
+            <DataTableFilterMenu table={table} />
+            <DataTableSortList table={table} />
+          </DataTableAdvancedToolbar>
+        </DataTable>
       </div>
-    </div>
+    </>
   );
 }
