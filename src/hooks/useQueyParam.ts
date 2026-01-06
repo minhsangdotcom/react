@@ -25,7 +25,6 @@ function getFilterItems(
 
 export function useQueryParam() {
   const [query, setQuery] = useState<Params>();
-  console.log("🚀 ~ useQueryParam ~ query:", query)
 
   const updateQuery = () => {
     const queryParams = queryString.parse(window.location.search);

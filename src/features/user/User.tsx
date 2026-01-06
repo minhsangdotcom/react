@@ -25,14 +25,14 @@ import {
   XCircle,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { useQueryParam } from "@/features/user/useQueyParam";
+import { useQueryParam } from "@/hooks/useQueyParam";
 import { userService } from "@/features/user/userService";
 import filterParser from "@utils/queryParams/filterParser";
 import { IPageInfo } from "@/types/IResponse";
 import { Checkbox } from "@dscn/components/ui/checkbox";
 import localStorageHelper from "@utils/storages/localStorageHelper";
 import { DataTableFilterMenu } from "@/design-system/cn/components/data-table/data-table-filter-menu";
-import SearchBar from "../../components/SearchBar";
+import SearchBar from "@components/SearchBar";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
