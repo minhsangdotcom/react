@@ -28,12 +28,13 @@ import { useEffect, useMemo, useState } from "react";
 import { useQueryParam } from "@/hooks/useQueyParam";
 import { userService } from "@/features/user/userService";
 import filterParser from "@utils/queryParams/filterParser";
-import { IPageInfo, IPagination } from "@/types/IResponse";
+import { IPageInfo } from "@/types/IResponse";
 import { Checkbox } from "@dscn/components/ui/checkbox";
 import localStorageHelper from "@utils/storages/localStorageHelper";
 import { DataTableFilterMenu } from "@/design-system/cn/components/data-table/data-table-filter-menu";
 import SearchBar from "@components/SearchBar";
 import CreateUserPopup from "./CreateUserPopup";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -67,6 +68,8 @@ export default function User() {
   const [loading, setLoading] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
   const [open, setOpen] = useState<boolean>(false);
+  const [openConfirmDialog, setConfirmDialogOpen] = useState<boolean>(false);
+  const [id, setId] = useState<string | null>(null);
 
   const columns = useMemo<ColumnDef<IUser>[]>(
     () => [
@@ -84,13 +87,13 @@ export default function User() {
             aria-label="Select all"
           />
         ),
-        cell: ({ row }) => (
+        cell: ({ row }) => {
           <Checkbox
             checked={row.getIsSelected()}
             onCheckedChange={(value) => row.toggleSelected(!!value)}
             aria-label="Select row"
-          />
-        ),
+          />;
+        },
         size: 32,
         enableSorting: false,
         enableHiding: false,
@@ -248,11 +251,23 @@ export default function User() {
               <DropdownMenuContent
                 align="end"
                 sideOffset={4}
-                className="min-w-[140px] bg-white dark:bg-800 rounded-lg shadow-lg p-1 z-100 cursor-pointer border-0"
+                className="min-w-35 bg-white dark:bg-800 rounded-lg shadow-lg p-1 z-100 cursor-pointer border-0"
               >
-                <DropdownMenuItem>Edit</DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setId(row.getValue("id"));
+                  }}
+                >
+                  Edit
+                </DropdownMenuItem>
 
-                <DropdownMenuItem variant="destructive">
+                <DropdownMenuItem
+                  variant="destructive"
+                  onClick={() => {
+                    setId(row.getValue("id"));
+                    setConfirmDialogOpen(true);
+                  }}
+                >
                   Delete
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -309,7 +324,7 @@ export default function User() {
   // );
 
   useEffect(() => {
-    if (query === undefined || open) {
+    if (query === undefined || open || openConfirmDialog) {
       return;
     }
     const params = filterParser.parse(query as Params);
@@ -338,7 +353,14 @@ export default function User() {
       .finally(() => {
         setLoading(false);
       });
-  }, [query, search, open]);
+  }, [query, search, open, openConfirmDialog]);
+
+  async function handleDelete(): Promise<void> {
+    setLoading(true);
+    await userService.delete(id as string);
+    setLoading(false);
+    setConfirmDialogOpen(false);
+  }
 
   return (
     <div>
@@ -384,6 +406,13 @@ export default function User() {
         </DataTable>
       </div>
       <CreateUserPopup open={open} setOpen={setOpen} />
+      <ConfirmDialog
+        isOpen={openConfirmDialog}
+        title="Delete Item"
+        message="Are you sure you want to delete this item?"
+        onConfirm={handleDelete}
+        onCancel={() => setConfirmDialogOpen(false)}
+      />
     </div>
   );
 }

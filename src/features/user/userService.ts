@@ -28,12 +28,21 @@ export const userService = {
       IBadRequestError | IUnauthorizedError | IForbiddenError
     >
   > {
-    //
     return await send({
       url: "users",
       method: "POST",
       data: request,
       headers: { "Content-Type": "multipart/form-data" },
+    });
+  },
+  delete: async function (
+    id: string
+  ): Promise<
+    IApiResult<void, IBadRequestError | IUnauthorizedError | IForbiddenError>
+  > {
+    return await send({
+      url: `users/${id}`,
+      method: "DELETE",
     });
   },
 };
