@@ -23,39 +23,8 @@ import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import IUpdateRoleRequest from "@/features/role/IUpdateRoleRequest";
-import React from "react";
 dayjs.extend(utc);
 dayjs.extend(timezone);
-
-const Popup = React.memo(function ({
-  isOpen,
-  setOpen,
-  setRoleId,
-  handleAddRole,
-  handleUpdateRole,
-  id,
-}: {
-  isOpen: boolean;
-  setOpen: Dispatch<SetStateAction<boolean>>;
-  handleAddRole: (roleData: ICreateRoleRequest) => Promise<void>;
-  handleUpdateRole: (roleData: IUpdateRoleRequest) => Promise<void>;
-  setRoleId: Dispatch<SetStateAction<string | null>>;
-  id: string | null;
-}) {
-  return (
-    <Dialog open={isOpen}>
-      {isOpen && (
-        <RolePopup
-          onCreate={handleAddRole}
-          onUpdate={handleUpdateRole}
-          setOpen={setOpen}
-          roleId={id}
-          setRoleId={setRoleId}
-        />
-      )}
-    </Dialog>
-  );
-});
 
 async function fetchRole() {
   return await roleService.list({});
@@ -156,7 +125,7 @@ export default function Role() {
               <DropdownMenuContent
                 align="end"
                 sideOffset={4}
-                className="min-w-[140px] bg-white dark:bg-800 rounded-lg shadow-lg p-1 z-100 cursor-pointer border-0"
+                className="min-w-35 bg-white dark:bg-800 rounded-lg shadow-lg p-1 z-100 cursor-pointer border-0"
               >
                 <DropdownMenuItem
                   onClick={(_) => {
@@ -199,27 +168,6 @@ export default function Role() {
     getRowId: (row: any) => row.id,
   });
 
-  const handleAddRole = async (roleData: ICreateRoleRequest) => {
-    setLoading(true);
-    const result = await roleService.create(roleData);
-    setLoading(false);
-    if (!result.isSuccess) {
-      console.log("create error:" + result.error);
-    }
-    setOpen(false);
-  };
-
-  const handleUpdateRole = async (roleData: IUpdateRoleRequest) => {
-    setLoading(true);
-    const result = await roleService.update(id!, roleData);
-    setLoading(false);
-    if (!result.isSuccess) {
-      console.log("update error:" + result.error);
-    }
-    setOpen(false);
-    setId(null);
-  };
-
   const handleDelete = async () => {
     const result = await roleService.delete(id!);
     if (!result.isSuccess) {
@@ -229,21 +177,21 @@ export default function Role() {
   };
 
   useEffect(() => {
-    if (!open && !dialogOpen) {
-      setLoading(true);
-      fetchRole()
-        .then((result) => {
-          if (result?.data?.results) {
-            const sortedRoles = result?.data?.results.sort(
-              (a: any, b: any) =>
-                new Date(b.createdAt).getTime() -
-                new Date(a.createdAt).getTime()
-            );
-            setRole([...sortedRoles]);
-          }
-        })
-        .finally(() => setLoading(false));
+    if (open || dialogOpen) {
+      return;
     }
+    setLoading(true);
+    fetchRole()
+      .then((result) => {
+        if (result?.data?.results) {
+          const sortedRoles = result?.data?.results.sort(
+            (a: any, b: any) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+          setRole([...sortedRoles]);
+        }
+      })
+      .finally(() => setLoading(false));
   }, [open, dialogOpen]);
 
   return (
@@ -283,12 +231,10 @@ export default function Role() {
         />
       </div>
 
-      <Popup
-        isOpen={open}
-        id={id}
+      <RolePopup
+        open={open}
+        roleId={id}
         setOpen={setOpen}
-        handleAddRole={handleAddRole}
-        handleUpdateRole={handleUpdateRole}
         setRoleId={setId}
       />
 

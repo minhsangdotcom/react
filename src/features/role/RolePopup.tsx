@@ -1,6 +1,7 @@
 import { DialogContent } from "@radix-ui/react-dialog";
-import { useState, useLayoutEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import {
+  Dialog,
   DialogClose,
   DialogFooter,
   DialogHeader,
@@ -18,6 +19,7 @@ import {
 import { IRoleResponse } from "@/features/role/IRole";
 import ICreateRoleRequest from "@/features/role/ICreateRoleRequest";
 import IUpdateRoleRequest from "@/features/role/IUpdateRoleRequest";
+import LoadingButton from "@/components/LoadingButton";
 
 function mapPermission(permission: any): IPermission {
   return {
@@ -84,9 +86,7 @@ function PermissionNode({
         />
 
         {/* Label (truncate prevents overflow) */}
-        <span className="text-sm truncate max-w-60">
-          {node.label}
-        </span>
+        <span className="text-sm truncate max-w-60">{node.label}</span>
       </div>
 
       {/* Children */}
@@ -179,14 +179,12 @@ function markAsChecked(
 }
 
 export default function RolePopup({
-  onCreate,
-  onUpdate,
+  open,
   setOpen,
   setRoleId,
   roleId,
 }: {
-  onCreate: (roleData: ICreateRoleRequest) => Promise<void>;
-  onUpdate: (roleData: IUpdateRoleRequest) => Promise<void>;
+  open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setRoleId: React.Dispatch<React.SetStateAction<string | null>>;
   roleId: string | null;
@@ -194,25 +192,22 @@ export default function RolePopup({
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [groups, setGroups] = useState<IPermissionGroup[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const didInit = useRef(false);
-
-  useLayoutEffect(() => {
-    if (didInit.current) {
+  useEffect(() => {
+    if (!open) {
       return;
     }
-    didInit.current = true;
 
     init();
-  }, []);
+  }, [open]);
 
   async function init() {
-    const apiResults = await permissionService.list();
-    if (!apiResults?.data?.results?.length) {
+    const result = await permissionService.list();
+    if (!result?.data?.results?.length) {
       return;
     }
-
-    const permissions = apiResults.data.results as IGroupPermissionResponse[];
+    const permissions = result.data.results as IGroupPermissionResponse[];
     let groups = mapPermissionGroups(permissions);
 
     if (roleId) {
@@ -276,7 +271,7 @@ export default function RolePopup({
     );
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     const permissionIds = collectCheckedParents(
@@ -288,92 +283,97 @@ export default function RolePopup({
       description,
       permissionIds,
     };
-
+    setLoading(true);
     if (roleId) {
-      onUpdate(payload as IUpdateRoleRequest);
+      await roleService.update(roleId!, payload);
     } else {
-      onCreate(payload as ICreateRoleRequest);
+      await roleService.create(payload);
     }
+    setLoading(false);
+    setRoleId(null);
+    setOpen(false);
   };
 
   return (
-    <DialogContent
-      aria-describedby={roleId ? "update-role" : "create-role"}
-      className="fixed inset-0 flex items-center justify-center z-50"
-    >
-      <div className="bg-white rounded-xl p-6 w-200 max-w-full shadow-lg max-h-[90vh] flex flex-col border border:grey-100">
-        <DialogHeader className="mb-2">
-          <DialogTitle className="text-lg font-semibold">
-            {roleId ? "Update Role" : "Create New Role"}
-          </DialogTitle>
-        </DialogHeader>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent
+        aria-describedby={roleId ? "update-role" : "create-role"}
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/40 backdrop-blur-[2px]"
+      >
+        <div className="bg-white rounded-xl p-6 w-200 max-w-full shadow-lg max-h-[90vh] flex flex-col border border:grey-100">
+          <DialogHeader className="mb-2">
+            <DialogTitle className="text-lg font-semibold">
+              {roleId ? "Update Role" : "Create New Role"}
+            </DialogTitle>
+          </DialogHeader>
 
-        <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6 flex-1 overflow-hidden">
-          {/* Left side: Name & Description */}
-          <div className="space-y-4">
-            <input
-              type="text"
-              className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
-              placeholder="Role Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
+          <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6 flex-1 overflow-hidden">
+            {/* Left side: Name & Description */}
+            <div className="space-y-4">
+              <input
+                type="text"
+                className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
+                placeholder="Role Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
 
-            <textarea
-              className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
-              placeholder="Description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
+              <textarea
+                className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
+                placeholder="Description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </div>
+
+            {/* Right side: Permissions */}
+            <div className="space-y-4 rounded p-2 overflow-auto">
+              <h3 className="mb-3 text-lg font-semibold text-gray-800">
+                Permissions
+              </h3>
+
+              {groups.map((group) => (
+                <div key={group.name}>
+                  <h4 className="mb-1 text-md font-medium">{group.label}</h4>
+
+                  {group.permissions.map((p) => (
+                    <PermissionNode
+                      key={p.id}
+                      node={p}
+                      onToggleCheck={onToggleCheck}
+                      onToggleExpand={onToggleExpand}
+                    />
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Right side: Permissions */}
-          <div className="space-y-4 rounded p-2 overflow-auto">
-            <h3 className="mb-3 text-lg font-semibold text-gray-800">
-              Permissions
-            </h3>
-
-            {groups.map((group) => (
-              <div key={group.name}>
-                <h4 className="mb-1 text-md font-medium">{group.label}</h4>
-
-                {group.permissions.map((p) => (
-                  <PermissionNode
-                    key={p.id}
-                    node={p}
-                    onToggleCheck={onToggleCheck}
-                    onToggleExpand={onToggleExpand}
-                  />
-                ))}
-              </div>
-            ))}
-          </div>
+          {/* Action buttons */}
+          <DialogFooter className="flex justify-end space-x-2 pt-6">
+            <DialogClose asChild>
+              <button
+                className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
+                onClick={() => {
+                  setName("");
+                  setDescription("");
+                  setGroups([]);
+                  setRoleId(null);
+                }}
+              >
+                Cancel
+              </button>
+            </DialogClose>
+            <LoadingButton
+              loading={loading}
+              text={roleId ? "Update" : "Create"}
+              onClick={handleSubmit}
+              type="button"
+              className="px-4 py-2 rounded bg-brand-primary text-white hover:bg-brand-primary-hover cursor-pointer"
+            />
+          </DialogFooter>
         </div>
-
-        {/* Action buttons */}
-        <DialogFooter className="flex justify-end space-x-2 pt-6">
-          <DialogClose asChild>
-            <button
-              className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
-              onClick={() => {
-                setOpen(false);
-                setName("");
-                setDescription("");
-                setGroups([]);
-                setRoleId(null);
-              }}
-            >
-              Cancel
-            </button>
-          </DialogClose>
-          <button
-            className="px-4 py-2 rounded bg-brand-primary text-white hover:bg-brand-primary-hover cursor-pointer"
-            onClick={handleSubmit}
-          >
-            {roleId ? "Update" : "Create"}
-          </button>
-        </DialogFooter>
-      </div>
-    </DialogContent>
+      </DialogContent>
+    </Dialog>
   );
 }
