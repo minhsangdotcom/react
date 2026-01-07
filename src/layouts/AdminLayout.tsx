@@ -5,7 +5,7 @@ import Header from "./components/Header";
 
 export default function AdminLayout() {
   return (
-    <SidebarProvider defaultOpen>
+    <SidebarProvider defaultOpen = {false}>
       <AppSidebar />
       <SidebarInset>
         <Header />

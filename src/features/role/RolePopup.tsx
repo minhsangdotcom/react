@@ -207,7 +207,7 @@ export default function RolePopup({
   }, []);
 
   async function init() {
-    const apiResults = await permissionService.listPermission();
+    const apiResults = await permissionService.list();
     if (!apiResults?.data?.results?.length) {
       return;
     }

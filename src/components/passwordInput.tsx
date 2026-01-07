@@ -8,6 +8,8 @@ type PasswordInputProps = {
   label?: string;
   placeholder?: string;
   isRequired: boolean;
+  labelClassName?: string;
+  inputClassName?: string;
 };
 
 export default function PasswordInput(inputProps: PasswordInputProps) {
@@ -15,17 +17,35 @@ export default function PasswordInput(inputProps: PasswordInputProps) {
   const [isHidden, setHidden] = useState(true);
   return (
     <div className="form-group">
-      <label htmlFor="password">{label}</label>
+      {inputProps.labelClassName ? (
+        <label htmlFor="password" className={inputProps.labelClassName}>
+          {label}
+        </label>
+      ) : (
+        <label htmlFor="password">{label}</label>
+      )}
       <div className="password-wrapper">
-        <input
-          className="form-input"
-          name={name}
-          type={isHidden ? "password" : "text"}
-          value={value}
-          onChange={onChange}
-          required={isRequired}
-          placeholder={placeholder}
-        />
+        {inputProps.inputClassName ? (
+          <input
+            className={inputProps.inputClassName}
+            name={name}
+            type={isHidden ? "password" : "text"}
+            value={value}
+            onChange={onChange}
+            required={isRequired}
+            placeholder={placeholder}
+          />
+        ) : (
+          <input
+            className="form-input"
+            name={name}
+            type={isHidden ? "password" : "text"}
+            value={value}
+            onChange={onChange}
+            required={isRequired}
+            placeholder={placeholder}
+          />
+        )}
 
         <button
           type="button"
@@ -34,11 +54,7 @@ export default function PasswordInput(inputProps: PasswordInputProps) {
           aria-label={isHidden ? "Show password" : "Hide password"}
         >
           <img
-            src={
-              isHidden
-                ? "/icons/eye-closed.png"
-                : "/icons/eye.png"
-            }
+            src={isHidden ? "/icons/eye-closed.png" : "/icons/eye.png"}
             alt=""
           />
         </button>

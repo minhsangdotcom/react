@@ -4,7 +4,7 @@ import { send } from "@utils/http/api";
 import { IApiResult } from "@utils/http/IApiResult";
 
 const permissionService = {
-  listPermission: async function (): Promise<
+  list: async function (): Promise<
     IApiResult<IResponse<Array<IGroupPermissionResponse>>, void>
   > {
     return await send({

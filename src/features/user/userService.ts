@@ -5,7 +5,7 @@ import {
 } from "@/types/IError";
 import IQueryParam from "@/types/IQueryParam";
 import IResponse, { IPagination } from "@/types/IResponse";
-import { IUser } from "@/features/user/IUser";
+import { IUserResponse } from "@/features/user/IUser";
 import { send } from "@utils/http/api";
 import { IApiResult } from "@utils/http/IApiResult";
 
@@ -14,10 +14,26 @@ export const userService = {
     params: IQueryParam
   ): Promise<
     IApiResult<
-      IResponse<IPagination<Array<IUser>>>,
+      IResponse<IPagination<Array<IUserResponse>>>,
       IBadRequestError | IUnauthorizedError | IForbiddenError
     >
   > {
     return await send({ url: "users", method: "GET", data: params });
+  },
+  create: async function (
+    request: FormData
+  ): Promise<
+    IApiResult<
+      IResponse<IUserResponse>,
+      IBadRequestError | IUnauthorizedError | IForbiddenError
+    >
+  > {
+    //
+    return await send({
+      url: "users",
+      method: "POST",
+      data: request,
+      headers: { "Content-Type": "multipart/form-data" },
+    });
   },
 };

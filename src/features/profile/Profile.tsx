@@ -117,7 +117,7 @@ export default function Profile() {
 
             <label className="absolute bottom-0 right-1 flex h-5.5 w-5.5 items-center justify-center rounded-full bg-blue-500 shadow cursor-pointer">
               <img src="/icons/edit-icon.png" className="h-3 w-3" />
-              <input type="file" hidden />
+              <input type="file" hidden onChange={handleFileChange} />
             </label>
           </div>
 

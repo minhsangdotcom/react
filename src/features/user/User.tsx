@@ -12,7 +12,7 @@ import {
 } from "@dscn/components/ui/dropdown-menu";
 import { useDataTable } from "@dscn/hooks/use-data-table";
 import { defaultParams, Params } from "@/types/Params";
-import { IUser } from "@/features/user/IUser";
+import { IUser, IUserResponse } from "@/features/user/IUser";
 import { UserStatus } from "@/features/user/UserStatus";
 import { Column, ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
@@ -28,13 +28,36 @@ import { useEffect, useMemo, useState } from "react";
 import { useQueryParam } from "@/hooks/useQueyParam";
 import { userService } from "@/features/user/userService";
 import filterParser from "@utils/queryParams/filterParser";
-import { IPageInfo } from "@/types/IResponse";
+import { IPageInfo, IPagination } from "@/types/IResponse";
 import { Checkbox } from "@dscn/components/ui/checkbox";
 import localStorageHelper from "@utils/storages/localStorageHelper";
 import { DataTableFilterMenu } from "@/design-system/cn/components/data-table/data-table-filter-menu";
 import SearchBar from "@components/SearchBar";
+import CreateUserPopup from "./CreateUserPopup";
 dayjs.extend(utc);
 dayjs.extend(timezone);
+
+function toIUser(dto: IUserResponse): IUser {
+  return {
+    id: dto.id,
+    username: dto.username,
+    email: dto.email,
+
+    firstName: dto.firstName ?? "",
+    lastName: dto.lastName ?? "",
+    phoneNumber: dto.phoneNumber ?? "",
+
+    password: "",
+
+    dateOfBirth: dto.dateOfBirth ?? "",
+    gender: dto.gender ?? null,
+    avatar: dto.avatar ?? null,
+    status: dto.status,
+    createdAt: new Date(dto.createdAt),
+    roles: [],
+    permissions: [],
+  };
+}
 
 export default function User() {
   const { query } = useQueryParam();
@@ -43,6 +66,7 @@ export default function User() {
   const [pageInfo, setPageInfo] = useState<IPageInfo>();
   const [loading, setLoading] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
+  const [open, setOpen] = useState<boolean>(false);
 
   const columns = useMemo<ColumnDef<IUser>[]>(
     () => [
@@ -285,7 +309,7 @@ export default function User() {
   // );
 
   useEffect(() => {
-    if (query === undefined) {
+    if (query === undefined || open) {
       return;
     }
     const params = filterParser.parse(query as Params);
@@ -296,9 +320,13 @@ export default function User() {
     userService
       .list(params)
       .then((result) => {
-        const data = result?.data?.results?.data as Array<IUser>;
-        const paging = result?.data?.results?.paging as IPageInfo;
-        setUser([...new Set(data)]);
+        if (!result.data?.results) {
+          return;
+        }
+        const { data, paging } = result.data.results;
+        const users = data.map((x) => toIUser(x));
+
+        setUser([...new Set([...users])]);
         setPageInfo({ ...paging });
         localStorageHelper.set("paginationInfo", {
           previous: paging?.before ?? "",
@@ -310,10 +338,10 @@ export default function User() {
       .finally(() => {
         setLoading(false);
       });
-  }, [query, search]);
+  }, [query, search, open]);
 
   return (
-    <>
+    <div>
       <div className="p-3 h-screen md:h-[calc(100vh-64px)]">
         {/*Title */}
         <h1 className="text-xl font-semibold text-gray-800 mt-3 ml-2">User</h1>
@@ -334,6 +362,7 @@ export default function User() {
           max-sm:py-3
           max-sm:text-base
           "
+          onClick={() => setOpen(true)}
         >
           Create new
         </button>
@@ -354,6 +383,7 @@ export default function User() {
           </DataTableAdvancedToolbar>
         </DataTable>
       </div>
-    </>
+      <CreateUserPopup open={open} setOpen={setOpen} />
+    </div>
   );
 }
