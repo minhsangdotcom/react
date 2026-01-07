@@ -139,27 +139,20 @@ export default function CreateUserPopup({
     if (!open) {
       return;
     }
-    setLoading((pre) => !pre);
-    roleService
-      .list({})
-      .then((data) => {
-        const roles = data.data?.results as IRole[];
-        setRoles([...roles]);
-      })
-      .catch((err) => {})
-      .finally(() => setLoading(false));
+    setLoading(true);
+    roleService.list({}).then((data) => {
+      const roles = data.data?.results as IRole[];
+      setRoles([...roles]);
+    });
 
-    permissionService
-      .list()
-      .then((data) => {
-        const groups = data.data?.results as IGroupPermissionResponse[];
-        const permissions = groups
-          .flatMap((group) => group.permissions)
-          .map((per) => per);
-        setPermissions([...permissions]);
-      })
-      .catch((err) => {})
-      .finally(() => setLoading(false));
+    permissionService.list().then((data) => {
+      const groups = data.data?.results as IGroupPermissionResponse[];
+      const permissions = groups
+        .flatMap((group) => group.permissions)
+        .map((per) => per);
+      setPermissions([...permissions]);
+    });
+    setLoading(false);
   }, [open]);
 
   return (
@@ -425,10 +418,10 @@ export default function CreateUserPopup({
               </div>
             </form>
           </div>
-          <DialogFooter className="flex items-center justify-end gap-3 px-6 py-5 border-t border-gray-200 dark:border-border-dark bg-gray-50 dark:bg-[#111722] shrink-0">
+          <DialogFooter className="flex justify-end gap-3 px-6 py-5 border-t border-gray-200 dark:border-border-dark bg-gray-50 dark:bg-[#111722] shrink-0">
             <DialogClose asChild>
               <button
-                className="max-sm:w-full px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
+                className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
                 onClick={() => {
                   setOpen(false);
                   setUser(toDefaultIUser());
@@ -442,7 +435,7 @@ export default function CreateUserPopup({
               type="button"
               loading={loading}
               text="Create"
-              className="max-sm:w-full px-4 py-2 rounded bg-brand-primary text-white hover:bg-brand-primary-hover cursor-pointer"
+              className="px-4 py-2 rounded bg-brand-primary text-white hover:bg-brand-primary-hover cursor-pointer"
             />
           </DialogFooter>
         </div>
