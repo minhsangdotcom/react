@@ -123,7 +123,7 @@ export default function Profile() {
 
           {/* Name */}
           <div className="flex flex-col justify-center">
-            <h2 className="text-2xl font-semibold leading-tight">Chloe Kim</h2>
+            <h2 className="text-2xl font-semibold leading-tight">{userProfile.firstName} {userProfile.lastName}</h2>
           </div>
         </div>
 
