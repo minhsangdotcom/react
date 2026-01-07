@@ -12,10 +12,8 @@ export default function LoadingButton({
   text: string;
   type: "submit" | "button" | "reset" | undefined;
   className?: string;
-  onClick?: (e : any) => void;
+  onClick?: (e: any) => void;
 }) {
-  console.log("🚀 ~ LoadingButton ~ className:", className);
-  console.log("🚀 ~ LoadingButton ~ loading:", loading);
   return (
     <button
       disabled={loading}
