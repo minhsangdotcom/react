@@ -25,28 +25,15 @@ export default function PasswordInput(inputProps: PasswordInputProps) {
         <label htmlFor="password">{label}</label>
       )}
       <div className="password-wrapper">
-        {inputProps.inputClassName ? (
-          <input
-            className={inputProps.inputClassName}
-            name={name}
-            type={isHidden ? "password" : "text"}
-            value={value}
-            onChange={onChange}
-            required={isRequired}
-            placeholder={placeholder}
-          />
-        ) : (
-          <input
-            className="form-input"
-            name={name}
-            type={isHidden ? "password" : "text"}
-            value={value}
-            onChange={onChange}
-            required={isRequired}
-            placeholder={placeholder}
-          />
-        )}
-
+        <input
+          className={inputProps.inputClassName ?? "form-input"}
+          name={name}
+          type={isHidden ? "password" : "text"}
+          value={value}
+          onChange={onChange}
+          required={isRequired}
+          placeholder={placeholder}
+        />
         <button
           type="button"
           className={`password-toggle ${!isHidden ? "active" : ""}`}

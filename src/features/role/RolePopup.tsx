@@ -17,8 +17,6 @@ import {
   IPermissionResponse,
 } from "@/types/permission/IPermission";
 import { IRoleResponse } from "@/features/role/IRole";
-import ICreateRoleRequest from "@/features/role/ICreateRoleRequest";
-import IUpdateRoleRequest from "@/features/role/IUpdateRoleRequest";
 import LoadingButton from "@/components/LoadingButton";
 
 function mapPermission(permission: any): IPermission {

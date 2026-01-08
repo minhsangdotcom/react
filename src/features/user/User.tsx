@@ -35,6 +35,7 @@ import { DataTableFilterMenu } from "@/design-system/cn/components/data-table/da
 import SearchBar from "@components/SearchBar";
 import CreateUserPopup from "./CreateUserPopup";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
+import UpdateUser from "./UpdateUserPopup";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -67,7 +68,8 @@ export default function User() {
   const [pageInfo, setPageInfo] = useState<IPageInfo>();
   const [loading, setLoading] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
-  const [open, setOpen] = useState<boolean>(false);
+  const [openCreatePopup, setOpenCreatePopup] = useState<boolean>(false);
+  const [openUpdatePopup, setOpenUpdatePopup] = useState<boolean>(false);
   const [openConfirmDialog, setConfirmDialogOpen] = useState<boolean>(false);
   const [id, setId] = useState<string | null>(null);
 
@@ -256,6 +258,7 @@ export default function User() {
                 <DropdownMenuItem
                   onClick={() => {
                     setId(row.getValue("id"));
+                    setOpenUpdatePopup(true);
                   }}
                 >
                   Edit
@@ -324,7 +327,12 @@ export default function User() {
   // );
 
   useEffect(() => {
-    if (query === undefined || open || openConfirmDialog) {
+    if (
+      query === undefined ||
+      openCreatePopup ||
+      openUpdatePopup ||
+      openConfirmDialog
+    ) {
       return;
     }
     const params = filterParser.parse(query as Params);
@@ -353,7 +361,7 @@ export default function User() {
       .finally(() => {
         setLoading(false);
       });
-  }, [query, search, open, openConfirmDialog]);
+  }, [query, search, openCreatePopup, openConfirmDialog, openUpdatePopup]);
 
   async function handleDelete(): Promise<void> {
     setLoading(true);
@@ -384,7 +392,7 @@ export default function User() {
           max-sm:py-3
           max-sm:text-base
           "
-          onClick={() => setOpen(true)}
+          onClick={() => setOpenCreatePopup(true)}
         >
           Create new
         </button>
@@ -405,13 +413,18 @@ export default function User() {
           </DataTableAdvancedToolbar>
         </DataTable>
       </div>
-      <CreateUserPopup open={open} setOpen={setOpen} />
+      <CreateUserPopup open={openCreatePopup} setOpen={setOpenCreatePopup} />
       <ConfirmDialog
         isOpen={openConfirmDialog}
         title="Delete Item"
         message="Are you sure you want to delete this item?"
         onConfirm={handleDelete}
         onCancel={() => setConfirmDialogOpen(false)}
+      />
+      <UpdateUser
+        open={openUpdatePopup}
+        setOpen={setOpenUpdatePopup}
+        userId={id!}
       />
     </div>
   );

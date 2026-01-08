@@ -20,10 +20,28 @@ interface IUserBase {
 
 export interface IUser extends IUserBase, IEntity {
   roles: Array<{ id: string; name: string }>;
-  permissions: Array<{ id: string; code: string; translationCode: string }>;
+  permissions?: Array<{ id: string; code: string }>;
 }
 
 export interface IUserResponse extends IUserBase, IEntity, IAuditable {
   roles: Array<IRole>;
   permissions: Array<IPermissionResponse>;
 }
+
+const DefaultIUser = {
+  id: "",
+  createdAt: new Date(),
+  firstName: "",
+  lastName: "",
+  gender: Gender.Male,
+  dateOfBirth: "2009-01-10",
+  email: "",
+  phoneNumber: "",
+  username: "",
+  password: "",
+  status: UserStatus.Active,
+  roles: [],
+  permissions: [],
+  avatar: "/images/avatar-boy.png",
+};
+export default DefaultIUser;

@@ -1,6 +1,6 @@
 import { DataTableColumnHeader } from "@dscn/components/data-table/data-table-column-header";
 import { useDataTable } from "@dscn/hooks/use-data-table";
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { roleService } from "@/features/role/roleService";
 import { IRole } from "@/features/role/IRole";
@@ -16,13 +16,10 @@ import {
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@dscn/components/ui/button";
 import RolePopup from "./RolePopup";
-import { Dialog } from "@dscn/components/ui/dialog";
-import ICreateRoleRequest from "@/features/role/ICreateRoleRequest";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
-import IUpdateRoleRequest from "@/features/role/IUpdateRoleRequest";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -231,12 +228,7 @@ export default function Role() {
         />
       </div>
 
-      <RolePopup
-        open={open}
-        roleId={id}
-        setOpen={setOpen}
-        setRoleId={setId}
-      />
+      <RolePopup open={open} roleId={id} setOpen={setOpen} setRoleId={setId} />
 
       <ConfirmDialog
         isOpen={dialogOpen}

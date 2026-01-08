@@ -11,7 +11,7 @@ import Select from "react-select";
 import PasswordInput from "@/components/PasswordInput";
 import { Mail, Phone } from "lucide-react";
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
-import { IUser } from "./IUser";
+import DefaultIUser, { IUser } from "./IUser";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { UserStatus } from "./UserStatus";
@@ -26,26 +26,10 @@ import {
 import { DateInput } from "@/components/DateInput";
 import { userService } from "./userService";
 import LoadingButton from "@/components/LoadingButton";
+import Input from "./Input";
+import genderSelectStyles from "./gender-select-style";
+import permissionSelectStyles from "./permission-select-style";
 dayjs.extend(utc);
-
-const toDefaultIUser = (): IUser => {
-  return {
-    id: "",
-    createdAt: new Date(),
-    firstName: "",
-    lastName: "",
-    gender: Gender.Male,
-    dateOfBirth: "2009-01-10",
-    email: "",
-    phoneNumber: "",
-    username: "",
-    password: "",
-    status: UserStatus.Active,
-    roles: [],
-    permissions: [],
-    avatar: "/images/avatar-boy.png",
-  };
-};
 
 export default function CreateUserPopup({
   open,
@@ -54,11 +38,12 @@ export default function CreateUserPopup({
   open: boolean;
   setOpen: any;
 }) {
-  const [user, setUser] = useState<IUser>(toDefaultIUser());
-  console.log("🚀 ~ CreateUserPopup ~ user:", user);
+  const [user, setUser] = useState<IUser>(DefaultIUser);
   const [loading, setLoading] = useState<boolean>(false);
-  const [permissions, setPermissions] = useState<INestedPermission[]>([]);
-  const [roles, setRoles] = useState<IRole[]>([]);
+  const [permissions, setPermissions] = useState<
+    { id: string; code: string }[]
+  >([]);
+  const [roles, setRoles] = useState<{ id: string; name: string }[]>([]);
   const [avatar, setAvatar] = useState<File | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -102,7 +87,7 @@ export default function CreateUserPopup({
     Object.entries({
       ...user,
       roles: user.roles.map((x) => x.id),
-      permissions: user.permissions.map((x) => x.id),
+      permissions: user.permissions?.map((x) => x.id),
     }).forEach(([key, val]) => {
       if (!val || val == "") return;
       if (key === "avatar") return;
@@ -114,6 +99,13 @@ export default function CreateUserPopup({
               .utc()
               .format()
           );
+        return;
+      }
+
+      if (Array.isArray(val)) {
+        val.forEach((item) => {
+          formData.append(key, item);
+        });
         return;
       }
 
@@ -130,7 +122,7 @@ export default function CreateUserPopup({
     const data = result.data?.results;
     if (result.isSuccess && data) {
       setOpen(false);
-      setUser(toDefaultIUser());
+      setUser(DefaultIUser);
     }
     setLoading(false);
   };
@@ -142,7 +134,7 @@ export default function CreateUserPopup({
     setLoading(true);
     roleService.list({}).then((data) => {
       const roles = data.data?.results as IRole[];
-      setRoles([...roles]);
+      setRoles([...roles.map((x) => ({ id: x.id, name: x.name }))]);
     });
 
     permissionService.list().then((data) => {
@@ -150,7 +142,9 @@ export default function CreateUserPopup({
       const permissions = groups
         .flatMap((group) => group.permissions)
         .map((per) => per);
-      setPermissions([...permissions]);
+      setPermissions([
+        ...permissions.map((x) => ({ id: x.id, code: x.codeTranslation })),
+      ]);
     });
     setLoading(false);
   }, [open]);
@@ -203,30 +197,20 @@ export default function CreateUserPopup({
                 </div>
 
                 <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div className="flex flex-col gap-2">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-                      First Name
-                    </span>
-                    <input
-                      name="firstName"
-                      value={user.firstName}
-                      onChange={handleInputChange}
-                      className="w-full rounded-lg text-gray-900 h-12 px-4 border border-gray-300 focus:outline-none focus:ring-2  focus:ring-blue-300"
-                      type="text"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-                      Last Name
-                    </span>
-                    <input
-                      name="lastName"
-                      value={user.lastName}
-                      onChange={handleInputChange}
-                      className="w-full rounded-lg text-gray-900 h-12 px-4 border border-gray-300 focus:outline-none focus:ring-2  focus:ring-blue-300"
-                      type="text"
-                    />
-                  </div>
+                  <Input
+                    label="First Name"
+                    name="firstName"
+                    type="text"
+                    value={user.firstName}
+                    onChange={handleInputChange}
+                  />
+                  <Input
+                    label="Last Name"
+                    name="lastName"
+                    type="text"
+                    value={user.lastName}
+                    onChange={handleInputChange}
+                  />
 
                   <div className="flex flex-col gap-2">
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
@@ -276,50 +260,26 @@ export default function CreateUserPopup({
                   Contact & Account
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div className="flex flex-col gap-2">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-                      Email Address
-                    </span>
-                    <div className="relative">
-                      <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-text-muted">
-                        <Mail />
-                      </span>
-                      <input
-                        name="email"
-                        className="w-full rounded-lg border focus:outline-none border-gray-300 bg-white text-gray-900 h-12 pl-10 pr-4 focus:ring-2 focus:ring-blue-300"
-                        type="email"
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-                      Phone Number
-                    </span>
-                    <div className="relative">
-                      <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-text-muted">
-                        <Phone />
-                      </span>
-                      <input
-                        name="phone"
-                        className="w-full rounded-lg border focus:outline-none border-gray-300 bg-white text-gray-900 h-12 pl-10 pr-4 focus:ring-2 focus:ring-blue-300"
-                        type="tel"
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-                      Username
-                    </span>
-                    <input
-                      name="username"
-                      className="w-full rounded-lg border focus:outline-none border-gray-300 bg-white text-gray-900 h-12 px-4 focus:ring-2 focus:ring-blue-300"
-                      placeholder="janedoe"
-                      type="text"
-                      onChange={handleInputChange}
-                    />
-                  </div>
+                  <Input
+                    label="Email Address"
+                    name="email"
+                    type="email"
+                    onChange={handleInputChange}
+                    icon={<Mail />}
+                  />
+                  <Input
+                    label="Phone Number"
+                    name="phone"
+                    type="tel"
+                    onChange={handleInputChange}
+                    icon={<Phone />}
+                  />
+                  <Input
+                    label="Username"
+                    name="username"
+                    type="text"
+                    onChange={handleInputChange}
+                  />
                   <div className="flex flex-col gap-2">
                     <PasswordInput
                       name="password"
@@ -399,7 +359,6 @@ export default function CreateUserPopup({
                       options={permissions.map((per) => ({
                         label: per.code,
                         value: per.id,
-                        translationLabel: per.codeTranslation,
                       }))}
                       styles={permissionSelectStyles}
                       onChange={(options: MultiValue<any>) => {
@@ -408,7 +367,6 @@ export default function CreateUserPopup({
                           permissions: options.map((o) => ({
                             id: o.value,
                             code: o.label,
-                            translationCode: o.translationLabel,
                           })),
                         }));
                       }}
@@ -424,7 +382,7 @@ export default function CreateUserPopup({
                 className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
                 onClick={() => {
                   setOpen(false);
-                  setUser(toDefaultIUser());
+                  setUser(DefaultIUser);
                 }}
               >
                 Cancel
@@ -443,163 +401,3 @@ export default function CreateUserPopup({
     </Dialog>
   );
 }
-
-export const permissionSelectStyles: StylesConfig = {
-  control: (base, state) => ({
-    ...base,
-    minHeight: "48px",
-    borderRadius: "8px",
-    borderColor: state.isFocused ? "transparent" : "#D1D5DB",
-    boxShadow: state.isFocused
-      ? "0 0 0 2px #93C5FD" // blue-300
-      : "none",
-    backgroundColor: "white",
-    padding: "4px",
-    cursor: "pointer",
-    "&:hover": {
-      borderColor: "#D1D5DB",
-    },
-  }),
-
-  valueContainer: (base) => ({
-    ...base,
-    padding: "0 8px",
-    display: "flex",
-    alignItems: "center",
-    gap: "6px",
-  }),
-
-  placeholder: (base) => ({
-    ...base,
-    color: "#9CA3AF",
-    fontSize: "14px",
-  }),
-
-  /* CHIPS */
-  multiValue: (base) => ({
-    ...base,
-    backgroundColor: "#ECFDF5", // green-50
-    borderRadius: "6px",
-    padding: "2px 4px",
-  }),
-
-  multiValueLabel: (base) => ({
-    ...base,
-    color: "#047857", // green-700
-    fontSize: "13px",
-    fontWeight: 500,
-  }),
-
-  multiValueRemove: (base) => ({
-    ...base,
-    color: "#047857",
-    cursor: "pointer",
-    ":hover": {
-      backgroundColor: "#D1FAE5",
-      color: "#065F46",
-    },
-  }),
-
-  /* DROPDOWN ARROW */
-  dropdownIndicator: (base) => ({
-    ...base,
-    color: "#6B7280",
-    padding: "0 6px",
-    ":hover": {
-      color: "#374151",
-    },
-  }),
-
-  indicatorSeparator: () => ({
-    display: "none",
-  }),
-
-  menu: (base) => ({
-    ...base,
-    borderRadius: "8px",
-    zIndex: 50,
-  }),
-
-  option: (base, state) => ({
-    ...base,
-    fontSize: "14px",
-    cursor: "pointer",
-    backgroundColor: state.isSelected
-      ? "#2563EB"
-      : state.isFocused
-      ? "#F3F4F6"
-      : "white",
-    color: state.isSelected ? "white" : "#111827",
-  }),
-};
-
-const genderSelectStyles: StylesConfig = {
-  control: (base, state) => ({
-    ...base,
-    width: "100%",
-    minHeight: "48px",
-    borderRadius: "0.5rem", // rounded-lg
-    borderColor: state.isFocused ? "transparent" : "#D1D5DB", // gray-300
-    backgroundColor: "white",
-    paddingLeft: "0.25rem",
-    cursor: "pointer",
-    boxShadow: state.isFocused ? "0 0 0 2px var(--color-blue-300)" : "none",
-    "&:hover": {
-      borderColor: "#D1D5DB",
-    },
-  }),
-
-  valueContainer: (base) => ({
-    ...base,
-    padding: "0 0.75rem",
-  }),
-
-  input: (base) => ({
-    ...base,
-    color: "#111827", // text-gray-900
-  }),
-
-  placeholder: (base) => ({
-    ...base,
-    color: "#9CA3AF", // gray-400
-  }),
-
-  singleValue: (base) => ({
-    ...base,
-    color: "#111827",
-  }),
-
-  indicatorsContainer: (base) => ({
-    ...base,
-    paddingRight: "0.5rem",
-  }),
-
-  dropdownIndicator: (base) => ({
-    ...base,
-    color: "#6B7280",
-    "&:hover": {
-      color: "#374151",
-    },
-  }),
-
-  indicatorSeparator: () => ({
-    display: "none",
-  }),
-
-  menu: (base) => ({
-    ...base,
-    borderRadius: "0.5rem",
-    zIndex: 50,
-  }),
-
-  option: (base, state) => ({
-    ...base,
-    cursor: "pointer",
-    backgroundColor: state.isSelected
-      ? "var(--color-primary)"
-      : state.isFocused
-      ? "#F3F4F6"
-      : "white",
-    color: state.isSelected ? "white" : "#111827",
-  }),
-};

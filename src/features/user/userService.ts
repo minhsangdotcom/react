@@ -20,6 +20,35 @@ export const userService = {
   > {
     return await send({ url: "users", method: "GET", data: params });
   },
+  update: async function (
+    id: string,
+    request: FormData
+  ): Promise<
+    IApiResult<
+      IResponse<IUserResponse>,
+      IBadRequestError | IUnauthorizedError | IForbiddenError
+    >
+  > {
+    return await send({
+      url: `users/${id}`,
+      method: "PUT",
+      data: request,
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  },
+  get: async function (
+    id: string
+  ): Promise<
+    IApiResult<
+      IResponse<IUserResponse>,
+      IBadRequestError | IUnauthorizedError | IForbiddenError
+    >
+  > {
+    return await send({
+      url: `users/${id}`,
+      method: "GET",
+    });
+  },
   create: async function (
     request: FormData
   ): Promise<
