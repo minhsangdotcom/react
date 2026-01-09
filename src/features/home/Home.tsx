@@ -1,6 +1,6 @@
 export default function Home() {
   return (
-    <div>
+    <div className="px-3 py-3 h-[calc(100vh-64px-105px)] md:h-[calc(100vh-64px-53px)] bg-gray-100">
       <h1>Home page</h1>
     </div>
   );

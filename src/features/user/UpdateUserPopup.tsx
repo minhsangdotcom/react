@@ -43,7 +43,7 @@ const toIUser = (dto: IUserResponse): IUser => {
   } as IUser;
 };
 
-export default function UpdateUser({
+export default function UpdateUserPopup({
   open,
   setOpen,
   userId,

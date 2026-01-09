@@ -35,7 +35,7 @@ import { DataTableFilterMenu } from "@/design-system/cn/components/data-table/da
 import SearchBar from "@components/SearchBar";
 import CreateUserPopup from "./CreateUserPopup";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
-import UpdateUser from "./UpdateUserPopup";
+import UpdateUserPopup from "./UpdateUserPopup";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -338,13 +338,7 @@ export default function User() {
     const params = filterParser.parse(query as Params);
     if (search !== "") {
       params.keyword = search;
-      params.targets = [
-        "id",
-        "username",
-        "email",
-        "phoneNumber",
-        "status",
-      ];
+      params.targets = ["id", "username", "email", "phoneNumber", "status"];
     }
     setLoading(true);
     userService
@@ -378,8 +372,8 @@ export default function User() {
   }
 
   return (
-    <div>
-      <div className="p-3 h-screen md:h-[calc(100vh-64px)]">
+    <>
+      <div className="p-3 min-h-screen">
         {/*Title */}
         <h1 className="text-xl font-semibold text-gray-800 mt-3 ml-2">User</h1>
 
@@ -428,11 +422,11 @@ export default function User() {
         onConfirm={handleDelete}
         onCancel={() => setConfirmDialogOpen(false)}
       />
-      <UpdateUser
+      <UpdateUserPopup
         open={openUpdatePopup}
         setOpen={setOpenUpdatePopup}
         userId={id!}
       />
-    </div>
+    </>
   );
 }

@@ -104,7 +104,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="display-flex justify-items-center items-center h-screen md:h-[calc(100vh-64px)]">
+    <div className="flex items-center justify-between">
       <div className="w-full px-4 sm:px-0 sm:max-w-md md:max-w-lg 2xl:max-w-2xl mt-3 mx-auto">
         <div className="flex items-center gap-4 mb-3 p-5">
           {/* Avatar */}

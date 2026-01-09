@@ -193,7 +193,7 @@ export default function Role() {
 
   return (
     <>
-      <div className="p-3 h-screen md:h-[calc(100vh-64px)]">
+      <div className="p-3 min-h-screen">
         {/* Header with Title */}
         <h1 className="text-xl font-semibold text-gray-800 mt-5 ml-2">Role</h1>
 
