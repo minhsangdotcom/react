@@ -1,0 +1,55 @@
+import { Github, Linkedin, Mail, Facebook } from "lucide-react";
+
+export default function Footer() {
+  return (
+    <footer className="border-t bg-background px-6 py-4 text-sm text-muted-foreground">
+      <div className="flex flex-col gap-2 items-center justify-between md:flex-row">
+        {/* Left: Author */}
+        <div className="flex flex-col md:flex-row gap-2">
+          <span className="text-center">© {new Date().getFullYear()} CMS</span>
+          <span className="hidden md:inline">•</span>
+          <span>
+            Built by <strong className="text-foreground">Tran Minh Sang</strong>
+          </span>
+        </div>
+
+        {/* Right: Social links */}
+        <div className="flex items-center gap-2">
+          <a
+            href="https://github.com/your-username"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-foreground transition-colors"
+            aria-label="GitHub"
+          >
+            <Github className="h-4 w-4" />
+          </a>
+          <a
+            href="https://linkedin.com/in/your-profile"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-foreground transition-colors"
+            aria-label="LinkedIn"
+          >
+            <Linkedin className="h-4 w-4" />
+          </a>
+          <a
+            href="mailto:youremail@example.com"
+            className="hover:text-foreground transition-colors"
+            aria-label="Email"
+          >
+            <Mail className="h-4 w-4" />
+          </a>
+
+          <a
+            href="https://www.facebook.com/sang.minh97"
+            className="hover:text-foreground transition-colors"
+            aria-label="Facebook"
+          >
+            <Facebook className="h-4 w-4" />
+          </a>
+        </div>
+      </div>
+    </footer>
+  );
+}

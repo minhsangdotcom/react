@@ -6,13 +6,13 @@ import RolePage from "@/features/role/Role";
 import UserPage from "@/features/user/User";
 
 import "@/styles/table.css";
-import AdminLayout from "@/layouts/AdminLayout";
+import Layout from "@/layouts/Layout";
 
 const PrivateRoutes: RouteObject = {
   element: <PrivateRoute />,
   children: [
     {
-      element: <AdminLayout />,
+      element: <Layout />,
       children: [
         { path: "/", element: <Home /> },
         { path: "/profile", element: <Profile /> },

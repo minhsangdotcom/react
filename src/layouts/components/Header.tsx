@@ -14,11 +14,8 @@ export default function AdminLayout() {
     });
   }, []);
   return (
-    <header className="relative flex items-center justify-between h-14 md:h-16  px-4">
-      <div className="flex items-center gap-2">
-        <SidebarTrigger/>
-      </div>
-
+    <header className="relative flex items-center justify-between px-4 py-3">
+      <SidebarTrigger />
       {!loading ? (
         <UserAvatarMenu avatarUrl="/images/avatar-boy.png" />
       ) : (
