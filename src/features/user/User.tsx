@@ -338,6 +338,13 @@ export default function User() {
     const params = filterParser.parse(query as Params);
     if (search !== "") {
       params.keyword = search;
+      params.targets = [
+        "id",
+        "username",
+        "email",
+        "phoneNumber",
+        "status",
+      ];
     }
     setLoading(true);
     userService
@@ -347,7 +354,7 @@ export default function User() {
           return;
         }
         const { data, paging } = result.data.results;
-        const users = data.map((x) => toIUser(x));
+        const users = data.map((user) => toIUser(user));
 
         setUser([...new Set([...users])]);
         setPageInfo({ ...paging });

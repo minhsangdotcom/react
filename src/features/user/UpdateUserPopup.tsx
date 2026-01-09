@@ -279,7 +279,7 @@ export default function UpdateUser({
                   />
                   <Input
                     label="Phone Number"
-                    name="phone"
+                    name="phoneNumber"
                     type="tel"
                     icon={<Phone />}
                     value={user.phoneNumber}

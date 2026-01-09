@@ -269,7 +269,7 @@ export default function CreateUserPopup({
                   />
                   <Input
                     label="Phone Number"
-                    name="phone"
+                    name="phoneNumber"
                     type="tel"
                     onChange={handleInputChange}
                     icon={<Phone />}

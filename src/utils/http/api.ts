@@ -3,6 +3,7 @@ import { env } from "@config/env";
 import { IApiResult } from "./IApiResult";
 import IApiRequest from "./IApiRequest";
 import { requestHandler, errorResponseHandler } from "./interceptor";
+import * as qs from "qs";
 
 const api = axios.create({
   baseURL: env.apiBaseUrl,
@@ -32,6 +33,9 @@ async function send<TRequest, TResult, TError>(
   if (config.method === "GET") {
     delete config.data;
     config.params = request.data;
+    config.paramsSerializer = (params) => {
+      return qs.stringify(params);
+    };
   }
 
   try {
