@@ -1,6 +1,6 @@
-type NestedFilterValue = string | number | boolean | INestedFilterMap;
+type NestedFilterValue = string | number | boolean | INestedFilterMap | INestedFilterMap[];
 
-interface INestedFilterMap {
+export interface INestedFilterMap {
   [key: string]: NestedFilterValue;
 }
 

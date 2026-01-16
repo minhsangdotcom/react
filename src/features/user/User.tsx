@@ -18,12 +18,7 @@ import { Column, ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import {
-  CheckCircle,
-  CheckCircle2,
-  MoreHorizontal,
-  XCircle,
-} from "lucide-react";
+import { CheckCircle, MoreHorizontal, XCircle } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useQueryParam } from "@/hooks/useQueyParam";
 import { userService } from "@/features/user/userService";
@@ -36,6 +31,8 @@ import SearchBar from "@components/SearchBar";
 import CreateUserPopup from "./CreateUserPopup";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import UpdateUserPopup from "./UpdateUserPopup";
+import IQueryParam, { INestedFilterMap } from "@/types/IQueryParam";
+import { abort } from "node:process";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -89,13 +86,13 @@ export default function User() {
             aria-label="Select all"
           />
         ),
-        cell: ({ row }) => {
+        cell: ({ row }) => (
           <Checkbox
             checked={row.getIsSelected()}
             onCheckedChange={(value) => row.toggleSelected(!!value)}
             aria-label="Select row"
-          />;
-        },
+          />
+        ),
         size: 32,
         enableSorting: false,
         enableHiding: false,
@@ -120,10 +117,41 @@ export default function User() {
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Username" />
         ),
-        cell: ({ row }) => <div>{row.getValue("username")}</div>,
+        cell: ({ row }) => {
+          return <div>@{row.getValue("username")}</div>;
+        },
         meta: {
           label: "Username",
           placeholder: "Search by Username...",
+          variant: "text",
+        },
+        enableColumnFilter: true,
+      },
+      {
+        id: "fullName",
+        accessorKey: "fullName",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Full Name" />
+        ),
+        cell: ({ row }) => {
+          const avatarUrl = row.original.avatar;
+          return (
+            <div className="flex items-center gap-3">
+              <img
+                src={avatarUrl ?? "/images/avatar-boy.png"}
+                alt="fullName"
+                className="h-8 w-8 rounded-full object-cover"
+              />
+
+              <span className="text-sm font-medium text-gray-900">
+                {row.original.firstName} {row.original.lastName}
+              </span>
+            </div>
+          );
+        },
+        meta: {
+          label: "Full Name",
+          placeholder: "Search by Full Name...",
           variant: "text",
         },
         enableColumnFilter: true,
@@ -185,12 +213,13 @@ export default function User() {
         ),
         cell: ({ cell }) => {
           const status = cell.getValue<IUser["status"]>();
-          const Icon = status === UserStatus.Active ? CheckCircle2 : XCircle;
-
           return (
-            <Badge variant="outline" className="capitalize">
-              <Icon />
-              {status === UserStatus.Active ? "Active" : "Inactive"}
+            <Badge
+              className={`rounded-sm px-4 py-1 text-xs font-medium ${
+                statusStyles[UserStatus[status]]
+              }`}
+            >
+              {UserStatus[status]}
             </Badge>
           );
         },
@@ -230,7 +259,6 @@ export default function User() {
           label: "Created At",
           placeholder: "Search by description...",
           variant: "dateRange",
-          //icon: Text ,
         },
         enableColumnFilter: false,
       },
@@ -293,6 +321,9 @@ export default function User() {
         pageSize: defaultParams.perPage!,
         pageIndex: 0,
       },
+      columnVisibility: {
+        id: false,
+      },
     },
     getRowId: (row: any) => row.id,
   });
@@ -336,9 +367,16 @@ export default function User() {
       return;
     }
     const params = filterParser.parse(query as Params);
+    convertFullNameToFirstLastNameFilter(params);
     if (search !== "") {
       params.keyword = search;
-      params.targets = ["id", "username", "email", "phoneNumber", "status"];
+      params.targets = [
+        "username",
+        "firsName",
+        "lastName",
+        "email",
+        "phoneNumber",
+      ];
     }
     setLoading(true);
     userService
@@ -430,3 +468,53 @@ export default function User() {
     </>
   );
 }
+
+const convertFullNameToFirstLastNameFilter = (params: IQueryParam): void => {
+  if (
+    typeof params.filter === "object" &&
+    params.filter !== null &&
+    "fullName" in params.filter
+  ) {
+    const value = params.filter?.fullName;
+    params.filter = {
+      ...params.filter,
+      $or: [
+        { firstName: { $containsi: value } },
+        { lastName: { $containsi: value } },
+      ],
+    };
+
+    delete params.filter?.fullName;
+  }
+
+  const andFilters = params.filter?.["$and"];
+  if (params.filter != null && Array.isArray(andFilters)) {
+    const index = andFilters.findIndex(
+      (item) => typeof item === "object" && item !== null && "fullName" in item
+    );
+
+    if (index !== -1) {
+      const filters = andFilters.filter(
+        (item) =>
+          typeof item === "object" && item !== null && !("fullName" in item)
+      );
+      const fullName = andFilters[index].fullName as any;
+      params.filter["$and"] = [
+        ...filters,
+        {
+          $or: [
+            { firstName: { $containsi: fullName["$containsi"] } },
+            { lastName: { $containsi: fullName["$containsi"] } },
+          ],
+        },
+      ];
+    }
+  }
+};
+const statusStyles: Record<string, string> = {
+  Active: "bg-emerald-100 text-emerald-700 border border-emerald-200",
+
+  Inactive: "bg-gray-100 text-gray-600 border border-gray-200",
+
+  Suspended: "bg-red-100 text-red-700 border border-red-200",
+};
