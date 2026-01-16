@@ -62,11 +62,11 @@ const genderSelectStyles: StylesConfig = {
     ...base,
     cursor: "pointer",
     backgroundColor: state.isSelected
-      ? "var(--color-primary)"
+      ? "rgba(91,192,222,0.2)"
       : state.isFocused
-      ? "#F3F4F6"
+      ? "rgba(91,192,222,0.2)"
       : "white",
-    color: state.isSelected ? "white" : "#111827",
+    color: state.isSelected ? "black" : "#111827",
   }),
 };
 export default genderSelectStyles;
