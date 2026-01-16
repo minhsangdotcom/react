@@ -1,4 +1,4 @@
-export interface IErrorBase {
+export interface IError {
   type: string;
   title: string;
   status: number;
@@ -6,25 +6,27 @@ export interface IErrorBase {
   requestId: string;
   traceId: string;
   spanId: string;
+  detail: string;
+  message: IMessage;
+}
+export interface IValidationError extends IError {
+  invalidParams: IInvalidParam;
 }
 
-export interface IError<T> extends IErrorBase {
-  errorDetails: T;
-}
-export interface IValidationError<T> extends IErrorBase {
-  invalidParams: T;
-}
-
-export interface IBadRequestError extends IError<IBadRequestMessage> {}
+export interface IBadRequestError extends IError {}
 
 export interface INotFoundError extends IBadRequestError {}
 
-export interface IUnauthorizedError extends IBadRequestError {}
+export interface IUnauthorizedError extends IError {}
 
-export interface IForbiddenError extends IBadRequestError {}
+export interface IForbiddenError extends IError {}
 
-interface IBadRequestMessage {
+interface IMessage {
   message: string;
-  en: string;
-  vi: string;
+  translation: string;
+}
+
+interface IInvalidParam {
+  code: string;
+  description: string;
 }

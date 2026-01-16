@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react";
 import authService from "@features/auth/authService";
-import NormalInput from "@/components/Input";
+import Input from "@/components/Input";
 import LoadingButton from "@components/LoadingButton";
 
 export default function RequestResetPassword() {
@@ -25,15 +25,15 @@ export default function RequestResetPassword() {
       >
         <h2 className="text-xl font-semibold mb-2">Forgot your password?</h2>
         <p className="text-muted-foreground mb-6">
-          Enter your email address and we’ll send you a reset link.
+          Enter your email address and we will send you a reset link.
         </p>
-        <NormalInput
+        <Input
           label="Email"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          name="email"
-          isRequired={true}
+          inputName="email"
+          required
         />
         <LoadingButton loading={loading} text="Send Reset Link" type="submit" />
         {error && <p>{error}</p>}
