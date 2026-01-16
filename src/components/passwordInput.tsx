@@ -1,51 +1,50 @@
-import { useState } from "react";
+import { forwardRef, InputHTMLAttributes, useState } from "react";
 import "./password-input.css";
 
-type PasswordInputProps = {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  name?: string | undefined;
+interface PasswordInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
-  placeholder?: string;
-  isRequired: boolean;
   labelClassName?: string;
   inputClassName?: string;
-};
-
-export default function PasswordInput(inputProps: PasswordInputProps) {
-  const { name, value, onChange, placeholder, label, isRequired } = inputProps;
-  const [isHidden, setHidden] = useState(true);
-  return (
-    <div className="form-group">
-      {inputProps.labelClassName ? (
-        <label htmlFor="password" className={inputProps.labelClassName}>
-          {label}
-        </label>
-      ) : (
-        <label htmlFor="password">{label}</label>
-      )}
-      <div className="password-wrapper">
-        <input
-          className={inputProps.inputClassName ?? "form-input"}
-          name={name}
-          type={isHidden ? "password" : "text"}
-          value={value}
-          onChange={onChange}
-          required={isRequired}
-          placeholder={placeholder}
-        />
-        <button
-          type="button"
-          className={`password-toggle ${!isHidden ? "active" : ""}`}
-          onClick={() => setHidden(!isHidden)}
-          aria-label={isHidden ? "Show password" : "Hide password"}
-        >
-          <img
-            src={isHidden ? "/icons/eye-closed.png" : "/icons/eye.png"}
-            alt=""
-          />
-        </button>
-      </div>
-    </div>
-  );
+  error?: string;
 }
+
+const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
+  ({ label, labelClassName, inputClassName, error, ...props }, ref) => {
+    const [hidden, setHidden] = useState(true);
+    return (
+      <div className="form-group">
+        {label && (
+          <label htmlFor="password" className={labelClassName}>
+            {label}
+          </label>
+        )}
+
+        <div className="password-wrapper">
+          <input
+            ref={ref}
+            className={inputClassName ?? "form-input"}
+            type={hidden ? "password" : "text"}
+            {...props}
+            autoComplete="current-password"
+          />
+
+          <button
+            type="button"
+            className={`password-toggle ${!hidden ? "active" : ""}`}
+            onClick={() => setHidden((prev) => !prev)}
+            aria-label={hidden ? "Show password" : "Hide password"}
+          >
+            <img src={hidden ? "/icons/eye-closed.png" : "/icons/eye.png"} />
+          </button>
+        </div>
+        {error && (
+          <p id={`password-error`} className="form-error-text">
+            {error}
+          </p>
+        )}
+      </div>
+    );
+  }
+);
+PasswordInput.displayName = "PasswordInput";
+export default PasswordInput;

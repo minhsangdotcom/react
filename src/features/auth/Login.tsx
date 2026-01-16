@@ -1,66 +1,63 @@
 import "@features/auth/login.css";
-import { useState } from "react";
-
 import { Link, useNavigate } from "react-router-dom";
-import { ILoginRequest } from "@features/auth/ILoginRequest";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
-import NormalInput from "@components/NormalInput";
+import Input from "@/components/Input";
 import PasswordInput from "@components/PasswordInput";
 import LoadingButton from "@components/LoadingButton";
 import { loginAsync } from "@features/auth/authAction";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema, loginSchemaType } from "./loginSchema";
 
 export default function Login() {
-  const [form, setForm] = useState<ILoginRequest>({
-    identifier: "chloe.kim",
-    password: "Admin@123",
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<loginSchemaType>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      identifier: "chloe.kim",
+      password: "Admin@123",
+    },
   });
   const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
   const data = useAppSelector((store) => store.auth);
 
-  const isLoading = data.isLoading;
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
-
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (isLoading) {
-      return;
-    }
-    try {
-      await dispatch(loginAsync(form)).unwrap();
-      navigate("/");
-    } catch (error) {
-      console.log("🚀 ~ onSubmit ~ error:", error);
-    }
+  const onSubmit = (data: loginSchemaType) => {
+    dispatch(
+      loginAsync({ identifier: data.identifier, password: data.password })
+    )
+      .unwrap()
+      .then(() => {
+        navigate("/");
+      });
   };
 
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="login-form-container p-5 w-full md:w-md">
         <h2 className="login-form-title">Login</h2>
-        <form onSubmit={onSubmit}>
-          <NormalInput
-            type="text"
-            value={form.identifier}
-            isRequired={true}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Input
             label="Username or email"
-            name="identifier"
-            onChange={onChange}
+            type="text"
+            inputName="identifier"
+            error={errors.identifier?.message}
+            autoComplete="username or email"
+            {...register("identifier")}
           />
 
           <PasswordInput
-            value={form.password}
-            isRequired={true}
             label="Password"
-            name="password"
-            onChange={onChange}
+            {...register("password")}
+            error={errors.password?.message}
           />
 
           <LoadingButton
-            loading={isLoading}
+            loading={data.isLoading}
             text="Sign In"
             type="submit"
             className="w-full p-3 text-base font-semibold text-white bg-brand-primary hover:bg-brand-primary-hover rounded cursor-pointer mb-[5px] disabled:opacity-50 disabled:cursor-not-allowed"
@@ -72,7 +69,7 @@ export default function Login() {
           >
             Forget password
           </Link>
-          {data.error?.en && <p className="error">* {data.error?.en}</p>}
+          {/* {data.error?.en && <p className="error">* {data.error?.en}</p>} */}
         </form>
       </div>
     </div>

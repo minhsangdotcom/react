@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react";
 import authService from "@features/auth/authService";
-import NormalInput from "@components/NormalInput";
+import NormalInput from "@/components/Input";
 import LoadingButton from "@components/LoadingButton";
 
 export default function RequestResetPassword() {

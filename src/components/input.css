@@ -31,3 +31,18 @@
   background-color: #fafafa;
   border-color: #e6e6e6;
 }
+.form-input-error {
+  border-color: #ef4444; /* red-500 */
+}
+
+.form-input-error:focus {
+  border-color: #ef4444; /* red-500 */
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.5); /* focus:ring-red-500 */
+}
+
+.form-error-text {
+  margin-top: 0.25rem; /* mt-1 */
+  font-size: 0.875rem; /* text-sm */
+  color: #dc2626; /* red-600 */
+}

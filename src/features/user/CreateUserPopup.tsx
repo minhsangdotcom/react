@@ -6,7 +6,7 @@ import {
 } from "@/design-system/cn/components/ui/dialog";
 import { DialogContent, DialogTitle } from "@radix-ui/react-dialog";
 import { Gender } from "./Gender";
-import { MultiValue, StylesConfig } from "react-select";
+import { MultiValue } from "react-select";
 import Select from "react-select";
 import PasswordInput from "@/components/PasswordInput";
 import { Mail, Phone } from "lucide-react";
@@ -19,14 +19,11 @@ import { UserStatus } from "./UserStatus";
 import { roleService } from "../role/roleService";
 import { IRole } from "../role/IRole";
 import permissionService from "@/services/permission/permissionService";
-import {
-  IGroupPermissionResponse,
-  INestedPermission,
-} from "@/types/permission/IPermission";
+import { IGroupPermissionResponse } from "@/types/permission/IPermission";
 import { DateInput } from "@/components/DateInput";
 import { userService } from "./userService";
 import LoadingButton from "@/components/LoadingButton";
-import Input from "./Input";
+import Input from "./UserInput";
 import genderSelectStyles from "./gender-select-style";
 import permissionSelectStyles from "./permission-select-style";
 dayjs.extend(utc);
@@ -281,7 +278,7 @@ export default function CreateUserPopup({
                     onChange={handleInputChange}
                   />
                   <div className="flex flex-col gap-2">
-                    <PasswordInput
+                    {/* <PasswordInput
                       name="password"
                       label="Password"
                       labelClassName="text-sm font-medium text-gray-700 dark:text-gray-200"
@@ -289,7 +286,7 @@ export default function CreateUserPopup({
                       onChange={handleInputChange}
                       isRequired
                       value={user.password}
-                    />
+                    /> */}
                   </div>
                 </div>
               </div>

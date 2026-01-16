@@ -11,7 +11,7 @@ import { DialogContent } from "@radix-ui/react-dialog";
 import { Mail, Phone, Upload } from "lucide-react";
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import Select, { MultiValue } from "react-select";
-import Input from "./Input";
+import Input from "./UserInput";
 import DefaultIUser, { IUser, IUserResponse } from "./IUser";
 import { Gender } from "./Gender";
 import { UserStatus } from "./UserStatus";

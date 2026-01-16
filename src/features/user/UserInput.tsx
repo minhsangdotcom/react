@@ -8,7 +8,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: string;
 }
 
-const Input = forwardRef<HTMLInputElement, InputProps>(
+const UserInput = forwardRef<HTMLInputElement, InputProps>(
   (
     { label, icon, trailingIcon, error, name, type = "text", ...props },
     ref
@@ -69,6 +69,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
   }
 );
 
-Input.displayName = "Input";
+UserInput.displayName = "UserInput";
 
-export default Input;
+export default UserInput;
