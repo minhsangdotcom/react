@@ -45,9 +45,8 @@ export default function Role() {
         cell: ({ row }) => <div>{row.getValue("id")}</div>,
         meta: {
           label: "Id",
-          placeholder: "Search by name...",
+          placeholder: "Search by Id...",
           variant: "text",
-          //icon: Text,
         },
         enableColumnFilter: false,
       },
@@ -160,6 +159,9 @@ export default function Role() {
       pagination: {
         pageSize: defaultParams.perPage,
         pageIndex: defaultParams.page!,
+      },
+      columnVisibility: {
+        id: false,
       },
     },
     getRowId: (row: any) => row.id,
