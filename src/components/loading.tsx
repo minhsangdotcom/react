@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 export function Loading() {
   return (
     <motion.div
-      className="fixed inset-0 z-[150] flex items-center justify-center bg-black"
+      className="fixed inset-0 z-150 flex items-center justify-center bg-black"
       initial={{ opacity: 0 }}
       animate={{ opacity: 0.4 }}
       exit={{ opacity: 0 }}
