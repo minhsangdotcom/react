@@ -201,6 +201,7 @@ export default function RolePopup({
 
   const [groups, setGroups] = useState<IPermissionGroup[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [buttonLoading, setButtonLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (!open) {
@@ -295,7 +296,7 @@ export default function RolePopup({
       description: data.description,
       permissionIds,
     };
-    setLoading(true);
+    setButtonLoading(true);
     try {
       if (roleId) {
         await roleService.update(roleId!, payload);
@@ -306,7 +307,7 @@ export default function RolePopup({
       //
     } finally {
       reset({ name: "", description: "" });
-      setLoading(false);
+      setButtonLoading(false);
       setRoleId(null);
       setGroups([]);
       setOpen(false);
@@ -326,61 +327,67 @@ export default function RolePopup({
             </DialogTitle>
           </DialogHeader>
 
-          <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6 flex-1 overflow-hidden">
-            {/* Left side: Name & Description */}
-            <div className="space-y-4">
-              <input
-                type="text"
-                className={`w-full border p-2 rounded focus:outline-none ${
-                  errors.name
-                    ? "border-red-300 focus:ring-red-300"
-                    : "focus:border-blue-200 focus:ring-blue-300"
-                }`}
-                placeholder="Role Name"
-                {...register("name")}
-              />
-              {errors.name && (
-                <p className="text-sm text-red-500">{errors.name.message}</p>
-              )}
-
-              <textarea
-                className={`w-full border p-2 rounded focus:outline-none ${
-                  errors.description
-                    ? "border-red-300 focus:ring-red-300"
-                    : "focus:border-blue-200 focus:ring-blue-300"
-                }`}
-                placeholder="Description"
-                {...register("description")}
-              />
-              {errors.description && (
-                <p className="text-sm text-red-500">
-                  {errors.description.message}
-                </p>
-              )}
+          {loading ? (
+            <div className="flex items-center justify-center min-h-100">
+              <span className="h-6 w-6 animate-spin rounded-full border-2 border-gray-400 border-t-transparent" />
             </div>
+          ) : (
+            <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6 flex-1 overflow-hidden">
+              {/* Left side: Name & Description */}
+              <div className="space-y-4">
+                <input
+                  type="text"
+                  className={`w-full border p-2 rounded focus:outline-none ${
+                    errors.name
+                      ? "border-red-300 focus:ring-red-300"
+                      : "focus:border-blue-200 focus:ring-blue-300"
+                  }`}
+                  placeholder="Role Name"
+                  {...register("name")}
+                />
+                {errors.name && (
+                  <p className="text-sm text-red-500">{errors.name?.message}</p>
+                )}
 
-            {/* Right side: Permissions */}
-            <div className="space-y-4 rounded p-2 overflow-auto">
-              <h3 className="mb-3 text-lg font-semibold text-gray-800">
-                Permissions
-              </h3>
+                <textarea
+                  className={`w-full border p-2 rounded focus:outline-none ${
+                    errors.description
+                      ? "border-red-300 focus:ring-red-300"
+                      : "focus:border-blue-200 focus:ring-blue-300"
+                  }`}
+                  placeholder="Description"
+                  {...register("description")}
+                />
+                {errors.description && (
+                  <p className="text-sm text-red-500">
+                    {errors.description?.message}
+                  </p>
+                )}
+              </div>
 
-              {groups.map((group) => (
-                <div key={group.name}>
-                  <h4 className="mb-1 text-md font-medium">{group.label}</h4>
+              {/* Right side: Permissions */}
+              <div className="space-y-4 rounded p-2 overflow-auto">
+                <h3 className="mb-3 text-lg font-semibold text-gray-800">
+                  Permissions
+                </h3>
 
-                  {group.permissions.map((p) => (
-                    <PermissionNode
-                      key={p.id}
-                      node={p}
-                      onToggleCheck={onToggleCheck}
-                      onToggleExpand={onToggleExpand}
-                    />
-                  ))}
-                </div>
-              ))}
+                {groups.map((group) => (
+                  <div key={group.name}>
+                    <h4 className="mb-1 text-md font-medium">{group.label}</h4>
+
+                    {group.permissions.map((p) => (
+                      <PermissionNode
+                        key={p.id}
+                        node={p}
+                        onToggleCheck={onToggleCheck}
+                        onToggleExpand={onToggleExpand}
+                      />
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Action buttons */}
           <DialogFooter className="flex justify-end space-x-2 pt-6">
@@ -397,7 +404,7 @@ export default function RolePopup({
               </button>
             </DialogClose>
             <LoadingButton
-              loading={loading}
+              loading={buttonLoading}
               text={roleId ? "Update" : "Create"}
               onClick={handleSubmit(onSubmit)}
               type="button"

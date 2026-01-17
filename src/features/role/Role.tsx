@@ -176,6 +176,7 @@ export default function Role() {
       //
     } finally {
       setDialogOpen(false);
+      setId(null);
     }
   };
 
@@ -240,7 +241,10 @@ export default function Role() {
         title="Delete Item"
         message="Are you sure you want to delete this item?"
         onConfirm={handleDelete}
-        onCancel={() => setDialogOpen(false)}
+        onCancel={() => {
+          setDialogOpen(false);
+          setId(null);
+        }}
       />
     </>
   );
