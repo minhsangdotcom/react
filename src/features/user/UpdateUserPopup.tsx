@@ -23,6 +23,12 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { IPermissionResponse } from "@/types/permission/IPermission";
 import permissionSelectStyles from "./permission-select-style";
+import {
+  SkeletonBlock,
+  SkeletonInput,
+  SkeletonToggle,
+  SkeletonWideInput,
+} from "@/components/Skeleton";
 dayjs.extend(utc);
 
 const toIUser = (dto: IUserResponse): IUser => {
@@ -200,7 +206,7 @@ export default function UpdateUserPopup({
             <div className="overflow-y-auto custom-scrollbar flex-1 p-6 sm:p-8">
               <div className="flex flex-col gap-8">
                 {/* profile info section*/}
-                <div className="flex flex-col sm:flex-row gap-2 items-start sm:items-center p-4 rounded-xl bg-background-input border border-background-border">
+                <div className="flex flex-col items-center gap-2 md:flex-row md:items-start p-4 rounded-xl bg-background-input border border-background-border">
                   <div className="relative group">
                     <img
                       className="bg-center bg-no-repeat bg-cover rounded-full h-24 w-24 border-2 border-background-border shadow-sm"
@@ -208,7 +214,7 @@ export default function UpdateUserPopup({
                     />
                   </div>
 
-                  <div className="flex flex-col flex-1">
+                  <div className="flex flex-col flex-1 items-center md:items-start">
                     <h4 className="text-black text-xl font-bold leading-tight">
                       {user.firstName} {user.lastName}
                     </h4>
@@ -407,80 +413,45 @@ export default function UpdateUserPopup({
     </Dialog>
   );
 }
+
 const Skeleton = () => (
   <div className="overflow-y-auto flex-1 p-6 sm:p-8 animate-pulse">
     <div className="flex flex-col gap-8">
       {/* Profile info section */}
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center p-4 rounded-xl border border-gray-200 bg-gray-100/50">
+      <div className="flex items-center flex-col md:flex-row gap-4 md:items-start p-4 rounded-xl border border-gray-200 bg-gray-100/50">
         {/* Avatar */}
-        <div className="h-24 w-24 rounded-full bg-gray-200" />
+        <SkeletonBlock className="h-24 w-24 rounded-full" />
 
         {/* User info */}
-        <div className="flex flex-col flex-1 gap-2">
-          <div className="h-5 w-48 rounded bg-gray-200" />
-          <div className="h-4 w-40 rounded bg-gray-200" />
-          <div className="h-4 w-32 rounded bg-gray-200" />
+        <div className="flex flex-col flex-1 gap-2 items-center md:items-start">
+          <SkeletonBlock className="h-5 w-48" />
+          <SkeletonBlock className="h-4 w-40" />
+          <SkeletonBlock className="h-4 w-32" />
 
           <div className="flex gap-2 mt-2">
-            <div className="h-5 w-20 rounded bg-gray-200" />
-            <div className="h-5 w-24 rounded bg-gray-200" />
+            <SkeletonBlock className="h-5 w-20" />
+            <SkeletonBlock className="h-5 w-24" />
           </div>
         </div>
 
         {/* Change photo button */}
-        <div className="h-10 w-32 rounded bg-gray-200 mt-2 sm:mt-0" />
+        <SkeletonBlock className="h-10 w-32 mt-0 md:mt-6" />
       </div>
 
       {/* Form fields */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* First Name */}
-        <div className="space-y-2">
-          <div className="h-4 w-24 rounded bg-gray-200" />
-          <div className="h-12 rounded bg-gray-200" />
-        </div>
-
-        {/* Last Name */}
-        <div className="space-y-2">
-          <div className="h-4 w-24 rounded bg-gray-200" />
-          <div className="h-12 rounded bg-gray-200" />
-        </div>
-
-        {/* Email */}
-        <div className="space-y-2">
-          <div className="h-4 w-32 rounded bg-gray-200" />
-          <div className="h-12 rounded bg-gray-200" />
-        </div>
-
-        {/* Phone */}
-        <div className="space-y-2">
-          <div className="h-4 w-32 rounded bg-gray-200" />
-          <div className="h-12 rounded bg-gray-200" />
-        </div>
-
-        {/* Date of birth */}
-        <div className="space-y-2">
-          <div className="h-4 w-28 rounded bg-gray-200" />
-          <div className="h-12 rounded bg-gray-200" />
-        </div>
-
-        {/* Status toggle */}
-        <div className="space-y-2">
-          <div className="h-4 w-28 rounded bg-gray-200" />
-          <div className="h-6 w-14 rounded-full bg-gray-200 mt-3" />
-        </div>
+        <SkeletonInput />
+        <SkeletonInput />
+        <SkeletonWideInput />
+        <SkeletonWideInput />
+        <SkeletonWideInput />
+        <SkeletonToggle />
       </div>
 
       {/* Roles & Permissions */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div className="space-y-2">
-          <div className="h-4 w-24 rounded bg-gray-200" />
-          <div className="h-12 rounded bg-gray-200" />
-        </div>
-
-        <div className="space-y-2">
-          <div className="h-4 w-32 rounded bg-gray-200" />
-          <div className="h-12 rounded bg-gray-200" />
-        </div>
+        <SkeletonWideInput />
+        <SkeletonWideInput />
       </div>
     </div>
   </div>
