@@ -31,8 +31,7 @@ import SearchBar from "@components/SearchBar";
 import CreateUserPopup from "./CreateUserPopup";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import UpdateUserPopup from "./UpdateUserPopup";
-import IQueryParam, { INestedFilterMap } from "@/types/IQueryParam";
-import { abort } from "node:process";
+import IQueryParam from "@/types/IQueryParam";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -118,7 +117,7 @@ export default function User() {
           <DataTableColumnHeader column={column} title="Username" />
         ),
         cell: ({ row }) => {
-          return <div>@{row.getValue("username")}</div>;
+          return <div className="text-gray-500">@{row.getValue("username")}</div>;
         },
         meta: {
           label: "Username",
@@ -475,7 +474,7 @@ const convertFullNameToFirstLastNameFilter = (params: IQueryParam): void => {
     params.filter !== null &&
     "fullName" in params.filter
   ) {
-    const value = params.filter?.fullName;
+    const value = (params.filter?.fullName as any)["$containsi"];
     params.filter = {
       ...params.filter,
       $or: [
