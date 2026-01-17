@@ -18,6 +18,9 @@ import {
 } from "@/types/permission/IPermission";
 import { IRoleResponse } from "@/features/role/IRole";
 import LoadingButton from "@/components/LoadingButton";
+import { roleSchema, roleSchemaType } from "./roleSchema";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 function mapPermission(permission: any): IPermission {
   return {
@@ -187,8 +190,15 @@ export default function RolePopup({
   setRoleId: React.Dispatch<React.SetStateAction<string | null>>;
   roleId: string | null;
 }) {
-  const [name, setName] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<roleSchemaType>({
+    resolver: zodResolver(roleSchema),
+  });
+
   const [groups, setGroups] = useState<IPermissionGroup[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -210,10 +220,16 @@ export default function RolePopup({
 
     if (roleId) {
       const roleResponse = await roleService.getById(roleId!);
-      const role = roleResponse.data?.results as IRoleResponse;
 
-      setName(role?.name || "");
-      setDescription(role?.description || "");
+      if (!roleResponse.isSuccess) {
+        return;
+      }
+      const role = roleResponse.data!.results as IRoleResponse;
+
+      reset({
+        name: role.name,
+        description: role.description,
+      });
 
       const checkedPermissions = getCheckedPermissions(
         role.permissions,
@@ -269,16 +285,14 @@ export default function RolePopup({
     );
   };
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-
+  const submit = async (data: any) => {
     const permissionIds = collectCheckedParents(
       groups.flatMap((g) => g.permissions)
     );
 
     const payload = {
-      name,
-      description,
+      name: data.name,
+      description: data.description,
       permissionIds,
     };
     setLoading(true);
@@ -287,8 +301,11 @@ export default function RolePopup({
     } else {
       await roleService.create(payload);
     }
+
+    reset({ name: "", description: "" });
     setLoading(false);
     setRoleId(null);
+    setGroups([]);
     setOpen(false);
   };
 
@@ -310,18 +327,32 @@ export default function RolePopup({
             <div className="space-y-4">
               <input
                 type="text"
-                className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
+                className={`w-full border p-2 rounded focus:outline-none ${
+                  errors.name
+                    ? "border-red-300 focus:ring-red-300"
+                    : "focus:border-blue-200 focus:ring-blue-300"
+                }`}
                 placeholder="Role Name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                {...register("name")}
               />
+              {errors.name && (
+                <p className="text-sm text-red-500">{errors.name.message}</p>
+              )}
 
               <textarea
-                className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-1 focus:ring-blue-300"
+                className={`w-full border p-2 rounded focus:outline-none ${
+                  errors.description
+                    ? "border-red-300 focus:ring-red-300"
+                    : "focus:border-blue-200 focus:ring-blue-300"
+                }`}
                 placeholder="Description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                {...register("description")}
               />
+              {errors.description && (
+                <p className="text-sm text-red-500">
+                  {errors.description.message}
+                </p>
+              )}
             </div>
 
             {/* Right side: Permissions */}
@@ -353,8 +384,7 @@ export default function RolePopup({
               <button
                 className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
                 onClick={() => {
-                  setName("");
-                  setDescription("");
+                  reset({ name: "", description: "" });
                   setGroups([]);
                   setRoleId(null);
                 }}
@@ -365,7 +395,7 @@ export default function RolePopup({
             <LoadingButton
               loading={loading}
               text={roleId ? "Update" : "Create"}
-              onClick={handleSubmit}
+              onClick={handleSubmit(submit)}
               type="button"
               className="px-4 py-2 rounded bg-brand-primary text-white hover:bg-brand-primary-hover cursor-pointer"
             />
