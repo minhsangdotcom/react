@@ -436,7 +436,7 @@ export default function User() {
         </button>
 
         {/* {table} */}
-        <DataTable table={table} isCursorPaged={true} isloading={loading}>
+        <DataTable table={table} isCursorPaged={true} loading={loading}>
           <DataTableAdvancedToolbar table={table}>
             <SearchBar
               value={search}

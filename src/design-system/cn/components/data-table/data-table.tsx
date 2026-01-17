@@ -18,7 +18,7 @@ interface DataTableProps<TData> extends React.ComponentProps<"div"> {
   actionBar?: React.ReactNode;
   hasPagination?: boolean;
   isCursorPaged?: boolean;
-  isloading: boolean;
+  loading: boolean;
 }
 
 export function DataTable<TData>({
@@ -28,7 +28,7 @@ export function DataTable<TData>({
   className,
   hasPagination = true,
   isCursorPaged = false,
-  isloading = false,
+  loading = false,
   ...props
 }: DataTableProps<TData>) {
   return (
@@ -62,7 +62,7 @@ export function DataTable<TData>({
             ))}
           </TableHeader>
           <TableBody>
-            {isloading ? (
+            {loading ? (
               <TableRow>
                 <TableCell
                   colSpan={table.getAllColumns().length}

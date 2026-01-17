@@ -226,7 +226,7 @@ export default function Role() {
           table={table}
           hasPagination={false}
           aria-sort="none"
-          isloading={loading}
+          loading={loading}
         />
       </div>
 
