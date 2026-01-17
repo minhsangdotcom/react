@@ -177,7 +177,6 @@ export default function UpdateUserPopup({
         id: x.id,
         code: x.codeTranslation,
       })) as IPermissionResponse[];
-    console.log("🚀 ~ InitUser ~ currentPermission:", currentPermission);
 
     setUser((pre) => ({
       ...pre,
