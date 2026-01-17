@@ -102,7 +102,7 @@ const authSlice = createSlice({
         return {
           ...state,
           isLoading: false,
-          error: action.payload ?? "unknown error",
+          error: action.payload,
         };
       });
   },

@@ -206,48 +206,48 @@ export default function RolePopup({
     if (!open) {
       return;
     }
-
     init();
   }, [open]);
 
   async function init() {
-    const result = await permissionService.list();
-    if (!result?.data?.results?.length) {
-      return;
-    }
-    const permissions = result.data.results as IGroupPermissionResponse[];
-    let groups = mapPermissionGroups(permissions);
+    setLoading(true);
+    try {
+      const result = await permissionService.list();
 
-    if (roleId) {
-      const roleResponse = await roleService.getById(roleId!);
+      const permissions = result.data!.results as IGroupPermissionResponse[];
+      let groups = mapPermissionGroups(permissions);
 
-      if (!roleResponse.isSuccess) {
-        return;
-      }
-      const role = roleResponse.data!.results as IRoleResponse;
+      if (roleId) {
+        const roleResponse = await roleService.getById(roleId!);
+        const role = roleResponse.data!.results as IRoleResponse;
 
-      reset({
-        name: role.name,
-        description: role.description,
-      });
+        reset({
+          name: role.name,
+          description: role.description,
+        });
 
-      const checkedPermissions = getCheckedPermissions(
-        role.permissions,
-        groups.flatMap((g) => g.permissions)
-      );
-      groups = groups.map((g) => {
-        const updatedPermission = markAsChecked(
-          g.permissions,
-          checkedPermissions
+        const checkedPermissions = getCheckedPermissions(
+          role.permissions,
+          groups.flatMap((g) => g.permissions)
         );
-        return {
-          ...g,
-          permissions: updatedPermission,
-        };
-      });
-    }
+        groups = groups.map((g) => {
+          const updatedPermission = markAsChecked(
+            g.permissions,
+            checkedPermissions
+          );
+          return {
+            ...g,
+            permissions: updatedPermission,
+          };
+        });
+      }
 
-    setGroups(groups);
+      setGroups(groups);
+    } catch (error) {
+      //
+    } finally {
+      setLoading(false);
+    }
   }
 
   const onToggleCheck = (id: string, checked: boolean) => {
@@ -285,7 +285,7 @@ export default function RolePopup({
     );
   };
 
-  const submit = async (data: any) => {
+  const onSubmit = async (data: any) => {
     const permissionIds = collectCheckedParents(
       groups.flatMap((g) => g.permissions)
     );
@@ -296,17 +296,21 @@ export default function RolePopup({
       permissionIds,
     };
     setLoading(true);
-    if (roleId) {
-      await roleService.update(roleId!, payload);
-    } else {
-      await roleService.create(payload);
+    try {
+      if (roleId) {
+        await roleService.update(roleId!, payload);
+      } else {
+        await roleService.create(payload);
+      }
+    } catch (error) {
+      //
+    } finally {
+      reset({ name: "", description: "" });
+      setLoading(false);
+      setRoleId(null);
+      setGroups([]);
+      setOpen(false);
     }
-
-    reset({ name: "", description: "" });
-    setLoading(false);
-    setRoleId(null);
-    setGroups([]);
-    setOpen(false);
   };
 
   return (
@@ -395,7 +399,7 @@ export default function RolePopup({
             <LoadingButton
               loading={loading}
               text={roleId ? "Update" : "Create"}
-              onClick={handleSubmit(submit)}
+              onClick={handleSubmit(onSubmit)}
               type="button"
               className="px-4 py-2 rounded bg-brand-primary text-white hover:bg-brand-primary-hover cursor-pointer"
             />

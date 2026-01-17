@@ -54,6 +54,7 @@ export default function UpdateUserPopup({
 }) {
   const [user, setUser] = useState<IUser>(DefaultIUser);
   const [loading, setLoading] = useState<boolean>(false);
+  const [buttonLoading, setButtonLoading] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<File | null>(null);
   const [permissions, setPermissions] = useState<
     { id: string; code: string }[]
@@ -121,83 +122,81 @@ export default function UpdateUserPopup({
       formData.append("avatar", avatar, avatar.name);
     }
 
-    setLoading(true);
-    var result = await userService.update(userId, formData);
-
-    const data = result.data?.results;
-    if (result.isSuccess && data) {
+    setButtonLoading(true);
+    try {
+      await userService.update(userId, formData);
+    } catch (error) {
+      //
+    } finally {
+      setButtonLoading(false);
       setOpen(false);
       setUser(DefaultIUser);
     }
-    setLoading(false);
-    setOpen(false);
   };
 
   useEffect(() => {
     if (!open) {
       return;
     }
-    setLoading(true);
+
     InitUser();
-    setLoading(false);
   }, [open]);
 
   async function InitUser() {
-    const result = await userService.get(userId);
-    const permissionResult = await permissionService.list();
-    const roleResult = await roleService.list({});
+    setLoading(true);
+    try {
+      const result = await userService.get(userId);
+      const permissionResult = await permissionService.list();
+      const roleResult = await roleService.list({});
 
-    if (result.data?.status !== 200) {
-      return;
+      const user = result.data!.results as IUserResponse;
+      const permissions = permissionResult.data!.results!.flatMap(
+        (group) => group.permissions
+      );
+      const roles = roleResult.data!.results! as IRole[];
+
+      setPermissions([
+        ...permissions!.map((x) => ({ id: x.id, code: x.codeTranslation })),
+      ]);
+      setRoles([...roles.map((x) => ({ id: x.id, name: x.name }))]);
+
+      const userPermissions = user.permissions;
+      const currentPermission = permissions
+        ?.filter((permission) =>
+          userPermissions?.some((p) => p.id == permission.id)
+        )
+        .map((x) => ({
+          id: x.id,
+          code: x.codeTranslation,
+        })) as IPermissionResponse[];
+
+      setUser((pre) => ({
+        ...pre,
+        ...toIUser({ ...user, permissions: currentPermission }),
+      }));
+    } catch (error) {
+      //
+    } finally {
+      setLoading(false);
     }
-    if (permissionResult.data?.status !== 200) {
-      return;
-    }
-    if (roleResult.data?.status !== 200) {
-      return;
-    }
-
-    const user = result.data.results as IUserResponse;
-    const permissions = permissionResult.data.results!.flatMap(
-      (group) => group.permissions
-    );
-    const roles = roleResult.data.results! as IRole[];
-
-    setPermissions([
-      ...permissions!.map((x) => ({ id: x.id, code: x.codeTranslation })),
-    ]);
-    setRoles([...roles.map((x) => ({ id: x.id, name: x.name }))]);
-
-    const userPermissions = user.permissions;
-    const currentPermission = permissions
-      ?.filter((permission) =>
-        userPermissions?.some((p) => p.id == permission.id)
-      )
-      .map((x) => ({
-        id: x.id,
-        code: x.codeTranslation,
-      })) as IPermissionResponse[];
-
-    setUser((pre) => ({
-      ...pre,
-      ...toIUser({ ...user, permissions: currentPermission }),
-    }));
   }
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   return (
-    user.id && (
-      <Dialog open={open}>
-        <DialogContent className="fixed inset-0 z-50 flex items-center justify-center p-4  bg-black/40 backdrop-blur-[2px]">
-          <div className="relative w-full max-w-4xl flex flex-col max-h-[90vh] rounded-xl shadow-2xl bg-background-card border border-background-border overflow-hidden bg-white">
-            {/* Header title */}
-            <DialogHeader className="flex justify-between px-6 py-5 border-b border-background-border shrink-0 bg-background-card">
-              <DialogTitle className="text-black tracking-tight text-xl font-bold leading-tight">
-                Update User
-              </DialogTitle>
-            </DialogHeader>
+    <Dialog open={open}>
+      <DialogContent className="fixed inset-0 z-50 flex items-center justify-center p-4  bg-black/40 backdrop-blur-[2px]">
+        <div className="relative w-full max-w-4xl flex flex-col max-h-[90vh] rounded-xl shadow-2xl bg-background-card border border-background-border overflow-hidden bg-white">
+          {/* Header title */}
+          <DialogHeader className="flex justify-between px-6 py-5 border-b border-background-border shrink-0 bg-background-card">
+            <DialogTitle className="text-black tracking-tight text-xl font-bold leading-tight">
+              Update User
+            </DialogTitle>
+          </DialogHeader>
 
-            {/* Content */}
+          {/* Content */}
+          {loading ? (
+            <Skeleton />
+          ) : (
             <div className="overflow-y-auto custom-scrollbar flex-1 p-6 sm:p-8">
               <div className="flex flex-col gap-8">
                 {/* profile info section*/}
@@ -380,31 +379,109 @@ export default function UpdateUserPopup({
                 </div>
               </div>
             </div>
+          )}
 
-            {/* Footer */}
-            <DialogFooter className="flex justify-end gap-3 px-6 py-5 border-t border-gray-200 dark:border-border-dark bg-gray-50 dark:bg-[#111722] shrink-0">
-              <DialogClose asChild>
-                <button
-                  className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
-                  onClick={() => {
-                    setOpen(false);
-                    setUser(DefaultIUser);
-                  }}
-                >
-                  Cancel
-                </button>
-              </DialogClose>
-              <LoadingButton
-                onClick={handleSubmit}
-                type="button"
-                loading={loading}
-                text="Update"
-                className="px-4 py-2 rounded bg-brand-primary text-white hover:bg-brand-primary-hover cursor-pointer"
-              />
-            </DialogFooter>
-          </div>
-        </DialogContent>
-      </Dialog>
-    )
+          {/* Footer */}
+          <DialogFooter className="flex justify-end gap-3 px-6 py-5 border-t border-gray-200 dark:border-border-dark bg-gray-50 dark:bg-[#111722] shrink-0">
+            <DialogClose asChild>
+              <button
+                className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
+                onClick={() => {
+                  setOpen(false);
+                  setUser(DefaultIUser);
+                }}
+              >
+                Cancel
+              </button>
+            </DialogClose>
+            <LoadingButton
+              onClick={handleSubmit}
+              type="button"
+              loading={buttonLoading}
+              text="Update"
+              className="px-4 py-2 rounded bg-brand-primary text-white hover:bg-brand-primary-hover cursor-pointer"
+            />
+          </DialogFooter>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
+const Skeleton = () => (
+  <div className="overflow-y-auto flex-1 p-6 sm:p-8 animate-pulse">
+    <div className="flex flex-col gap-8">
+      {/* Profile info section */}
+      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center p-4 rounded-xl border border-gray-200 bg-gray-100/50">
+        {/* Avatar */}
+        <div className="h-24 w-24 rounded-full bg-gray-200" />
+
+        {/* User info */}
+        <div className="flex flex-col flex-1 gap-2">
+          <div className="h-5 w-48 rounded bg-gray-200" />
+          <div className="h-4 w-40 rounded bg-gray-200" />
+          <div className="h-4 w-32 rounded bg-gray-200" />
+
+          <div className="flex gap-2 mt-2">
+            <div className="h-5 w-20 rounded bg-gray-200" />
+            <div className="h-5 w-24 rounded bg-gray-200" />
+          </div>
+        </div>
+
+        {/* Change photo button */}
+        <div className="h-10 w-32 rounded bg-gray-200 mt-2 sm:mt-0" />
+      </div>
+
+      {/* Form fields */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* First Name */}
+        <div className="space-y-2">
+          <div className="h-4 w-24 rounded bg-gray-200" />
+          <div className="h-12 rounded bg-gray-200" />
+        </div>
+
+        {/* Last Name */}
+        <div className="space-y-2">
+          <div className="h-4 w-24 rounded bg-gray-200" />
+          <div className="h-12 rounded bg-gray-200" />
+        </div>
+
+        {/* Email */}
+        <div className="space-y-2">
+          <div className="h-4 w-32 rounded bg-gray-200" />
+          <div className="h-12 rounded bg-gray-200" />
+        </div>
+
+        {/* Phone */}
+        <div className="space-y-2">
+          <div className="h-4 w-32 rounded bg-gray-200" />
+          <div className="h-12 rounded bg-gray-200" />
+        </div>
+
+        {/* Date of birth */}
+        <div className="space-y-2">
+          <div className="h-4 w-28 rounded bg-gray-200" />
+          <div className="h-12 rounded bg-gray-200" />
+        </div>
+
+        {/* Status toggle */}
+        <div className="space-y-2">
+          <div className="h-4 w-28 rounded bg-gray-200" />
+          <div className="h-6 w-14 rounded-full bg-gray-200 mt-3" />
+        </div>
+      </div>
+
+      {/* Roles & Permissions */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="space-y-2">
+          <div className="h-4 w-24 rounded bg-gray-200" />
+          <div className="h-12 rounded bg-gray-200" />
+        </div>
+
+        <div className="space-y-2">
+          <div className="h-4 w-32 rounded bg-gray-200" />
+          <div className="h-12 rounded bg-gray-200" />
+        </div>
+      </div>
+    </div>
+  </div>
+);

@@ -23,7 +23,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useQueryParam } from "@/hooks/useQueyParam";
 import { userService } from "@/features/user/userService";
 import filterParser from "@utils/queryParams/filterParser";
-import { IPageInfo } from "@/types/IResponse";
+import IResponse, { IPageInfo, IPagination } from "@/types/IResponse";
 import { Checkbox } from "@dscn/components/ui/checkbox";
 import localStorageHelper from "@utils/storages/localStorageHelper";
 import { DataTableFilterMenu } from "@/design-system/cn/components/data-table/data-table-filter-menu";
@@ -117,7 +117,9 @@ export default function User() {
           <DataTableColumnHeader column={column} title="Username" />
         ),
         cell: ({ row }) => {
-          return <div className="text-gray-500">@{row.getValue("username")}</div>;
+          return (
+            <div className="text-gray-500">@{row.getValue("username")}</div>
+          );
         },
         meta: {
           label: "Username",
@@ -380,11 +382,10 @@ export default function User() {
     setLoading(true);
     userService
       .list(params)
-      .then((result) => {
-        if (!result.data?.results) {
-          return;
-        }
-        const { data, paging } = result.data.results;
+      .then((results) => {
+        const { data, paging } = results.data!.results as IPagination<
+          IUserResponse[]
+        >;
         const users = data.map((user) => toIUser(user));
 
         setUser([...new Set([...users])]);
@@ -395,6 +396,9 @@ export default function User() {
           hasNextPage: paging?.hasNextPage,
           hasPreviousPage: paging?.hasPreviousPage,
         });
+      })
+      .catch((error) => {
+        //
       })
       .finally(() => {
         setLoading(false);

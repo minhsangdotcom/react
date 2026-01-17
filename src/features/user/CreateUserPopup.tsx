@@ -77,7 +77,7 @@ export default function CreateUserPopup({
     }));
   };
 
-  const handleSubmit = async (e: FormEvent) => {
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const formData = new FormData();
 
@@ -114,14 +114,15 @@ export default function CreateUserPopup({
     }
 
     setLoading(true);
-    var result = await userService.create(formData);
-
-    const data = result.data?.results;
-    if (result.isSuccess && data) {
+    try {
+      await userService.create(formData);
+    } catch (error) {
+      //
+    } finally {
       setOpen(false);
       setUser(DefaultIUser);
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -129,20 +130,30 @@ export default function CreateUserPopup({
       return;
     }
     setLoading(true);
-    roleService.list({}).then((data) => {
-      const roles = data.data?.results as IRole[];
-      setRoles([...roles.map((x) => ({ id: x.id, name: x.name }))]);
-    });
+    roleService
+      .list({})
+      .then((data) => {
+        const roles = data.data?.results as IRole[];
+        setRoles([...roles.map((x) => ({ id: x.id, name: x.name }))]);
+      })
+      .catch((error) => {
+        //
+      });
 
-    permissionService.list().then((data) => {
-      const groups = data.data?.results as IGroupPermissionResponse[];
-      const permissions = groups
-        .flatMap((group) => group.permissions)
-        .map((per) => per);
-      setPermissions([
-        ...permissions.map((x) => ({ id: x.id, code: x.codeTranslation })),
-      ]);
-    });
+    permissionService
+      .list()
+      .then((data) => {
+        const groups = data.data?.results as IGroupPermissionResponse[];
+        const permissions = groups
+          .flatMap((group) => group.permissions)
+          .map((per) => per);
+        setPermissions([
+          ...permissions.map((x) => ({ id: x.id, code: x.codeTranslation })),
+        ]);
+      })
+      .catch((error) => {
+        //
+      });
     setLoading(false);
   }, [open]);
 
@@ -386,7 +397,7 @@ export default function CreateUserPopup({
               </button>
             </DialogClose>
             <LoadingButton
-              onClick={(e) => handleSubmit(e)}
+              onClick={(e) => onSubmit(e)}
               type="button"
               loading={loading}
               text="Create"

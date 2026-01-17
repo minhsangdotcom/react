@@ -26,15 +26,16 @@ export default function Login() {
   const dispatch = useAppDispatch();
   const data = useAppSelector((store) => store.auth);
 
-  const onSubmit = (data: loginSchemaType) => {
-    dispatch(
-      loginAsync({ identifier: data.identifier, password: data.password })
-    )
-      .unwrap()
-      .then(() => {
-        navigate("/");
-      });
-  };
+  async function onSubmit(data: loginSchemaType) {
+    try {
+      await dispatch(
+        loginAsync({ identifier: data.identifier, password: data.password })
+      ).unwrap();
+      navigate("/");
+    } catch (error) {
+      //
+    }
+  }
 
   return (
     <div className="flex items-center justify-center h-screen">

@@ -11,7 +11,7 @@ interface IProfileInfo {
 
 interface IProfileState extends IProfileInfo {
   isLoading: boolean;
-  error: null;
+  error: any;
 }
 
 const initialState = {
@@ -31,7 +31,9 @@ const profileSlice = createSlice({
         state.error = null;
       })
       .addCase(profileAsync.fulfilled, (state: IProfileState, action) => {
-        const result = action.payload.data as IResponse<IUserProfileResponse> | undefined;
+        const result = action.payload.data as
+          | IResponse<IUserProfileResponse>
+          | undefined;
         const user = result?.results as IUserProfileResponse | undefined;
 
         localStorageHelper.set<IProfileInfo>(keyConfig.profileInfoKey, {
@@ -46,16 +48,11 @@ const profileSlice = createSlice({
         };
       })
       .addCase(profileAsync.rejected, (state: IProfileState, action) => {
-        state.isLoading = false;
-
-        if (action.payload) {
-          state.error = action.payload as any;
-        } else {
-          state.error = {
-            message: action.error.message ?? "Something went wrong",
-          } as any;
-        }
-        return state;
+        return {
+          ...state,
+          isLoading: false,
+          error: action.error,
+        };
       });
   },
 });

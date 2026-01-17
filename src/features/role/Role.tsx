@@ -20,6 +20,8 @@ import { ConfirmDialog } from "@/components/ConfirmDialog";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
+import { IApiResult } from "@/utils/http/IApiResult";
+import IResponse from "@/types/IResponse";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -168,11 +170,13 @@ export default function Role() {
   });
 
   const handleDelete = async () => {
-    const result = await roleService.delete(id!);
-    if (!result.isSuccess) {
-      console.log("delete error:" + result.error);
+    try {
+      await roleService.delete(id!);
+    } catch (error) {
+      //
+    } finally {
+      setDialogOpen(false);
     }
-    setDialogOpen(false);
   };
 
   useEffect(() => {
@@ -182,13 +186,12 @@ export default function Role() {
     setLoading(true);
     fetchRole()
       .then((result) => {
-        if (result?.data?.results) {
-          const sortedRoles = result?.data?.results.sort(
-            (a: any, b: any) =>
-              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          );
-          setRole([...sortedRoles]);
-        }
+        const roles = result.data!.results as IRole[];
+        const sortedRoles = roles.sort(
+          (a: IRole, b: IRole) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+        setRole([...sortedRoles]);
       })
       .finally(() => setLoading(false));
   }, [open, dialogOpen]);

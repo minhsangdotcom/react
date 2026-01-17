@@ -73,14 +73,15 @@ export default function Profile() {
     }
 
     setLoading(true);
-    var result = await profileService.updateProfile(formData);
-
-    const data = result.data?.results;
-    if (result.isSuccess && data) {
+    try {
+      var result = await profileService.updateProfile(formData);
+      const data = result.data?.results as IUserProfileResponse;
       setUserProfile((pre) => ({
         ...pre,
         avatar: data.avatar != null ? data.avatar : pre.avatar,
       }));
+    } catch (error) {
+      //
     }
     setLoading(false);
   };
@@ -123,7 +124,9 @@ export default function Profile() {
 
           {/* Name */}
           <div className="flex flex-col justify-center">
-            <h2 className="text-2xl font-semibold leading-tight">{userProfile.firstName} {userProfile.lastName}</h2>
+            <h2 className="text-2xl font-semibold leading-tight">
+              {userProfile.firstName} {userProfile.lastName}
+            </h2>
           </div>
         </div>
 
