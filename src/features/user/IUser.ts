@@ -19,8 +19,8 @@ interface IUserBase {
 }
 
 export interface IUser extends IUserBase, IEntity {
-  roles: Array<{ id: string; name: string }>;
-  permissions?: Array<{ id: string; code: string }>;
+  roles: Array<IRoleModel>;
+  permissions?: Array<IPermissionModel>;
 }
 
 export interface IUserResponse extends IUserBase, IEntity, IAuditable {
@@ -28,7 +28,17 @@ export interface IUserResponse extends IUserBase, IEntity, IAuditable {
   permissions: Array<IPermissionResponse>;
 }
 
-const DefaultIUser = {
+export interface IRoleModel {
+  id: string;
+  name: string;
+}
+
+export interface IPermissionModel {
+  id: string;
+  code: string;
+}
+
+const IDefaultUser = {
   id: "",
   createdAt: new Date(),
   firstName: "",
@@ -44,4 +54,4 @@ const DefaultIUser = {
   permissions: [],
   avatar: "/images/avatar-boy.png",
 };
-export default DefaultIUser;
+export default IDefaultUser;

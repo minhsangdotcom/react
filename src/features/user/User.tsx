@@ -12,14 +12,19 @@ import {
 } from "@dscn/components/ui/dropdown-menu";
 import { useDataTable } from "@dscn/hooks/use-data-table";
 import { defaultParams, Params } from "@/types/Params";
-import { IUser, IUserResponse } from "@/features/user/IUser";
+import {
+  IPermissionModel,
+  IRoleModel,
+  IUser,
+  IUserResponse,
+} from "@/features/user/IUser";
 import { UserStatus } from "@/features/user/UserStatus";
 import { Column, ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { CheckCircle, MoreHorizontal, XCircle } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useQueryParam } from "@/hooks/useQueyParam";
 import { userService } from "@/features/user/userService";
 import filterParser from "@utils/queryParams/filterParser";
@@ -32,6 +37,11 @@ import CreateUserPopup from "./CreateUserPopup";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import UpdateUserPopup from "./UpdateUserPopup";
 import IQueryParam from "@/types/IQueryParam";
+import { roleService } from "@features/role/roleService";
+import permissionService from "@/services/permission/permissionService";
+import { IPermissionGroupResponse } from "@/types/permission/IPermission";
+import { IRole } from "../role/IRole";
+import { Loading } from "@/components/Loading";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -63,11 +73,15 @@ export default function User() {
   const [user, setUser] = useState<Array<IUser>>([]);
   const [pageInfo, setPageInfo] = useState<IPageInfo>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [refDataLoading, setRefDataLoading] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
   const [openCreatePopup, setOpenCreatePopup] = useState<boolean>(false);
   const [openUpdatePopup, setOpenUpdatePopup] = useState<boolean>(false);
   const [openConfirmDialog, setConfirmDialogOpen] = useState<boolean>(false);
   const [id, setId] = useState<string | null>(null);
+
+  const [permissions, setPermissions] = useState<IPermissionModel[]>([]);
+  const [roles, setRoles] = useState<IRoleModel[]>([]);
 
   const columns = useMemo<ColumnDef<IUser>[]>(
     () => [
@@ -383,7 +397,7 @@ export default function User() {
     userService
       .list(params)
       .then((results) => {
-        const { data, paging } = results.data!.results as IPagination<
+        const { data, paging } = results.data?.results as IPagination<
           IUserResponse[]
         >;
         const users = data.map((user) => toIUser(user));
@@ -405,11 +419,56 @@ export default function User() {
       });
   }, [query, search, openCreatePopup, openConfirmDialog, openUpdatePopup]);
 
-  async function handleDelete(): Promise<void> {
+  const referenceDataRef = useRef<boolean>(false);
+  useEffect(() => {
+    if (referenceDataRef.current) {
+      return;
+    }
+    loadReferenceData();
+    referenceDataRef.current = true;
+  }, []);
+
+  async function loadReferenceData() {
+    setRefDataLoading(true);
+    try {
+      const [roleResult, permissionResult] = await Promise.all([
+        roleService.list({}),
+        permissionService.list(),
+      ]);
+      const rolesData = roleResult.data?.results as IRole[];
+      setRoles(rolesData.map((x) => ({ id: x.id, name: x.name })));
+
+      const groups = permissionResult.data
+        ?.results as IPermissionGroupResponse[];
+      const permissionsData = groups
+        .flatMap((group) => group.permissions)
+        .map((per) => ({ id: per.id, code: per.codeTranslation }));
+      setPermissions(permissionsData);
+    } catch (error) {
+      console.error("Failed to load reference data:", error);
+    } finally {
+      setRefDataLoading(false);
+    }
+  }
+
+  async function onConfirm() {
     setLoading(true);
-    await userService.delete(id as string);
-    setLoading(false);
-    setConfirmDialogOpen(false);
+    try {
+      await userService.delete(id!);
+    } catch (error) {
+      //
+    } finally {
+      setLoading(false);
+      setConfirmDialogOpen(false);
+    }
+  }
+
+  if (refDataLoading) {
+    return (
+      <div className="p-3 min-h-screen">
+        <Loading />
+      </div>
+    );
   }
 
   return (
@@ -455,12 +514,17 @@ export default function User() {
           </DataTableAdvancedToolbar>
         </DataTable>
       </div>
-      <CreateUserPopup open={openCreatePopup} setOpen={setOpenCreatePopup} />
+      <CreateUserPopup
+        open={openCreatePopup}
+        closePopup={() => setOpenCreatePopup(false)}
+        roles={roles}
+        permissions={permissions}
+      />
       <ConfirmDialog
         isOpen={openConfirmDialog}
         title="Delete Item"
         message="Are you sure you want to delete this item?"
-        onConfirm={handleDelete}
+        onConfirm={onConfirm}
         onCancel={() => setConfirmDialogOpen(false)}
       />
       <UpdateUserPopup
