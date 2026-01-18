@@ -11,7 +11,7 @@ import { ulid } from "ulidx";
 import { roleService } from "@/features/role/roleService";
 import permissionService from "@services/permission/permissionService";
 import {
-  IGroupPermissionResponse,
+  IPermissionGroupResponse,
   IPermission,
   IPermissionGroup,
   IPermissionResponse,
@@ -36,7 +36,7 @@ function mapPermission(permission: any): IPermission {
 }
 
 export function mapPermissionGroups(
-  response: IGroupPermissionResponse[]
+  response: IPermissionGroupResponse[]
 ): IPermissionGroup[] {
   return response.map((group) => ({
     name: group.name,
@@ -215,7 +215,7 @@ export default function RolePopup({
     try {
       const result = await permissionService.list();
 
-      const permissions = result.data!.results as IGroupPermissionResponse[];
+      const permissions = result.data!.results as IPermissionGroupResponse[];
       let groups = mapPermissionGroups(permissions);
 
       if (roleId) {

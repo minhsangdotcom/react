@@ -1,6 +1,7 @@
 import { IAuditable } from "../IAuditable";
 import IEntity from "../IEntity";
 
+// Model for form
 export interface IPermission extends IEntity {
   code: string;
   label: string;
@@ -16,23 +17,26 @@ export interface IPermissionGroup {
   label: string;
   permissions: IPermission[];
 }
+//
 
-export interface INestedPermission extends IEntity {
+// response for get all permissions api
+interface INestedPermissionResponse extends IEntity {
   code: string;
   codeTranslation: string;
-  children?: Array<INestedPermission>;
+  children?: Array<INestedPermissionResponse>;
 }
 
-export interface IGroupPermissionResponse {
+export interface IPermissionGroupResponse {
   name: string;
   nameTranslation: string;
-  permissions: Array<INestedPermission>;
+  permissions: Array<INestedPermissionResponse>;
 }
+//
 
+// response for permission inside role, user
 export interface IPermissionResponse extends IEntity, IAuditable {
   code: string;
   name: string;
   group: string;
-  description: string; 
-  children: IPermissionResponse[];
+  description: string;
 }

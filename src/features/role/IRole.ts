@@ -2,9 +2,9 @@ import { IAuditable } from "@/types/IAuditable";
 import IEntity from "@/types/IEntity";
 import { IPermissionResponse } from "../../types/permission/IPermission";
 
-export interface IRole extends IEntity, IAuditable {
+export interface IRole extends IEntity {
   name: string;
-  description: string;
+  description?: string | null;
 }
 
 export interface IRoleRequest {
@@ -13,12 +13,6 @@ export interface IRoleRequest {
   permissionIds: Array<string>;
 }
 
-export interface IRoleResponse extends IRole {
+export interface IRoleResponse extends IRole, IAuditable {
   permissions: Array<IPermissionResponse>;
-}
-
-export interface IRoleClaim {
-  id?: string;
-  claimType: string;
-  claimValue: string;
 }
