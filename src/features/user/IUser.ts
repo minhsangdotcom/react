@@ -38,7 +38,7 @@ export interface IPermissionModel {
   code: string;
 }
 
-const IDefaultUser = {
+const DefaultUser = {
   id: "",
   createdAt: new Date(),
   firstName: "",
@@ -54,4 +54,4 @@ const IDefaultUser = {
   permissions: [],
   avatar: "/images/avatar-boy.png",
 };
-export default IDefaultUser;
+export default DefaultUser;

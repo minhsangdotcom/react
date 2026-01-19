@@ -10,8 +10,8 @@ import { MultiValue } from "react-select";
 import Select from "react-select";
 import PasswordInput from "@/components/PasswordInput";
 import { Mail, Phone } from "lucide-react";
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
-import IDefaultUser, { IPermissionModel, IRoleModel, IUser } from "./IUser";
+import { ChangeEvent, useRef, useState } from "react";
+import DefaultUser, { IPermissionModel, IRoleModel, IUser } from "./IUser";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { UserStatus } from "./UserStatus";
@@ -27,6 +27,9 @@ import {
   SkeletonInput,
   SkeletonSelect,
 } from "@/components/Skeleton";
+import { createUserSchema, createUserSchemaType } from "./userSchema";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 dayjs.extend(utc);
 
 interface CreateUserProps {
@@ -36,15 +39,37 @@ interface CreateUserProps {
   closePopup: () => void;
 }
 
+function resetForm(defaultData: any) {
+  return {
+    email: defaultData.email,
+    dateOfBirth: defaultData.dateOfBirth,
+    firstName: defaultData.firstName,
+    lastName: defaultData.lastName,
+    gender: defaultData.gender.toString(),
+    password: defaultData.password,
+    phoneNumber: defaultData.phoneNumber,
+    username: defaultData.username,
+  };
+}
+
 export default function CreateUserPopup({
   open,
   roles,
   permissions,
   closePopup,
 }: CreateUserProps) {
-  const [user, setUser] = useState<IUser>(IDefaultUser);
+  const [user, setUser] = useState<IUser>(DefaultUser);
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<File | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<createUserSchemaType>({
+    resolver: zodResolver(createUserSchema),
+    defaultValues: resetForm(DefaultUser),
+  });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -80,12 +105,11 @@ export default function CreateUserPopup({
     }));
   };
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const submit = async (data: createUserSchemaType) => {
     const formData = new FormData();
 
     Object.entries({
-      ...user,
+      ...data,
       roles: user.roles.map((x) => x.id),
       permissions: user.permissions?.map((x) => x.id),
     }).forEach(([key, val]) => {
@@ -123,7 +147,8 @@ export default function CreateUserPopup({
       //
     } finally {
       closePopup();
-      setUser(IDefaultUser);
+      setUser(DefaultUser);
+      resetForm(DefaultUser);
       setSubmitLoading(false);
     }
   };
@@ -180,17 +205,15 @@ export default function CreateUserPopup({
                 <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-5">
                   <Input
                     label="First Name"
-                    name="firstName"
                     type="text"
-                    value={user.firstName}
-                    onChange={handleInputChange}
+                    {...register("firstName")}
+                    error={errors.firstName?.message}
                   />
                   <Input
                     label="Last Name"
-                    name="lastName"
                     type="text"
-                    value={user.lastName}
-                    onChange={handleInputChange}
+                    {...register("lastName")}
+                    error={errors.lastName?.message}
                   />
 
                   <div className="flex flex-col gap-2">
@@ -234,7 +257,7 @@ export default function CreateUserPopup({
                 </div>
               </div>
 
-              <div className="h-px bg-gray-200 dark:bg-border-dark w-full"></div>
+              <div className="h-px bg-gray-200 dark:bg-border-dark w-full" />
               {/* Contact & Account */}
               <div>
                 <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-4">
@@ -243,39 +266,38 @@ export default function CreateUserPopup({
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <Input
                     label="Email Address"
-                    name="email"
                     type="email"
-                    onChange={handleInputChange}
                     icon={<Mail />}
+                    {...register("email")}
+                    error={errors.email?.message}
                   />
                   <Input
                     label="Phone Number"
-                    name="phoneNumber"
                     type="tel"
-                    onChange={handleInputChange}
                     icon={<Phone />}
+                    {...register("phoneNumber")}
+                    error={errors.phoneNumber?.message}
                   />
                   <Input
                     label="Username"
-                    name="username"
                     type="text"
-                    onChange={handleInputChange}
+                    autoComplete="username"
+                    {...register("username")}
+                    error={errors.username?.message}
                   />
                   <div className="flex flex-col gap-2">
-                    {/* <PasswordInput
-                        name="password"
-                        label="Password"
-                        labelClassName="text-sm font-medium text-gray-700 dark:text-gray-200"
-                        inputClassName="w-full rounded-lg border focus:outline-none border-gray-300 bg-white text-gray-900 h-12 px-4 focus:ring-2 focus:ring-blue-300"
-                        onChange={handleInputChange}
-                        isRequired
-                        value={user.password}
-                      /> */}
+                    <PasswordInput
+                      label="Password"
+                      labelClassName="text-sm font-medium text-gray-700 dark:text-gray-200"
+                      inputClassName="w-full rounded-lg border focus:outline-none border-gray-300 bg-white text-gray-900 h-12 px-4 focus:ring-2 focus:ring-blue-300"
+                      {...register("password")}
+                      error={errors.password?.message}
+                    />
                   </div>
                 </div>
               </div>
 
-              <div className="h-px bg-gray-200 dark:bg-border-dark w-full"></div>
+              <div className="h-px bg-gray-200 dark:bg-border-dark w-full" />
 
               {/* Access Control */}
               <div>
@@ -365,14 +387,15 @@ export default function CreateUserPopup({
                 className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
                 onClick={() => {
                   closePopup();
-                  setUser(IDefaultUser);
+                  setUser(DefaultUser);
+                  resetForm(DefaultUser);
                 }}
               >
                 Cancel
               </button>
             </DialogClose>
             <LoadingButton
-              onClick={(e) => handleSubmit(e)}
+              onClick={handleSubmit(submit)}
               type="button"
               loading={submitLoading}
               text="Create"
