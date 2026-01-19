@@ -61,7 +61,7 @@ interface UpdateUserProps {
   closePopup: () => void;
 }
 
-export default function UpdateUserPopup({
+export default function UpdateUserModal({
   open,
   roles,
   permissions,
