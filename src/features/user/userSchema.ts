@@ -11,31 +11,70 @@ const userSchema = z.object({
     .nonempty("Last name is required")
     .max(100, "Last name is too long"),
   email: z.string().nonempty("Email is required").email("Email is invalid"),
+  // phoneNumber: z
+  //   .string()
+  //   .regex(
+  //     /^(?:\+84|84|0)[3-9]\d{8}$/,
+  //     "Phone number must be a valid international format (E.164)"
+  //   )
+  //   .refine(
+  //     (val) => {
+  //       const digits = val.replace(/\+/g, "");
+  //       return digits.length >= 10 && digits.length <= 15;
+  //     },
+  //     {
+  //       message: "Phone number must be between 10-15 digits",
+  //     }
+  //   )
+  //   .nullable(),
   phoneNumber: z
     .string()
-    .nonempty("Phone number is required")
-    .regex(
-      /^\+?[1-9]\d{1,14}$/,
-      "Phone number must be a valid international format (E.164)"
-    )
-    .refine(
-      (val) => {
-        // Remove + and check length (typically 10-15 digits)
-        const digits = val.replace(/\+/g, "");
-        return digits.length >= 10 && digits.length <= 15;
-      },
-      {
-        message: "Phone number must be between 10-15 digits",
+    .nullable()
+    .superRefine((val, ctx) => {
+      if (!val) {
+        return;
       }
-    ),
+
+      if (!/^(?:\+84|84|0)[3-9]\d{8}$/.test(val)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Invalid phone number format",
+        });
+        return;
+      }
+
+      const digits = val.replace(/\+/g, "");
+      if (digits.length < 10 || digits.length > 15) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Phone number must contain 10–15 digits",
+        });
+      }
+    }),
   dateOfBirth: z
     .string()
-    .nonempty("Date of birth is required")
-    .refine((val) => !isNaN(new Date(val).getTime()), {
-      message: "Please enter a valid date",
-    })
-    .refine((val) => new Date(val) <= new Date(), {
-      message: "Date of birth cannot be in the future",
+    .nullable()
+    .superRefine((val, ctx) => {
+      if (!val) {
+        return;
+      }
+
+      const date = new Date(val);
+
+      if (isNaN(date.getTime())) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Please enter a valid date",
+        });
+        return;
+      }
+
+      if (date > new Date()) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Date of birth cannot be in the future",
+        });
+      }
     }),
 });
 
@@ -55,10 +94,12 @@ const createUserSchema = userSchema.extend({
       /^(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/,
       `Password must be at least 8 characters and include an uppercase letter, a number, and a symbol`
     ),
-  gender: z.enum(Object.values(Gender) as [string, ...string[]], {
-    required_error: "Gender is required",
-    invalid_type_error: "Invalid gender selection",
-  }),
+  gender: z
+    .enum(Object.values(Gender) as [string, ...string[]], {
+      required_error: "Gender is required",
+      invalid_type_error: "Invalid gender selection",
+    })
+    .nullable(),
 });
 
 export type userSchemaType = z.input<typeof userSchema>;

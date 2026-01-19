@@ -39,9 +39,7 @@ export function DateInput({
       <input
         value={dateInput}
         onClick={() => {
-          if (dateInput) {
-            setOpened((o) => !o);
-          }
+          setOpened((o) => !o);
         }}
         placeholder={placeholder}
         className={
@@ -70,7 +68,7 @@ export function DateInput({
             }
 
             onChange(parsed.format(format));
-            setOpened(true);
+            setOpened(false);
           }
         }}
         onChange={(e) => {
@@ -95,11 +93,11 @@ export function DateInput({
       )}
 
       {/* DATE PICKER */}
-      {opened && (
+      {opened ? (
         <div className="absolute z-50 mt-2 rounded-lg border bg-white dark:bg-input-dark shadow-lg p-2">
           <DatePicker
             value={value}
-            defaultDate={value!}
+            defaultDate={value ?? dayjs().toDate().toString()}
             onChange={(date) => {
               onChange(date);
               setOpened(false);
@@ -109,6 +107,8 @@ export function DateInput({
             allowDeselect
           />
         </div>
+      ) : (
+        <></>
       )}
     </div>
   );

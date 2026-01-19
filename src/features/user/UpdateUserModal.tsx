@@ -12,7 +12,7 @@ import { Mail, Phone, Upload } from "lucide-react";
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import Select, { MultiValue } from "react-select";
 import Input from "./UserInput";
-import IDefaultUser, {
+import DefaultUser, {
   IPermissionModel,
   IRoleModel,
   IUser,
@@ -30,22 +30,27 @@ import {
   SkeletonToggle,
   SkeletonWideInput,
 } from "@/components/Skeleton";
+import { userSchema, userSchemaType } from "./userSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
 dayjs.extend(utc);
 
-const toIUser = (dto: IUserResponse): IUser => {
+const toUserSchema = (
+  dto: IUserResponse
+): {
+  firstName: string;
+  lastName: string;
+  dateOfBirth?: string | null;
+  email: string;
+  phoneNumber?: string | null;
+} => {
   return {
     firstName: dto.firstName,
     lastName: dto.lastName,
     dateOfBirth: dto.dateOfBirth,
     email: dto.email,
     phoneNumber: dto.phoneNumber,
-    avatar: dto.avatar ?? "/images/avatar-boy.png",
-    id: dto.id,
-    createdAt: dto.createdAt,
-    gender: dto.gender,
-    status: dto.status,
-    username: dto.username,
-  } as IUser;
+  };
 };
 
 interface UpdateUserProps {
@@ -63,10 +68,21 @@ export default function UpdateUserPopup({
   userId,
   closePopup,
 }: UpdateUserProps) {
-  const [user, setUser] = useState<IUser>(IDefaultUser);
+  const [user, setUser] = useState<IUser>(DefaultUser);
   const [loading, setLoading] = useState<boolean>(false);
-  const [buttonLoading, setButtonLoading] = useState<boolean>(false);
+  const [submitLoading, setSubmitLoading] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<File | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    getValues,
+    formState: { errors },
+  } = useForm<userSchemaType>({
+    resolver: zodResolver(userSchema),
+  });
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const img = e.target.files?.[0];
@@ -93,12 +109,12 @@ export default function UpdateUserPopup({
     }));
   };
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const submit = async (data: userSchemaType) => {
     const formData = new FormData();
 
     Object.entries({
-      ...user,
+      ...data,
+      status: user.status,
       roles: user.roles.map((x) => x.id),
       permissions: user.permissions?.map((x) => x.id),
     }).forEach(([key, val]) => {
@@ -129,15 +145,15 @@ export default function UpdateUserPopup({
       formData.append("avatar", avatar, avatar.name);
     }
 
-    setButtonLoading(true);
+    setSubmitLoading(true);
     try {
       await userService.update(userId, formData);
     } catch (error) {
       //
     } finally {
-      setButtonLoading(false);
+      setSubmitLoading(false);
       closePopup();
-      setUser(IDefaultUser);
+      setUser(DefaultUser);
     }
   };
 
@@ -169,10 +185,15 @@ export default function UpdateUserPopup({
 
       setUser((pre) => ({
         ...pre,
-        ...toIUser({ ...user }),
+        avatar: user.avatar ?? "/images/avatar-boy.png",
+        status: user.status,
+        gender: user.gender,
+        username: user.username,
         permissions: [...currentPermission],
         roles: [...currentRoles],
       }));
+
+      reset({ ...toUserSchema(user) });
     } catch (error) {
       //
     } finally {
@@ -209,7 +230,7 @@ export default function UpdateUserPopup({
 
                   <div className="flex flex-col flex-1 items-center md:items-start">
                     <h4 className="text-black text-xl font-bold leading-tight">
-                      {user.firstName} {user.lastName}
+                      {getValues("firstName")} {getValues("lastName")}
                     </h4>
                     <p className="text-sm font-normal text-gray-500">
                       Username: @{user.username}
@@ -254,43 +275,43 @@ export default function UpdateUserPopup({
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <Input
                     label="First Name"
-                    name="firstName"
                     type="text"
-                    value={user.firstName}
-                    onChange={handleInputChange}
+                    {...register("firstName")}
+                    error={errors.firstName?.message}
                   />
                   <Input
                     label="Last Name"
-                    name="lastName"
                     type="text"
-                    value={user.lastName}
-                    onChange={handleInputChange}
+                    {...register("lastName")}
+                    error={errors.lastName?.message}
                   />
                   <Input
                     label="Email Address"
-                    name="email"
                     type="email"
                     icon={<Mail />}
-                    value={user.email}
-                    onChange={handleInputChange}
+                    {...register("email")}
+                    error={errors.email?.message}
                   />
                   <Input
                     label="Phone Number"
-                    name="phoneNumber"
                     type="tel"
                     icon={<Phone />}
-                    value={user.phoneNumber}
-                    onChange={handleInputChange}
+                    {...register("phoneNumber")}
+                    error={errors.phoneNumber?.message}
                   />
                   <div className="date-wrapper flex flex-col gap-2">
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
                       Date of Birth
                     </span>
-                    <DateInput
-                      value={user.dateOfBirth}
-                      onChange={(date) =>
-                        setUser((pre) => ({ ...pre, dateOfBirth: date }))
-                      }
+                    <Controller
+                      name="dateOfBirth"
+                      control={control}
+                      render={({ field }) => (
+                        <DateInput
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      )}
                     />
                   </div>
                   <div className="flex flex-col gap-2">
@@ -387,16 +408,16 @@ export default function UpdateUserPopup({
                 className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
                 onClick={() => {
                   closePopup();
-                  setUser(IDefaultUser);
+                  setUser(DefaultUser);
                 }}
               >
                 Cancel
               </button>
             </DialogClose>
             <LoadingButton
-              onClick={handleSubmit}
+              onClick={handleSubmit(submit)}
               type="button"
-              loading={buttonLoading}
+              loading={submitLoading}
               text="Update"
               className="px-4 py-2 rounded bg-brand-primary text-white hover:bg-brand-primary-hover cursor-pointer"
             />

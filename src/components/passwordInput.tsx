@@ -5,11 +5,15 @@ interface PasswordInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   labelClassName?: string;
   inputClassName?: string;
+  errorClassName?: string;
   error?: string;
 }
 
 const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
-  ({ label, labelClassName, inputClassName, error, ...props }, ref) => {
+  (
+    { label, labelClassName, inputClassName, error, errorClassName, ...props },
+    ref
+  ) => {
     const [hidden, setHidden] = useState(true);
     return (
       <div className="form-group">
@@ -22,7 +26,9 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
         <div className="password-wrapper">
           <input
             ref={ref}
-            className={inputClassName ?? "form-input"}
+            className={`${inputClassName ?? "form-input"} ${
+              error ? "form-input-error" : ""
+            }`}
             type={hidden ? "password" : "text"}
             {...props}
             autoComplete="current-password"
@@ -38,7 +44,10 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
           </button>
         </div>
         {error && (
-          <p id={`password-error`} className="form-error-text">
+          <p
+            id={`password-error`}
+            className={`${errorClassName ?? "form-error-text"}`}
+          >
             {error}
           </p>
         )}

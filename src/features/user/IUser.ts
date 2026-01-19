@@ -4,13 +4,14 @@ import { Gender } from "./Gender";
 import { UserStatus } from "./UserStatus";
 import IEntity from "@/types/IEntity";
 import { IAuditable } from "@/types/IAuditable";
+import dayjs from "dayjs";
 
 interface IUserBase {
   firstName: string;
   lastName: string;
   username: string;
   email: string;
-  phoneNumber: string;
+  phoneNumber?: string | null;
   password: string;
   dateOfBirth?: string | null;
   gender?: Gender | null;
@@ -43,10 +44,10 @@ const DefaultUser = {
   createdAt: new Date(),
   firstName: "",
   lastName: "",
-  gender: Gender.Male,
-  dateOfBirth: "2009-01-10",
+  gender:  null,
+  dateOfBirth: null,
   email: "",
-  phoneNumber: "",
+  phoneNumber: null,
   username: "",
   password: "",
   status: UserStatus.Active,
@@ -54,4 +55,7 @@ const DefaultUser = {
   permissions: [],
   avatar: "/images/avatar-boy.png",
 };
+
+
+
 export default DefaultUser;

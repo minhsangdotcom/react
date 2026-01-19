@@ -31,7 +31,7 @@ export function ConfirmDialog({
         <div className="mt-6 flex justify-end gap-3">
           <button
             type="button"
-            className="rounded-md px-4 py-2 text-gray-700 hover:bg-gray-100"
+            className="rounded-md px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
             onClick={onCancel}
           >
             {cancelText}
@@ -39,7 +39,7 @@ export function ConfirmDialog({
 
           <button
             type="button"
-            className="rounded-md bg-red-500 px-4 py-2 text-white hover:bg-red-600"
+            className="rounded-md bg-red-500 px-4 py-2 text-white hover:bg-red-600 cursor-pointer"
             onClick={onConfirm}
           >
             {confirmText}

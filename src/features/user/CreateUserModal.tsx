@@ -28,7 +28,7 @@ import {
   SkeletonSelect,
 } from "@/components/Skeleton";
 import { createUserSchema, createUserSchemaType } from "./userSchema";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 dayjs.extend(utc);
 
@@ -39,20 +39,7 @@ interface CreateUserProps {
   closePopup: () => void;
 }
 
-function resetForm(defaultData: any) {
-  return {
-    email: defaultData.email,
-    dateOfBirth: defaultData.dateOfBirth,
-    firstName: defaultData.firstName,
-    lastName: defaultData.lastName,
-    gender: defaultData.gender.toString(),
-    password: defaultData.password,
-    phoneNumber: defaultData.phoneNumber,
-    username: defaultData.username,
-  };
-}
-
-export default function CreateUserPopup({
+export default function CreateUserModal({
   open,
   roles,
   permissions,
@@ -65,10 +52,12 @@ export default function CreateUserPopup({
   const {
     register,
     handleSubmit,
+    control,
+    reset,
     formState: { errors },
   } = useForm<createUserSchemaType>({
     resolver: zodResolver(createUserSchema),
-    defaultValues: resetForm(DefaultUser),
+    defaultValues: setDefault(),
   });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -110,12 +99,13 @@ export default function CreateUserPopup({
 
     Object.entries({
       ...data,
+      status: user.status,
       roles: user.roles.map((x) => x.id),
       permissions: user.permissions?.map((x) => x.id),
     }).forEach(([key, val]) => {
       if (!val || val == "") return;
       if (key === "avatar") return;
-      if (key === "dateOfBirth") {
+      if (key === "dateOfBirth" && val != dayjs().toDate().toString()) {
         val &&
           formData.append(
             key,
@@ -148,10 +138,27 @@ export default function CreateUserPopup({
     } finally {
       closePopup();
       setUser(DefaultUser);
-      resetForm(DefaultUser);
+      resetForm();
       setSubmitLoading(false);
     }
   };
+
+  function setDefault() {
+    return {
+      email: DefaultUser.email,
+      dateOfBirth: DefaultUser.dateOfBirth,
+      firstName: DefaultUser.firstName,
+      lastName: DefaultUser.lastName,
+      gender: DefaultUser.gender,
+      password: DefaultUser.password,
+      phoneNumber: DefaultUser.phoneNumber,
+      username: DefaultUser.username,
+    };
+  }
+
+  function resetForm() {
+    reset({ ...setDefault() });
+  }
 
   return (
     <Dialog open={open}>
@@ -221,24 +228,25 @@ export default function CreateUserPopup({
                       Gender
                     </span>
                     <div className="relative">
-                      <Select
+                      <Controller
                         name="gender"
-                        options={genderOptions}
-                        styles={genderSelectStyles}
-                        value={
-                          user.gender
-                            ? {
-                                value: user.gender,
-                                label: Gender[user.gender!],
-                              }
-                            : null
-                        }
-                        onChange={(option: any) => {
-                          setUser((prev) => ({
-                            ...prev,
-                            gender: option?.value as Gender,
-                          }));
-                        }}
+                        control={control}
+                        render={({ field }) => (
+                          <Select
+                            {...field}
+                            options={genderOptions}
+                            styles={genderSelectStyles}
+                            value={
+                              genderOptions.find(
+                                (x) => x.value.toString() == field.value
+                              ) ?? null
+                            }
+                            onChange={(option: any) => {
+                              field.onChange(option?.value ?? null);
+                            }}
+                            isClearable
+                          />
+                        )}
                       />
                     </div>
                   </div>
@@ -247,11 +255,15 @@ export default function CreateUserPopup({
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
                       Date of Birth
                     </span>
-                    <DateInput
-                      value={user.dateOfBirth}
-                      onChange={(date) =>
-                        setUser((pre) => ({ ...pre, dateOfBirth: date }))
-                      }
+                    <Controller
+                      name="dateOfBirth"
+                      control={control}
+                      render={({ field }) => (
+                        <DateInput
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      )}
                     />
                   </div>
                 </div>
@@ -290,6 +302,7 @@ export default function CreateUserPopup({
                       label="Password"
                       labelClassName="text-sm font-medium text-gray-700 dark:text-gray-200"
                       inputClassName="w-full rounded-lg border focus:outline-none border-gray-300 bg-white text-gray-900 h-12 px-4 focus:ring-2 focus:ring-blue-300"
+                      errorClassName="text-xs text-red-500 mt-0.5"
                       {...register("password")}
                       error={errors.password?.message}
                     />
@@ -388,7 +401,7 @@ export default function CreateUserPopup({
                 onClick={() => {
                   closePopup();
                   setUser(DefaultUser);
-                  resetForm(DefaultUser);
+                  resetForm();
                 }}
               >
                 Cancel

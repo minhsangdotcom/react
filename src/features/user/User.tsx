@@ -28,14 +28,14 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useQueryParam } from "@/hooks/useQueyParam";
 import { userService } from "@/features/user/userService";
 import filterParser from "@utils/queryParams/filterParser";
-import IResponse, { IPageInfo, IPagination } from "@/types/IResponse";
+import { IPageInfo, IPagination } from "@/types/IResponse";
 import { Checkbox } from "@dscn/components/ui/checkbox";
 import localStorageHelper from "@utils/storages/localStorageHelper";
 import { DataTableFilterMenu } from "@/design-system/cn/components/data-table/data-table-filter-menu";
 import SearchBar from "@components/SearchBar";
-import CreateUserPopup from "./CreateUserPopup";
+import CreateUserModal from "./CreateUserModal";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
-import UpdateUserPopup from "./UpdateUserPopup";
+import UpdateUserModal from "./UpdateUserModal";
 import IQueryParam from "@/types/IQueryParam";
 import { roleService } from "@features/role/roleService";
 import permissionService from "@/services/permission/permissionService";
@@ -191,7 +191,10 @@ export default function User() {
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="PhoneNumber" />
         ),
-        cell: ({ row }) => <div>{row.getValue("phoneNumber")}</div>,
+        cell: ({ row }) => {
+          const phoneNumber: string = row.getValue("phoneNumber");
+          return <div>{phoneNumber ? phoneNumber : "_"}</div>;
+        },
         meta: {
           label: "PhoneNumber",
           placeholder: "Search by PhoneNumber...",
@@ -205,14 +208,19 @@ export default function User() {
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Date of birth" />
         ),
-        cell: ({ row }) => (
-          <div>
-            {dayjs
-              .utc(row.getValue("dateOfBirth"))
-              .tz(dayjs.tz.guess())
-              .format("DD/MM/YYYY")}
-          </div>
-        ),
+        cell: ({ row }) => {
+          const dateOfBirth: string = row.getValue("dateOfBirth");
+          return (
+            <div>
+              {dateOfBirth
+                ? dayjs
+                    .utc(dateOfBirth)
+                    .tz(dayjs.tz.guess())
+                    .format("DD/MM/YYYY")
+                : "_"}
+            </div>
+          );
+        },
         meta: {
           label: "Date of birth",
           placeholder: "Search by Date of birth...",
@@ -514,13 +522,13 @@ export default function User() {
           </DataTableAdvancedToolbar>
         </DataTable>
       </div>
-      <CreateUserPopup
+      <CreateUserModal
         open={openCreatePopup}
         closePopup={() => setOpenCreatePopup(false)}
         roles={roles}
         permissions={permissions}
       />
-      <UpdateUserPopup
+      <UpdateUserModal
         open={openUpdatePopup}
         closePopup={() => setOpenUpdatePopup(false)}
         roles={roles}
