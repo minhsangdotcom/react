@@ -29,7 +29,7 @@ import {
 } from "@/components/Skeleton";
 dayjs.extend(utc);
 
-interface CreateUserPopupProps {
+interface CreateUserProps {
   open: boolean;
   roles: IRoleModel[];
   permissions: IPermissionModel[];
@@ -41,7 +41,7 @@ export default function CreateUserPopup({
   roles,
   permissions,
   closePopup,
-}: CreateUserPopupProps) {
+}: CreateUserProps) {
   const [user, setUser] = useState<IUser>(IDefaultUser);
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<File | null>(null);
@@ -80,7 +80,7 @@ export default function CreateUserPopup({
     }));
   };
 
-  const onSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const formData = new FormData();
 
@@ -372,7 +372,7 @@ export default function CreateUserPopup({
               </button>
             </DialogClose>
             <LoadingButton
-              onClick={(e) => onSubmit(e)}
+              onClick={(e) => handleSubmit(e)}
               type="button"
               loading={submitLoading}
               text="Create"

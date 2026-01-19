@@ -12,16 +12,17 @@ import { Mail, Phone, Upload } from "lucide-react";
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import Select, { MultiValue } from "react-select";
 import Input from "./UserInput";
-import DefaultIUser, { IUser, IUserResponse } from "./IUser";
+import IDefaultUser, {
+  IPermissionModel,
+  IRoleModel,
+  IUser,
+  IUserResponse,
+} from "./IUser";
 import { Gender } from "./Gender";
 import { UserStatus } from "./UserStatus";
 import { userService } from "./userService";
-import permissionService from "@/services/permission/permissionService";
-import { IRole } from "../role/IRole";
-import { roleService } from "../role/roleService";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { IPermissionResponse } from "@/types/permission/IPermission";
 import permissionSelectStyles from "./permission-select-style";
 import {
   SkeletonBlock,
@@ -44,28 +45,28 @@ const toIUser = (dto: IUserResponse): IUser => {
     gender: dto.gender,
     status: dto.status,
     username: dto.username,
-    roles: dto.roles.map((x) => ({ id: x.id, name: x.name })),
-    permissions: dto.permissions.map((x) => ({ id: x.id, code: x.code })),
   } as IUser;
 };
 
+interface UpdateUserProps {
+  open: boolean;
+  roles: IRoleModel[];
+  permissions: IPermissionModel[];
+  userId: string;
+  closePopup: () => void;
+}
+
 export default function UpdateUserPopup({
   open,
-  setOpen,
+  roles,
+  permissions,
   userId,
-}: {
-  open: boolean;
-  setOpen: any;
-  userId: string;
-}) {
-  const [user, setUser] = useState<IUser>(DefaultIUser);
+  closePopup,
+}: UpdateUserProps) {
+  const [user, setUser] = useState<IUser>(IDefaultUser);
   const [loading, setLoading] = useState<boolean>(false);
   const [buttonLoading, setButtonLoading] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<File | null>(null);
-  const [permissions, setPermissions] = useState<
-    { id: string; code: string }[]
-  >([]);
-  const [roles, setRoles] = useState<{ id: string; name: string }[]>([]);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const img = e.target.files?.[0];
@@ -135,36 +136,22 @@ export default function UpdateUserPopup({
       //
     } finally {
       setButtonLoading(false);
-      setOpen(false);
-      setUser(DefaultIUser);
+      closePopup();
+      setUser(IDefaultUser);
     }
   };
 
   useEffect(() => {
-    if (!open) {
-      return;
+    if (open) {
+      InitUser();
     }
-
-    InitUser();
   }, [open]);
 
   async function InitUser() {
     setLoading(true);
     try {
-      const result = await userService.get(userId);
-      const permissionResult = await permissionService.list();
-      const roleResult = await roleService.list({});
-
-      const user = result.data!.results as IUserResponse;
-      const permissions = permissionResult.data!.results!.flatMap(
-        (group) => group.permissions
-      );
-      const roles = roleResult.data!.results! as IRole[];
-
-      setPermissions([
-        ...permissions!.map((x) => ({ id: x.id, code: x.codeTranslation })),
-      ]);
-      setRoles([...roles.map((x) => ({ id: x.id, name: x.name }))]);
+      const userResult = await userService.get(userId);
+      const user = userResult.data?.results as IUserResponse;
 
       const userPermissions = user.permissions;
       const currentPermission = permissions
@@ -173,12 +160,18 @@ export default function UpdateUserPopup({
         )
         .map((x) => ({
           id: x.id,
-          code: x.codeTranslation,
-        })) as IPermissionResponse[];
+          code: x.code,
+        }));
+
+      const currentRoles = roles.filter((role) =>
+        user.roles.some((r) => r.id == role.id)
+      );
 
       setUser((pre) => ({
         ...pre,
-        ...toIUser({ ...user, permissions: currentPermission }),
+        ...toIUser({ ...user }),
+        permissions: [...currentPermission],
+        roles: [...currentRoles],
       }));
     } catch (error) {
       //
@@ -393,8 +386,8 @@ export default function UpdateUserPopup({
               <button
                 className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
                 onClick={() => {
-                  setOpen(false);
-                  setUser(DefaultIUser);
+                  closePopup();
+                  setUser(IDefaultUser);
                 }}
               >
                 Cancel

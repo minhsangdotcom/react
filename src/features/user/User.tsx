@@ -451,7 +451,7 @@ export default function User() {
     }
   }
 
-  async function onConfirm() {
+  async function handleConfirm() {
     setLoading(true);
     try {
       await userService.delete(id!);
@@ -520,17 +520,19 @@ export default function User() {
         roles={roles}
         permissions={permissions}
       />
+      <UpdateUserPopup
+        open={openUpdatePopup}
+        closePopup={() => setOpenUpdatePopup(false)}
+        roles={roles}
+        permissions={permissions}
+        userId={id!}
+      />
       <ConfirmDialog
         isOpen={openConfirmDialog}
         title="Delete Item"
         message="Are you sure you want to delete this item?"
-        onConfirm={onConfirm}
+        onConfirm={handleConfirm}
         onCancel={() => setConfirmDialogOpen(false)}
-      />
-      <UpdateUserPopup
-        open={openUpdatePopup}
-        setOpen={setOpenUpdatePopup}
-        userId={id!}
       />
     </>
   );
