@@ -179,15 +179,13 @@ function markAsChecked(
   });
 }
 
-export default function RolePopup({
+export default function RoleModal({
   open,
-  setOpen,
-  setRoleId,
+  onRequestClose,
   roleId,
 }: {
   open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setRoleId: React.Dispatch<React.SetStateAction<string | null>>;
+  onRequestClose: () => void;
   roleId: string | null;
 }) {
   const {
@@ -308,14 +306,13 @@ export default function RolePopup({
     } finally {
       reset({ name: "", description: "" });
       setButtonLoading(false);
-      setRoleId(null);
+      onRequestClose();
       setGroups([]);
-      setOpen(false);
     }
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open}>
       <DialogContent
         aria-describedby={roleId ? "update-role" : "create-role"}
         className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/40 backdrop-blur-[2px]"
@@ -397,7 +394,7 @@ export default function RolePopup({
                 onClick={() => {
                   reset({ name: "", description: "" });
                   setGroups([]);
-                  setRoleId(null);
+                  onRequestClose();
                 }}
               >
                 Cancel

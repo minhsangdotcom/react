@@ -1,6 +1,6 @@
 import { DataTableColumnHeader } from "@dscn/components/data-table/data-table-column-header";
 import { useDataTable } from "@dscn/hooks/use-data-table";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { roleService } from "@/features/role/roleService";
 import { IRole } from "@/features/role/IRole";
@@ -15,22 +15,16 @@ import {
 } from "@dscn/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@dscn/components/ui/button";
-import RolePopup from "./RolePopup";
+import RoleModal from "./RoleModal";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
-import { IApiResult } from "@/utils/http/IApiResult";
-import IResponse from "@/types/IResponse";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-async function fetchRole() {
-  return await roleService.list({});
-}
-
 export default function Role() {
-  const [role, setRole] = useState<Array<IRole>>();
+  const [role, setRole] = useState<Array<IRole>>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
@@ -73,7 +67,10 @@ export default function Role() {
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Description" />
         ),
-        cell: ({ row }) => <div>{row.getValue("description")}</div>,
+        cell: ({ row }) => {
+          const description: string = row.getValue("description");
+          return <div>{description ? description : "_"}</div>;
+        },
         meta: {
           label: "Description",
           placeholder: "Search by description...",
@@ -154,7 +151,7 @@ export default function Role() {
   );
 
   const { table } = useDataTable({
-    data: role ?? [],
+    data: role,
     columns,
     pageCount: role?.length ?? 100,
     initialState: {
@@ -185,9 +182,10 @@ export default function Role() {
       return;
     }
     setLoading(true);
-    fetchRole()
+    roleService
+      .list({})
       .then((result) => {
-        const roles = result.data!.results as IRole[];
+        const roles = result.data?.results as IRole[];
         const sortedRoles = roles.sort(
           (a: IRole, b: IRole) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -234,7 +232,14 @@ export default function Role() {
         />
       </div>
 
-      <RolePopup open={open} roleId={id} setOpen={setOpen} setRoleId={setId} />
+      <RoleModal
+        open={open}
+        roleId={id}
+        onRequestClose={() => {
+          setOpen(false);
+          setId(null);
+        }}
+      />
 
       <ConfirmDialog
         isOpen={dialogOpen}

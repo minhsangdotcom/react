@@ -36,14 +36,14 @@ interface CreateUserProps {
   open: boolean;
   roles: IRoleModel[];
   permissions: IPermissionModel[];
-  closePopup: () => void;
+  onRequestClose: () => void;
 }
 
 export default function CreateUserModal({
   open,
   roles,
   permissions,
-  closePopup,
+  onRequestClose,
 }: CreateUserProps) {
   const [user, setUser] = useState<IUser>(DefaultUser);
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
@@ -136,7 +136,7 @@ export default function CreateUserModal({
     } catch (error) {
       //
     } finally {
-      closePopup();
+      onRequestClose();
       setUser(DefaultUser);
       resetForm();
       setSubmitLoading(false);
@@ -399,7 +399,7 @@ export default function CreateUserModal({
               <button
                 className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
                 onClick={() => {
-                  closePopup();
+                  onRequestClose();
                   setUser(DefaultUser);
                   resetForm();
                 }}

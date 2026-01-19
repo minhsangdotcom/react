@@ -58,7 +58,7 @@ interface UpdateUserProps {
   roles: IRoleModel[];
   permissions: IPermissionModel[];
   userId: string;
-  closePopup: () => void;
+  onRequestClose: () => void;
 }
 
 export default function UpdateUserModal({
@@ -66,7 +66,7 @@ export default function UpdateUserModal({
   roles,
   permissions,
   userId,
-  closePopup,
+  onRequestClose,
 }: UpdateUserProps) {
   const [user, setUser] = useState<IUser>(DefaultUser);
   const [loading, setLoading] = useState<boolean>(false);
@@ -152,7 +152,7 @@ export default function UpdateUserModal({
       //
     } finally {
       setSubmitLoading(false);
-      closePopup();
+      onRequestClose();
       setUser(DefaultUser);
     }
   };
@@ -407,7 +407,7 @@ export default function UpdateUserModal({
               <button
                 className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
                 onClick={() => {
-                  closePopup();
+                  onRequestClose();
                   setUser(DefaultUser);
                 }}
               >

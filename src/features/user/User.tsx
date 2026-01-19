@@ -524,13 +524,13 @@ export default function User() {
       </div>
       <CreateUserModal
         open={openCreatePopup}
-        closePopup={() => setOpenCreatePopup(false)}
+        onRequestClose={() => setOpenCreatePopup(false)}
         roles={roles}
         permissions={permissions}
       />
       <UpdateUserModal
         open={openUpdatePopup}
-        closePopup={() => setOpenUpdatePopup(false)}
+        onRequestClose={() => setOpenUpdatePopup(false)}
         roles={roles}
         permissions={permissions}
         userId={id!}
