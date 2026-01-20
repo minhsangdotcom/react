@@ -44,7 +44,7 @@ const DefaultUser = {
   createdAt: new Date(),
   firstName: "",
   lastName: "",
-  gender:  null,
+  gender: null,
   dateOfBirth: null,
   email: "",
   phoneNumber: null,
@@ -53,9 +53,7 @@ const DefaultUser = {
   status: UserStatus.Active,
   roles: [],
   permissions: [],
-  avatar: "/images/avatar-boy.png",
+  avatar: null,
 };
-
-
 
 export default DefaultUser;

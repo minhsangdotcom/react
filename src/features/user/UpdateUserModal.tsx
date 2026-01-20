@@ -33,6 +33,7 @@ import {
 import { userSchema, userSchemaType } from "./userSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm, useWatch } from "react-hook-form";
+import { defaultAvatarPicker } from "@/utils/defaultAvatarPicker";
 dayjs.extend(utc);
 
 const toUserSchema = (
@@ -189,7 +190,7 @@ export default function UpdateUserModal({
 
       setUser((pre) => ({
         ...pre,
-        avatar: user.avatar ?? "/images/avatar-boy.png",
+        avatar: user.avatar ?? defaultAvatarPicker.getAvatar(user.gender),
         status: user.status,
         gender: user.gender,
         username: user.username,
@@ -226,10 +227,13 @@ export default function UpdateUserModal({
                 {/* profile info section*/}
                 <div className="flex flex-col items-center gap-2 md:flex-row md:items-start p-4 rounded-xl bg-background-input border border-background-border">
                   <div className="relative group">
-                    <img
-                      className="bg-center bg-no-repeat bg-cover rounded-full h-24 w-24 border-2 border-background-border shadow-sm"
-                      src={user.avatar!}
-                    />
+                    <div className="h-24 w-24 rounded-full overflow-hidden border-2 border-background-border shadow-sm">
+                      <img
+                        src={user.avatar!}
+                        alt="User avatar"
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
                   </div>
 
                   <div className="flex flex-col flex-1 items-center md:items-start">

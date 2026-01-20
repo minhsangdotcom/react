@@ -3,9 +3,7 @@ import { Loading } from "@components/Loading";
 import { ChangeEvent, useEffect, useState } from "react";
 import profileService from "@features/profile/profileService";
 import LoadingButton from "@components/LoadingButton";
-import {
-  IUserProfileResponse,
-} from "@/features/profile/IUserProfile";
+import { IUserProfileResponse } from "@/features/profile/IUserProfile";
 import Select from "react-select";
 import { Gender, genderOptions } from "@/features/user/Gender";
 import { DateInput } from "@mantine/dates";
@@ -16,12 +14,12 @@ import { useAppSelector } from "@/store/hook";
 import { profileSchema, profileSchemaType } from "./profileSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm, useWatch } from "react-hook-form";
+import { defaultAvatarPicker } from "@/utils/defaultAvatarPicker";
 
 dayjs.extend(utc);
 
 export default function Profile() {
   const { user, isLoading } = useAppSelector((store) => store.profile);
-  const defaultAvatarPath = "/images/avatar-boy.png";
 
   const [loading, setLoading] = useState<boolean>(false);
   const [userAvatar, setUserAvatar] = useState<string | null>(null);
@@ -37,9 +35,9 @@ export default function Profile() {
     resolver: zodResolver(profileSchema),
   });
 
-  const [firstName, lastName] = useWatch({
+  const [firstName, lastName, gender] = useWatch({
     control,
-    name: ["firstName", "lastName"],
+    name: ["firstName", "lastName", "gender"],
   });
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -111,7 +109,7 @@ export default function Profile() {
           {/* Avatar */}
           <div className="relative shrink-0">
             <img
-              src={userAvatar ?? defaultAvatarPath}
+              src={userAvatar ?? defaultAvatarPicker.getAvatar(gender)}
               alt="Avatar"
               className="w-20 rounded-full object-cover"
             />

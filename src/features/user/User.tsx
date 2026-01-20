@@ -42,6 +42,7 @@ import permissionService from "@/services/permission/permissionService";
 import { IPermissionGroupResponse } from "@/types/permission/IPermission";
 import { IRole } from "../role/IRole";
 import { Loading } from "@/components/Loading";
+import { defaultAvatarPicker } from "@/utils/defaultAvatarPicker";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -149,11 +150,13 @@ export default function User() {
           <DataTableColumnHeader column={column} title="Full Name" />
         ),
         cell: ({ row }) => {
-          const avatarUrl = row.original.avatar;
+          const avatarUrl =
+            row.original.avatar ??
+            defaultAvatarPicker.getAvatar(row.original.gender);
           return (
             <div className="flex items-center gap-3">
               <img
-                src={avatarUrl ?? "/images/avatar-boy.png"}
+                src={avatarUrl}
                 alt="fullName"
                 className="h-8 w-8 rounded-full object-cover"
               />
