@@ -9,7 +9,7 @@ import {
 } from "@/design-system/cn/components/ui/dialog";
 import { DialogContent } from "@radix-ui/react-dialog";
 import { Mail, Phone, Upload } from "lucide-react";
-import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import Select, { MultiValue } from "react-select";
 import Input from "./UserInput";
 import DefaultUser, {
@@ -32,7 +32,7 @@ import {
 } from "@/components/Skeleton";
 import { userSchema, userSchemaType } from "./userSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 dayjs.extend(utc);
 
 const toUserSchema = (
@@ -78,10 +78,14 @@ export default function UpdateUserModal({
     handleSubmit,
     reset,
     control,
-    getValues,
     formState: { errors },
   } = useForm<userSchemaType>({
     resolver: zodResolver(userSchema),
+  });
+
+  const [firstName, lastName] = useWatch({
+    control,
+    name: ["firstName", "lastName"],
   });
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -230,14 +234,16 @@ export default function UpdateUserModal({
 
                   <div className="flex flex-col flex-1 items-center md:items-start">
                     <h4 className="text-black text-xl font-bold leading-tight">
-                      {getValues("firstName")} {getValues("lastName")}
+                      {firstName} {lastName}
                     </h4>
                     <p className="text-sm font-normal text-gray-500">
                       Username: @{user.username}
                     </p>
-                    <p className="text-sm font-normal text-gray-500">
-                      Gender: {Gender[user.gender as Gender]}
-                    </p>
+                    {user.gender && (
+                      <p className="text-sm font-normal text-gray-500">
+                        Gender: {Gender[user.gender as Gender]}
+                      </p>
+                    )}
                     <div className="flex gap-2 mt-2">
                       <span
                         className={`inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium ${

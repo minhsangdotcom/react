@@ -4,7 +4,6 @@ import { ChangeEvent, useEffect, useState } from "react";
 import profileService from "@features/profile/profileService";
 import LoadingButton from "@components/LoadingButton";
 import {
-  IUserProfile,
   IUserProfileResponse,
 } from "@/features/profile/IUserProfile";
 import Select from "react-select";

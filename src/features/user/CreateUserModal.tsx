@@ -5,7 +5,7 @@ import {
   DialogHeader,
 } from "@/design-system/cn/components/ui/dialog";
 import { DialogContent, DialogTitle } from "@radix-ui/react-dialog";
-import { Gender, genderOptions } from "./Gender";
+import { genderOptions } from "./Gender";
 import { MultiValue } from "react-select";
 import Select from "react-select";
 import PasswordInput from "@/components/PasswordInput";
