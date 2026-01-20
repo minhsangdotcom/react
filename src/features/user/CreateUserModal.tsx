@@ -5,7 +5,7 @@ import {
   DialogHeader,
 } from "@/design-system/cn/components/ui/dialog";
 import { DialogContent, DialogTitle } from "@radix-ui/react-dialog";
-import { Gender } from "./Gender";
+import { Gender, genderOptions } from "./Gender";
 import { MultiValue } from "react-select";
 import Select from "react-select";
 import PasswordInput from "@/components/PasswordInput";
@@ -61,13 +61,6 @@ export default function CreateUserModal({
   });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const genderOptions = Object.values(Gender)
-    .filter((v) => typeof v === "number")
-    .map((v) => ({
-      value: v as Gender,
-      label: Gender[v as Gender],
-    }));
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const img = e.target.files?.[0];

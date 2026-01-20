@@ -8,7 +8,7 @@ import {
   IUserProfileResponse,
 } from "@/features/profile/IUserProfile";
 import Select from "react-select";
-import { Gender } from "@/features/user/Gender";
+import { Gender, genderOptions } from "@/features/user/Gender";
 import { DateInput } from "@mantine/dates";
 
 import dayjs from "dayjs";
@@ -81,13 +81,6 @@ export default function Profile() {
     }
     setLoading(false);
   };
-
-  const genderOptions = Object.values(Gender)
-    .filter((v) => typeof v === "number")
-    .map((v) => ({
-      value: Gender[v as Gender],
-      label: Gender[v as Gender],
-    }));
 
   useEffect(() => {
     if (!user) {
