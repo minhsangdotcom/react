@@ -53,7 +53,7 @@ export function AppSidebar() {
           {state === "expanded" ? (
             <span className="line-through">Untitled 2025</span>
           ) : (
-            <span className="h-6 w-6 shrink-0 rounded bg-slate-800 flex items-center justify-center text-sm">
+            <span className="h-6 w-6 shrink-0 rounded flex items-center justify-center text-md line-through">
               U
             </span>
           )}
