@@ -1,6 +1,6 @@
 import "./profile.css";
 import { Loading } from "@components/Loading";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import profileService from "@features/profile/profileService";
 import LoadingButton from "@components/LoadingButton";
 import {
@@ -14,34 +14,34 @@ import { DateInput } from "@mantine/dates";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { useAppSelector } from "@/store/hook";
+import { profileSchema, profileSchemaType } from "./profileSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm, useWatch } from "react-hook-form";
 
 dayjs.extend(utc);
-
-const toUserProfile = (user: IUserProfileResponse): IUserProfile => ({
-  firstName: user?.firstName!,
-  lastName: user?.lastName!,
-  dateOfBirth: user?.dateOfBirth!,
-  email: user?.email!,
-  phoneNumber: user?.phoneNumber!,
-  avatar: user?.avatar && user.avatar,
-  gender: user?.gender!,
-});
 
 export default function Profile() {
   const { user, isLoading } = useAppSelector((store) => store.profile);
   const defaultAvatarPath = "/images/avatar-boy.png";
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [userProfile, setUserProfile] = useState<IUserProfile>({
-    firstName: "",
-    lastName: "",
-    dateOfBirth: null,
-    email: "",
-    phoneNumber: "",
-    avatar: defaultAvatarPath,
-    gender: Gender.Male,
-  } as IUserProfile);
+  const [userAvatar, setUserAvatar] = useState<string | null>(null);
   const [avatar, setAvatar] = useState<File | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm<profileSchemaType>({
+    resolver: zodResolver(profileSchema),
+  });
+
+  const [firstName, lastName] = useWatch({
+    control,
+    name: ["firstName", "lastName"],
+  });
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const img = e.target.files?.[0];
@@ -50,14 +50,13 @@ export default function Profile() {
       return;
     }
     setAvatar(img);
-    setUserProfile((pre) => ({ ...pre, avatar: URL.createObjectURL(img) }));
+    setUserAvatar(URL.createObjectURL(img));
   };
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const submit = async (data: profileSchemaType) => {
     const formData = new FormData();
 
-    Object.entries(userProfile).forEach(([key, val]) => {
+    Object.entries({ ...data, avatar: user?.avatar }).forEach(([key, val]) => {
       if (val == null) return;
       if (key === "avatar") return;
       if (key === "dateOfBirth") {
@@ -75,11 +74,8 @@ export default function Profile() {
     setLoading(true);
     try {
       var result = await profileService.updateProfile(formData);
-      const data = result.data?.results as IUserProfileResponse;
-      setUserProfile((pre) => ({
-        ...pre,
-        avatar: data.avatar != null ? data.avatar : pre.avatar,
-      }));
+      const user = result.data?.results as IUserProfileResponse;
+      updateProfile(user);
     } catch (error) {
       //
     }
@@ -89,7 +85,7 @@ export default function Profile() {
   const genderOptions = Object.values(Gender)
     .filter((v) => typeof v === "number")
     .map((v) => ({
-      value: v as Gender,
+      value: Gender[v as Gender],
       label: Gender[v as Gender],
     }));
 
@@ -97,8 +93,20 @@ export default function Profile() {
     if (!user) {
       return;
     }
-    setUserProfile(toUserProfile(user));
+    updateProfile(user);
   }, [isLoading]);
+
+  function updateProfile(user: IUserProfileResponse) {
+    reset({
+      firstName: user.firstName,
+      lastName: user.lastName,
+      dateOfBirth: user.dateOfBirth,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      gender: user.gender ? Gender[user.gender as Gender] : null,
+    });
+    setUserAvatar(user.avatar ?? null);
+  }
 
   if (isLoading || loading) {
     return <Loading />;
@@ -111,7 +119,7 @@ export default function Profile() {
           {/* Avatar */}
           <div className="relative shrink-0">
             <img
-              src={userProfile?.avatar ?? defaultAvatarPath}
+              src={userAvatar ?? defaultAvatarPath}
               alt="Avatar"
               className="w-20 rounded-full object-cover"
             />
@@ -125,109 +133,100 @@ export default function Profile() {
           {/* Name */}
           <div className="flex flex-col justify-center">
             <h2 className="text-2xl font-semibold leading-tight">
-              {userProfile.firstName} {userProfile.lastName}
+              {firstName} {lastName}
             </h2>
           </div>
         </div>
 
-        <form className="profile-form" onSubmit={handleSubmit}>
+        <form className="profile-form" onSubmit={handleSubmit(submit)}>
           <div className="row">
             <div className="field">
               <label>First Name</label>
-              <input
-                name="firstName"
-                value={userProfile?.firstName}
-                onChange={(e) =>
-                  setUserProfile((pre) => ({
-                    ...pre,
-                    firstName: e.target.value,
-                  }))
-                }
-              />
+              <input {...register("firstName")} />
+              {errors.firstName?.message && (
+                <span className="text-xs text-red-500">
+                  {errors.firstName?.message}
+                </span>
+              )}
             </div>
             <div className="field">
               <label>Last Name</label>
-              <input
-                name="lastName"
-                value={userProfile?.lastName}
-                onChange={(e) =>
-                  setUserProfile((pre) => ({
-                    ...pre,
-                    lastName: e.target.value,
-                  }))
-                }
-              />
+              <input {...register("lastName")} />
             </div>
+            {errors.lastName?.message && (
+              <span className="text-xs text-red-500">
+                {errors.lastName?.message}
+              </span>
+            )}
           </div>
 
           <div className="row">
             <div className="field">
               <label>Email Address</label>
-              <input
-                name="email"
-                type="email"
-                value={userProfile?.email}
-                onChange={(e) =>
-                  setUserProfile((pre) => ({ ...pre!, email: e.target.value }))
-                }
-              />
+              <input type="email" {...register("email")} />
+              {errors.email?.message && (
+                <span className="text-xs text-red-500">
+                  {errors.email?.message}
+                </span>
+              )}
             </div>
             <div className="field">
               <label>Phone Number</label>
-              <input
-                name="phone"
-                value={userProfile?.phoneNumber}
-                onChange={(e) =>
-                  setUserProfile((pre) => ({
-                    ...pre!,
-                    phoneNumber: e.target.value,
-                  }))
-                }
-              />
+              <input {...register("phoneNumber")} />
+              {errors.phoneNumber?.message && (
+                <span className="text-xs text-red-500">
+                  {errors.phoneNumber?.message}
+                </span>
+              )}
             </div>
           </div>
 
           <div className="row">
             <div className="field">
               <label>Date of Birth</label>
-              <DateInput
-                value={userProfile?.dateOfBirth}
-                onChange={(date) => {
-                  console.log("🚀 ~ profilePage ~ date:", date);
-
-                  setUserProfile((pre) => ({
-                    ...pre,
-                    dateOfBirth: date ?? undefined,
-                  }));
-                }}
-                allowDeselect
-                maxDate={new Date(new Date().getFullYear() - 18, 11, 31)}
-                minDate={new Date(new Date().getFullYear() - 100, 0, 1)}
-                valueFormat="DD/MM/YYYY"
-                placeholder="Date of Birth"
+              <Controller
+                name="dateOfBirth"
+                control={control}
+                render={({ field }) => (
+                  <DateInput
+                    value={field.value}
+                    onChange={field.onChange}
+                    allowDeselect
+                    maxDate={new Date(new Date().getFullYear() - 18, 11, 31)}
+                    minDate={new Date(new Date().getFullYear() - 100, 0, 1)}
+                    valueFormat="DD/MM/YYYY"
+                    placeholder="Date of Birth"
+                  />
+                )}
               />
             </div>
 
             <div className="field">
               <label>Gender</label>
-              <Select
-                styles={customStyles}
-                options={genderOptions}
-                value={
-                  userProfile.gender
-                    ? {
-                        value: userProfile.gender,
-                        label: Gender[userProfile.gender],
-                      }
-                    : null
-                }
-                onChange={(option) => {
-                  setUserProfile((prev) => ({
-                    ...prev,
-                    gender: option?.value as Gender,
-                  }));
-                }}
+              <Controller
+                name="gender"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    styles={customStyles}
+                    options={genderOptions}
+                    value={
+                      genderOptions.find(
+                        (x) => x.value.toString() == field.value
+                      ) ?? null
+                    }
+                    onChange={(option) => {
+                      field.onChange(option?.value ?? null);
+                    }}
+                  />
+                )}
               />
+              {errors.gender?.message && (
+                <span className="text-xs text-red-500">
+                  {errors.gender?.message}
+                </span>
+              )}
             </div>
           </div>
 

@@ -11,35 +11,11 @@ const userSchema = z.object({
     .nonempty("Last name is required")
     .max(100, "Last name is too long"),
   email: z.string().nonempty("Email is required").email("Email is invalid"),
-  // phoneNumber: z
-  //   .string()
-  //   .regex(
-  //     /^(?:\+84|84|0)[3-9]\d{8}$/,
-  //     "Phone number must be a valid international format (E.164)"
-  //   )
-  //   .refine(
-  //     (val) => {
-  //       const digits = val.replace(/\+/g, "");
-  //       return digits.length >= 10 && digits.length <= 15;
-  //     },
-  //     {
-  //       message: "Phone number must be between 10-15 digits",
-  //     }
-  //   )
-  //   .nullable(),
   phoneNumber: z
     .string()
     .nullable()
     .superRefine((val, ctx) => {
       if (!val) {
-        return;
-      }
-
-      if (!/^(?:\+84|84|0)[3-9]\d{8}$/.test(val)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Invalid phone number format",
-        });
         return;
       }
 

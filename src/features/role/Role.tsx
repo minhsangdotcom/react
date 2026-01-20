@@ -153,11 +153,11 @@ export default function Role() {
   const { table } = useDataTable({
     data: role,
     columns,
-    pageCount: role?.length ?? 100,
+    pageCount: 100,
     initialState: {
       pagination: {
         pageSize: defaultParams.perPage,
-        pageIndex: defaultParams.page!,
+        pageIndex: 0,
       },
       columnVisibility: {
         id: false,
@@ -176,7 +176,6 @@ export default function Role() {
       setId(null);
     }
   };
-
   useEffect(() => {
     if (open || dialogOpen) {
       return;
