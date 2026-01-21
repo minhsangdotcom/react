@@ -1,5 +1,6 @@
 export interface IApiResult<TResult, TError> {
-  isSuccess: boolean;
+  success: boolean;
+  status?: number;
   data?: TResult | null;
   error?: TError | null;
 }

@@ -10,11 +10,12 @@ export interface IPagination<T> {
 }
 
 export interface IPageInfo {
-  currentPage: 0;
-  pageSize: 0;
-  totalPage: 0;
+  currentPage?: number;
+  pageSize: number;
+  totalPage: number;
+  totalItemCount? : number;
   hasNextPage: boolean;
   hasPreviousPage: boolean;
-  before: "string";
-  after: "string";
+  before?: string;
+  after?: string;
 }

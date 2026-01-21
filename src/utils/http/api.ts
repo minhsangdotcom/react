@@ -41,17 +41,17 @@ async function send<TRequest, TResult, TError>(
   try {
     const response = await api.request<TResult>(config);
     return {
-      isSuccess: true,
+      success: true,
+      status: response.status,
       data: response.data,
-      error: null,
     };
   } catch (err) {
     const axiosError = err as AxiosError<TError>;
 
     return {
-      isSuccess: false,
-      data: null,
-      error: axiosError.response?.data ?? null,
+      success: false,
+      status: axiosError.response?.status ?? 0,
+      error: axiosError.response?.data,
     };
   }
 }
