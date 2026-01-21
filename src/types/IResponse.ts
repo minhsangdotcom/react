@@ -1,10 +1,10 @@
-export default interface IResponse<T> {
+export default interface IResponse<T = any | IPagination> {
   status: number;
   message: string;
-  results: T | null;
+  results?: T | null;
 }
 
-export interface IPagination<T> {
+export interface IPagination<T = any> {
   data: T;
   paging: IPageInfo;
 }
@@ -13,7 +13,7 @@ export interface IPageInfo {
   currentPage?: number;
   pageSize: number;
   totalPage: number;
-  totalItemCount? : number;
+  totalItemCount?: number;
   hasNextPage: boolean;
   hasPreviousPage: boolean;
   before?: string;

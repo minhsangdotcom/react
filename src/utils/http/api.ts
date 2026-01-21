@@ -1,9 +1,17 @@
-import axios, { AxiosError, AxiosRequestConfig } from "axios";
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { env } from "@config/env";
 import { IApiResult } from "./IApiResult";
 import IApiRequest from "./IApiRequest";
 import { requestHandler, errorResponseHandler } from "./interceptor";
 import * as qs from "qs";
+import IResponse from "@/types/IResponse";
+import {
+  IBadRequestError,
+  IForbiddenError,
+  INotFoundError,
+  IUnauthorizedError,
+  IValidationError,
+} from "@/types/IError";
 
 const api = axios.create({
   baseURL: env.apiBaseUrl,
@@ -14,15 +22,25 @@ const api = axios.create({
 
 api.interceptors.request.use(requestHandler);
 api.interceptors.response.use(
-  (res) => res,
+  (response: AxiosResponse<IApiResult>) => {
+    // if (response.data && !response.data.success) {
+    //   return Promise.reject({
+    //     success: false,
+    //     message: response.data.data,
+    //     errors: response.data.errors,
+    //     statusCode: response.status,
+    //   });
+    // }
+    return response;
+  },
   async (error) => {
     await errorResponseHandler(error, api);
   }
 );
 
-async function send<TRequest, TResult, TError>(
+async function send<TRequest, TResult>(
   request: IApiRequest<TRequest>
-): Promise<IApiResult<TResult, TError>> {
+): Promise<IApiResult<TResult>> {
   let config = {
     url: request.url,
     method: request.method,
@@ -39,19 +57,25 @@ async function send<TRequest, TResult, TError>(
   }
 
   try {
-    const response = await api.request<TResult>(config);
+    const result = await api.request<IResponse<TResult>>(config);
     return {
       success: true,
-      status: response.status,
-      data: response.data,
+      status: result.status,
+      data: result.data,
     };
-  } catch (err) {
-    const axiosError = err as AxiosError<TError>;
-
+  } catch (error) {
+    const axiosError = error as AxiosError<
+      | IBadRequestError
+      | INotFoundError
+      | IUnauthorizedError
+      | IForbiddenError
+      | IValidationError
+    >;
+    const errorResult = axiosError.response?.data;
     return {
       success: false,
-      status: axiosError.response?.status ?? 0,
-      error: axiosError.response?.data,
+      status: errorResult?.status,
+      error: errorResult,
     };
   }
 }

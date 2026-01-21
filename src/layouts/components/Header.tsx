@@ -9,7 +9,7 @@ import { defaultAvatarPicker } from "@/utils/defaultAvatarPicker";
 export default function AdminLayout() {
   const [loading, setLoading] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<string>();
-
+  
   const dispatch = useAppDispatch();
   useEffect(() => {
     setLoading(true);

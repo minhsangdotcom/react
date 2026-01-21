@@ -12,32 +12,17 @@ import IQueryParam from "@/types/IQueryParam";
 export const regionService = {
   listProvince: async function (
     params: IQueryParam
-  ): Promise<
-    IApiResult<
-      IResponse<{ data: Array<IProvince> }>,
-      IBadRequestError | IUnauthorizedError | IForbiddenError
-    >
-  > {
+  ): Promise<IApiResult<IProvince[]>> {
     return await send({ url: "provinces", method: "GET", data: params });
   },
   listDistrict: async function (
     params: IQueryParam
-  ): Promise<
-    IApiResult<
-      IResponse<{ data: Array<IDistrict> }>,
-      IBadRequestError | IUnauthorizedError | IForbiddenError
-    >
-  > {
+  ): Promise<IApiResult<IDistrict[]>> {
     return await send({ url: "districts", method: "GET", data: params });
   },
   listCommune: async function (
     params: IQueryParam
-  ): Promise<
-    IApiResult<
-      IResponse<{ data: Array<ICommune> }>,
-      IBadRequestError | IUnauthorizedError | IForbiddenError
-    >
-  > {
+  ): Promise<IApiResult<ICommune[]>> {
     return await send({ url: "communes", method: "GET", data: params });
   },
 };

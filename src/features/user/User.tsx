@@ -338,13 +338,13 @@ export default function User() {
   );
 
   const { table } = useDataTable({
-    data: user ?? [],
+    data: user,
     columns,
     pageCount: pageInfo?.totalPage ?? 0,
     initialState: {
       sorting: defaultParams.sort,
       pagination: {
-        pageSize: defaultParams.perPage!,
+        pageSize: defaultParams.perPage,
         pageIndex: 0,
       },
       columnVisibility: {

@@ -1,8 +1,3 @@
-import {
-  IBadRequestError,
-  IForbiddenError,
-  IUnauthorizedError,
-} from "@/types/IError";
 import IQueryParam from "@/types/IQueryParam";
 import IResponse, { IPagination } from "@/types/IResponse";
 import { IUserResponse } from "@/features/user/IUser";
@@ -12,23 +7,13 @@ import { IApiResult } from "@utils/http/IApiResult";
 export const userService = {
   list: async function (
     params: IQueryParam
-  ): Promise<
-    IApiResult<
-      IResponse<IPagination<Array<IUserResponse>>>,
-      IBadRequestError | IUnauthorizedError | IForbiddenError
-    >
-  > {
+  ): Promise<IApiResult<IPagination<IUserResponse[]>>> {
     return await send({ url: "users", method: "GET", data: params });
   },
   update: async function (
     id: string,
     request: FormData
-  ): Promise<
-    IApiResult<
-      IResponse<IUserResponse>,
-      IBadRequestError | IUnauthorizedError | IForbiddenError
-    >
-  > {
+  ): Promise<IApiResult<IUserResponse>> {
     return await send({
       url: `users/${id}`,
       method: "PUT",
@@ -38,12 +23,7 @@ export const userService = {
   },
   get: async function (
     id: string
-  ): Promise<
-    IApiResult<
-      IResponse<IUserResponse>,
-      IBadRequestError | IUnauthorizedError | IForbiddenError
-    >
-  > {
+  ): Promise<IApiResult<IResponse<IUserResponse>>> {
     return await send({
       url: `users/${id}`,
       method: "GET",
@@ -51,12 +31,7 @@ export const userService = {
   },
   create: async function (
     request: FormData
-  ): Promise<
-    IApiResult<
-      IResponse<IUserResponse>,
-      IBadRequestError | IUnauthorizedError | IForbiddenError
-    >
-  > {
+  ): Promise<IApiResult<IUserResponse>> {
     return await send({
       url: "users",
       method: "POST",
@@ -64,11 +39,7 @@ export const userService = {
       headers: { "Content-Type": "multipart/form-data" },
     });
   },
-  delete: async function (
-    id: string
-  ): Promise<
-    IApiResult<void, IBadRequestError | IUnauthorizedError | IForbiddenError>
-  > {
+  delete: async function (id: string): Promise<IApiResult<void>> {
     return await send({
       url: `users/${id}`,
       method: "DELETE",
