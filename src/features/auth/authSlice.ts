@@ -51,7 +51,7 @@ const authSlice = createSlice({
       })
       .addCase(loginAsync.fulfilled, (state: IAuthState, action) => {
         const result = action.payload?.data as IResponse<ILoginResponse>;
-        const { token, refreshToken } = result.results!;
+        const { token, refreshToken } = result.results as ILoginResponse;
 
         localStorageHelper.set<IAuthInfo>(Configs.authInfoKey, {
           token,
@@ -83,8 +83,8 @@ const authSlice = createSlice({
       .addCase(refreshAsync.fulfilled, (state: IAuthState, action) => {
         const result = action.payload.data as IResponse<ITokenResponse>;
 
-        const token = result?.results?.token!;
-        const refreshToken = result?.results?.refreshToken!;
+        const token = result.results?.token as string;
+        const refreshToken = result.results?.refreshToken as string;
 
         localStorageHelper.set<IAuthInfo>(Configs.authInfoKey, {
           token,

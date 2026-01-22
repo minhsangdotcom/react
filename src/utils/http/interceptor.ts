@@ -7,23 +7,22 @@ import {
   refreshTokenHandler,
   tokenHandler,
 } from "@features/auth/auth-interceptor";
-import toast from "react-hot-toast";
+import { showServerErrorToast } from "@/notifications/toastServerError";
 
 export function requestHandler(
   config: InternalAxiosRequestConfig<any>
 ): InternalAxiosRequestConfig<any> {
-  // put bearer token to header
+  // add bearer token to header
   tokenHandler(config);
 
   return config;
 }
-const notify = () => toast("500 error");
 export async function errorResponseHandler(
   error: AxiosError,
   api: AxiosInstance
 ): Promise<any> {
   if (error.response?.status == 500) {
-    notify();
+    showServerErrorToast();
     return Promise.reject(error);
   }
 
