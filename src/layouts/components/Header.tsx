@@ -1,7 +1,7 @@
 import { SidebarTrigger } from "@dscn/components/ui/sidebar";
 import { profileAsync } from "@features/profile/profileAction";
 import { useAppDispatch } from "@/store/hook";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { UserAvatarMenu } from "./UserAvatarMenu";
 import { IUserProfileResponse } from "@/features/profile/IUserProfile";
 import { defaultAvatarPicker } from "@/utils/defaultAvatarPicker";
@@ -9,9 +9,15 @@ import { defaultAvatarPicker } from "@/utils/defaultAvatarPicker";
 export default function AdminLayout() {
   const [loading, setLoading] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<string>();
-  
+
+  const ref = useRef<boolean>(false);
+
   const dispatch = useAppDispatch();
   useEffect(() => {
+    if (ref.current) {
+      return;
+    }
+
     setLoading(true);
     dispatch(profileAsync())
       .unwrap()
@@ -22,7 +28,9 @@ export default function AdminLayout() {
       .finally(() => {
         setLoading(false);
       });
+    ref.current = true;
   }, []);
+
   return (
     <header className="relative flex items-center justify-between px-4 py-3">
       <SidebarTrigger />
