@@ -1,5 +1,5 @@
 import IQueryParam from "@/types/IQueryParam";
-import IResponse, { IPagination } from "@/types/IResponse";
+import { IPagination } from "@/types/IResponse";
 import { IUserResponse } from "@/features/user/IUser";
 import { send } from "@utils/http/api";
 import { IApiResult } from "@utils/http/IApiResult";
@@ -21,9 +21,7 @@ export const userService = {
       headers: { "Content-Type": "multipart/form-data" },
     });
   },
-  get: async function (
-    id: string
-  ): Promise<IApiResult<IResponse<IUserResponse>>> {
+  get: async function (id: string): Promise<IApiResult<IUserResponse>> {
     return await send({
       url: `users/${id}`,
       method: "GET",

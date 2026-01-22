@@ -5,13 +5,7 @@ import IApiRequest from "./IApiRequest";
 import { requestHandler, errorResponseHandler } from "./interceptor";
 import * as qs from "qs";
 import IResponse from "@/types/IResponse";
-import {
-  IBadRequestError,
-  IForbiddenError,
-  INotFoundError,
-  IUnauthorizedError,
-  IValidationError,
-} from "@/types/IError";
+import ErrorType from "@/types/IError";
 
 const api = axios.create({
   baseURL: env.apiBaseUrl,
@@ -22,18 +16,10 @@ const api = axios.create({
 
 api.interceptors.request.use(requestHandler);
 api.interceptors.response.use(
-  (response: AxiosResponse<IApiResult>) => {
-    // if (response.data && !response.data.success) {
-    //   return Promise.reject({
-    //     success: false,
-    //     message: response.data.data,
-    //     errors: response.data.errors,
-    //     statusCode: response.status,
-    //   });
-    // }
+  (response: AxiosResponse) => {
     return response;
   },
-  async (error) => {
+  async (error: AxiosError) => {
     await errorResponseHandler(error, api);
   }
 );
@@ -64,13 +50,7 @@ async function send<TRequest, TResult>(
       data: result.data,
     };
   } catch (error) {
-    const axiosError = error as AxiosError<
-      | IBadRequestError
-      | INotFoundError
-      | IUnauthorizedError
-      | IForbiddenError
-      | IValidationError
-    >;
+    const axiosError = error as AxiosError<ErrorType>;
     const errorResult = axiosError.response?.data;
     return {
       success: false,

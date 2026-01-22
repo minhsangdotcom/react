@@ -7,19 +7,26 @@ export interface IError {
   traceId: string;
   spanId: string;
   detail: string;
-  message: IMessage;
 }
+
+export interface IInternalServerError extends IError {}
+
 export interface IValidationError extends IError {
   invalidParams: IInvalidParam;
+  message: IMessage;
 }
-
-export interface IBadRequestError extends IError {}
-
-export interface INotFoundError extends IBadRequestError {}
-
-export interface IUnauthorizedError extends IError {}
-
-export interface IForbiddenError extends IError {}
+export interface IBadRequestError extends IError {
+  message: IMessage;
+}
+export interface INotFoundError extends IBadRequestError {
+  message: IMessage;
+}
+export interface IUnauthorizedError extends IError {
+  message: IMessage;
+}
+export interface IForbiddenError extends IError {
+  message: IMessage;
+}
 
 interface IMessage {
   message: string;
@@ -30,3 +37,13 @@ interface IInvalidParam {
   code: string;
   description: string;
 }
+
+type ErrorType =
+  | IBadRequestError
+  | INotFoundError
+  | IUnauthorizedError
+  | IForbiddenError
+  | IValidationError
+  | IInternalServerError;
+
+export default ErrorType;

@@ -1,11 +1,4 @@
-import IResponse from "@/types/IResponse";
 import { send } from "@utils/http/api";
-
-import {
-  IBadRequestError,
-  INotFoundError,
-  IUnauthorizedError,
-} from "@/types/IError";
 import { IApiResult } from "@utils/http/IApiResult";
 import IResetpasswordRequest from "@/features/auth/IResetPasswordRequest";
 import { ILoginResponse } from "@features/auth/ILoginResponse";
@@ -15,16 +8,12 @@ import { ILoginRequest } from "@features/auth/ILoginRequest";
 const authService = {
   login: async function (
     request: ILoginRequest
-  ): Promise<
-    IApiResult<IResponse<ILoginResponse>, IBadRequestError | INotFoundError>
-  > {
+  ): Promise<IApiResult<ILoginResponse>> {
     return await send({ url: "users/login", method: "POST", data: request });
   },
   refresh: async function (
     refreshToken: string
-  ): Promise<
-    IApiResult<IResponse<ITokenResponse>, IBadRequestError | IUnauthorizedError>
-  > {
+  ): Promise<IApiResult<ITokenResponse>> {
     return await send({
       url: "users/refresh-token",
       method: "POST",
@@ -33,7 +22,7 @@ const authService = {
   },
   requestResetPassword: async function (
     email: string
-  ): Promise<IApiResult<void, IBadRequestError | INotFoundError>> {
+  ): Promise<IApiResult<void>> {
     return await send({
       url: "users/request-reset-password",
       method: "POST",
@@ -42,9 +31,9 @@ const authService = {
   },
   resetPassword: async function (
     request: IResetpasswordRequest
-  ): Promise<IApiResult<void, IBadRequestError | INotFoundError>> {
+  ): Promise<IApiResult<void>> {
     return await send({
-      url: `users/reset-password`,
+      url: "users/reset-password",
       method: "PUT",
       data: { ...request },
     });

@@ -27,14 +27,11 @@ export default function Login() {
   const data = useAppSelector((store) => store.auth);
 
   async function onSubmit(data: loginSchemaType) {
-    try {
-      await dispatch(
-        loginAsync({ identifier: data.identifier, password: data.password })
-      ).unwrap();
+    dispatch(
+      loginAsync({ identifier: data.identifier, password: data.password })
+    ).then(() => {
       navigate("/");
-    } catch (error) {
-      //
-    }
+    });
   }
 
   return (

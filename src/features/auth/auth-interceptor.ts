@@ -55,8 +55,8 @@ export async function refreshTokenHandler(
       .dispatch(refreshAsync(refreshToken))
       .unwrap()
       .then((res) => {
-        console.warn("Token's refreshed sucessfully!.");
-        return res.data!.results!.token;
+        console.warn("Token's refreshed successfully!.");
+        return res.data.results.token;
       })
       .catch((err) => {
         store.dispatch(logout());
