@@ -2,10 +2,10 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { env } from "@config/env";
 import { IApiResult } from "./IApiResult";
 import IApiRequest from "./IApiRequest";
-import { requestHandler, errorResponseHandler } from "./interceptor";
 import * as qs from "qs";
 import IResponse from "@/types/IResponse";
 import ErrorType from "@/types/IError";
+import { refreshTokenHandler, toastError, tokenHandler } from "./interceptor";
 
 const api = axios.create({
   baseURL: env.apiBaseUrl,
@@ -14,13 +14,24 @@ const api = axios.create({
   },
 });
 
-api.interceptors.request.use(requestHandler);
+api.interceptors.request.use((config) => {
+  tokenHandler(config);
+  return config;
+});
 api.interceptors.response.use(
   (response: AxiosResponse) => {
     return response;
   },
-  async (error: AxiosError) => {
-    await errorResponseHandler(error, api);
+  async (error: AxiosError) => await refreshTokenHandler(error, api)
+);
+
+api.interceptors.response.use(
+  (response: AxiosResponse) => {
+    return response;
+  },
+  (error: AxiosError) => {
+    toastError(error);
+    return Promise.reject(error);
   }
 );
 

@@ -1,10 +1,9 @@
 import toast from "react-hot-toast";
 
-export const showNetworkErrorToast = () => {
-  toast.error("Cannot connect to the server. Please check your network.", {
-    id: "network-error",
+export const showNetworkErrorToast = (message: string, id: string) => {
+  toast.error(message, {
+    id: id,
     duration: 8000,
-    position: "top-right",
     style: {
       background: "#EFF6FF", // blue-50
       color: "#1E40AF", // blue-800

@@ -177,23 +177,27 @@ export default function Role() {
       setId(null);
     }
   };
+
   useEffect(() => {
     if (open || dialogOpen) {
       return;
     }
-    setLoading(true);
-    roleService
-      .list({})
-      .then((result) => {
-        const roles = result.data?.results as IRole[];
-        const sortedRoles = roles.sort(
-          (a: IRole, b: IRole) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-        setRole([...sortedRoles]);
-      })
-      .finally(() => setLoading(false));
+    fetchRoles();
   }, [open, dialogOpen]);
+
+  async function fetchRoles() {
+    setLoading(true);
+    const result = await roleService.list({});
+    if (result.success) {
+      const roles = result.data?.results as IRole[];
+      const sortedRoles = roles.sort(
+        (a: IRole, b: IRole) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+      setRole([...sortedRoles]);
+    }
+    setLoading(false);
+  }
 
   return (
     <>

@@ -405,31 +405,30 @@ export default function User() {
         "phoneNumber",
       ];
     }
-    setLoading(true);
-    userService
-      .list(params)
-      .then((results) => {
-        const { data, paging } = results.data?.results as IPagination<
-          IUserResponse[]
-        >;
-        const users = data.map((user) => toIUser(user));
-
-        setUser([...new Set([...users])]);
-        setPageInfo({ ...paging });
-        localStorageHelper.set("paginationInfo", {
-          previous: paging?.before ?? "",
-          next: paging?.after ?? "",
-          hasNextPage: paging?.hasNextPage,
-          hasPreviousPage: paging?.hasPreviousPage,
-        });
-      })
-      .catch((error) => {
-        //
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    getUsers(params);
   }, [query, search, openCreatePopup, openConfirmDialog, openUpdatePopup]);
+
+  async function getUsers(params: IQueryParam) {
+    setLoading(true);
+    const result = await userService.list(params);
+    if (result.success) {
+      const { data, paging } = result.data?.results as IPagination<
+        IUserResponse[]
+      >;
+      const users = data.map((user) => toIUser(user));
+
+      setUser([...new Set([...users])]);
+      setPageInfo({ ...paging });
+      localStorageHelper.set("paginationInfo", {
+        previous: paging?.before ?? "",
+        next: paging?.after ?? "",
+        hasNextPage: paging?.hasNextPage,
+        hasPreviousPage: paging?.hasPreviousPage,
+      });
+    }
+
+    setLoading(false);
+  }
 
   const referenceDataRef = useRef<boolean>(false);
   useEffect(() => {
@@ -442,11 +441,12 @@ export default function User() {
 
   async function loadReferenceData() {
     setRefDataLoading(true);
-    try {
-      const [roleResult, permissionResult] = await Promise.all([
-        roleService.list({}),
-        permissionService.list(),
-      ]);
+    const [roleResult, permissionResult] = await Promise.all([
+      roleService.list({}),
+      permissionService.list(),
+    ]);
+
+    if (roleResult.success && permissionResult.success) {
       const rolesData = roleResult.data?.results as IRole[];
       setRoles(rolesData.map((x) => ({ id: x.id, name: x.name })));
 
@@ -456,11 +456,8 @@ export default function User() {
         .flatMap((group) => group.permissions)
         .map((per) => ({ id: per.id, code: per.codeTranslation }));
       setPermissions(permissionsData);
-    } catch (error) {
-      console.error("Failed to load reference data:", error);
-    } finally {
-      setRefDataLoading(false);
     }
+    setRefDataLoading(false);
   }
 
   async function handleConfirm() {
