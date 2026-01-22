@@ -22,7 +22,7 @@ dayjs.extend(utc);
 export default function Profile() {
   const { user, isLoading } = useAppSelector((store) => store.profile);
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const [submitLoading, setSubmitLoading] = useState<boolean>(false);
   const [userAvatar, setUserAvatar] = useState<string | null>(null);
   const [avatar, setAvatar] = useState<File | null>(null);
 
@@ -69,11 +69,11 @@ export default function Profile() {
       formData.append("avatar", avatar, avatar.name);
     }
 
-    setLoading(true);
+    setSubmitLoading(true);
     var result = await profileService.updateProfile(formData);
     const userResult = result.data?.results as IUserProfileResponse;
     updateProfile(userResult);
-    setLoading(false);
+    setSubmitLoading(false);
     showSuccessToast("Update profile success!");
   };
 
@@ -96,7 +96,7 @@ export default function Profile() {
     setUserAvatar(user.avatar ?? null);
   }
 
-  if (isLoading || loading) {
+  if (isLoading) {
     return <Loading />;
   }
 
@@ -220,7 +220,7 @@ export default function Profile() {
 
           <div className="btn-wrapper">
             <LoadingButton
-              loading={loading}
+              loading={submitLoading}
               text="Save Changes"
               type="submit"
               className="save-btn"
