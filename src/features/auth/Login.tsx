@@ -7,7 +7,7 @@ import { loginAsync } from "@features/auth/authAction";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, loginSchemaType } from "./loginSchema";
-import PasswordInput from "@/components/passwordInput";
+import PasswordInput from "@/components/PasswordInput";
 
 export default function Login() {
   const {

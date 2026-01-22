@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import authService from "@features/auth/authService";
 
 import LoadingButton from "@components/LoadingButton";
-import PasswordInput from "@components/PasswordInput";
+import PasswordInput from "@/components/PasswordInput";
 import {
   resetPasswordSchema,
   ResetPasswordSchemaType,

@@ -60,6 +60,7 @@ interface UpdateUserProps {
   permissions: IPermissionModel[];
   userId: string;
   onRequestClose: () => void;
+  onSubmit: () => void;
 }
 
 export default function UpdateUserModal({
@@ -68,6 +69,7 @@ export default function UpdateUserModal({
   permissions,
   userId,
   onRequestClose,
+  onSubmit,
 }: UpdateUserProps) {
   const [user, setUser] = useState<IUser>(DefaultUser);
   const [loading, setLoading] = useState<boolean>(false);
@@ -151,24 +153,23 @@ export default function UpdateUserModal({
     }
 
     setSubmitLoading(true);
-    try {
-      await userService.update(userId, formData);
-    } catch (error) {
-      //
-    } finally {
-      setSubmitLoading(false);
-      onRequestClose();
+    const result = await userService.update(userId, formData);
+    if (result.success) {
+      onSubmit();
       setUser(DefaultUser);
+      onRequestClose();
     }
+    setSubmitLoading(false);
   };
 
   useEffect(() => {
-    if (open) {
-      InitUser();
+    if (!open) {
+      return;
     }
+    initUser();
   }, [open]);
 
-  async function InitUser() {
+  async function initUser() {
     setLoading(true);
     try {
       const userResult = await userService.get(userId);

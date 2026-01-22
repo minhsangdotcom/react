@@ -21,6 +21,7 @@ import LoadingButton from "@/components/LoadingButton";
 import { roleSchema, roleSchemaType } from "./roleSchema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { IApiResult } from "@/utils/http/IApiResult";
 
 function mapPermission(permission: any): IPermission {
   return {
@@ -183,9 +184,11 @@ export default function RoleModal({
   open,
   onRequestClose,
   roleId,
+  onSubmit,
 }: {
   open: boolean;
   onRequestClose: () => void;
+  onSubmit: () => void;
   roleId: string | null;
 }) {
   const {
@@ -284,7 +287,7 @@ export default function RoleModal({
     );
   };
 
-  const onSubmit = async (data: any) => {
+  const submit = async (data: any) => {
     const permissionIds = collectCheckedParents(
       groups.flatMap((g) => g.permissions)
     );
@@ -295,20 +298,16 @@ export default function RoleModal({
       permissionIds,
     };
     setButtonLoading(true);
-    try {
-      if (roleId) {
-        await roleService.update(roleId!, payload);
-      } else {
-        await roleService.create(payload);
-      }
-    } catch (error) {
-      //
-    } finally {
+    const result: IApiResult = roleId
+      ? await roleService.update(roleId!, payload)
+      : await roleService.create(payload);
+    if (result.success) {
       reset({ name: "", description: "" });
-      setButtonLoading(false);
-      onRequestClose();
       setGroups([]);
+      onSubmit();
+      onRequestClose();
     }
+    setButtonLoading(false);
   };
 
   return (
@@ -403,7 +402,7 @@ export default function RoleModal({
             <LoadingButton
               loading={buttonLoading}
               text={roleId ? "Update" : "Create"}
-              onClick={handleSubmit(onSubmit)}
+              onClick={handleSubmit(submit)}
               type="button"
               className="px-4 py-2 rounded bg-brand-primary text-white hover:bg-brand-primary-hover cursor-pointer"
             />

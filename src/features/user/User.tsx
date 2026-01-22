@@ -43,6 +43,7 @@ import { IPermissionGroupResponse } from "@/types/permission/IPermission";
 import { IRole } from "../role/IRole";
 import { Loading } from "@/components/Loading";
 import { defaultAvatarPicker } from "@/utils/defaultAvatarPicker";
+import { showSuccessToast } from "@/notifications/toastSuccess";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -482,6 +483,8 @@ export default function User() {
     );
   }
 
+  const onSubmit = (message: string) => showSuccessToast(message);
+
   return (
     <>
       <div className="p-3 min-h-screen">
@@ -530,10 +533,12 @@ export default function User() {
         onRequestClose={() => setOpenCreatePopup(false)}
         roles={roles}
         permissions={permissions}
+        onSubmit={() => onSubmit("Create user success!")}
       />
       <UpdateUserModal
         open={openUpdatePopup}
         onRequestClose={() => setOpenUpdatePopup(false)}
+        onSubmit={() => onSubmit("Update user success")}
         roles={roles}
         permissions={permissions}
         userId={id!}

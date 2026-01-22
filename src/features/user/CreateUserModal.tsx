@@ -37,6 +37,7 @@ interface CreateUserProps {
   roles: IRoleModel[];
   permissions: IPermissionModel[];
   onRequestClose: () => void;
+  onSubmit: () => void;
 }
 
 export default function CreateUserModal({
@@ -44,6 +45,7 @@ export default function CreateUserModal({
   roles,
   permissions,
   onRequestClose,
+  onSubmit,
 }: CreateUserProps) {
   const [user, setUser] = useState<IUser>(DefaultUser);
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
@@ -124,16 +126,16 @@ export default function CreateUserModal({
     }
 
     setSubmitLoading(true);
-    try {
-      await userService.create(formData);
-    } catch (error) {
-      //
-    } finally {
-      onRequestClose();
+    const result = await userService.create(formData);
+
+    if (result.success) {
+      onSubmit();
       setUser(DefaultUser);
       resetForm();
-      setSubmitLoading(false);
+      onRequestClose();
     }
+
+    setSubmitLoading(false);
   };
 
   function setDefault() {

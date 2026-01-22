@@ -15,6 +15,7 @@ import { profileSchema, profileSchemaType } from "./profileSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { defaultAvatarPicker } from "@/utils/defaultAvatarPicker";
+import { showSuccessToast } from "@/notifications/toastSuccess";
 
 dayjs.extend(utc);
 
@@ -69,14 +70,11 @@ export default function Profile() {
     }
 
     setLoading(true);
-    try {
-      var result = await profileService.updateProfile(formData);
-      const user = result.data?.results as IUserProfileResponse;
-      updateProfile(user);
-    } catch (error) {
-      //
-    }
+    var result = await profileService.updateProfile(formData);
+    const userResult = result.data?.results as IUserProfileResponse;
+    updateProfile(userResult);
     setLoading(false);
+    showSuccessToast("Update profile success!");
   };
 
   useEffect(() => {

@@ -20,6 +20,7 @@ import { ConfirmDialog } from "@/components/ConfirmDialog";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
+import { showSuccessToast } from "@/notifications/toastSuccess";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -238,6 +239,11 @@ export default function Role() {
           setOpen(false);
           setId(null);
         }}
+        onSubmit={() =>
+          showSuccessToast(
+            `${id ? "Update role success!" : "Create role success"}`
+          )
+        }
       />
 
       <ConfirmDialog
