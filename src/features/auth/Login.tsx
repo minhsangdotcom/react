@@ -2,12 +2,12 @@ import "@features/auth/login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import Input from "@/components/Input";
-import PasswordInput from "@components/PasswordInput";
 import LoadingButton from "@components/LoadingButton";
 import { loginAsync } from "@features/auth/authAction";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, loginSchemaType } from "./loginSchema";
+import PasswordInput from "@/components/passwordInput";
 
 export default function Login() {
   const {
@@ -58,7 +58,7 @@ export default function Login() {
             loading={data.isLoading}
             text="Sign In"
             type="submit"
-            className="w-full p-3 text-base font-semibold text-white bg-brand-primary hover:bg-brand-primary-hover rounded cursor-pointer mb-[5px] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full p-3 text-base font-semibold text-white bg-brand-primary hover:bg-brand-primary-hover rounded cursor-pointer mb-1.25 disabled:opacity-50 disabled:cursor-not-allowed"
           />
 
           <Link
@@ -67,7 +67,6 @@ export default function Login() {
           >
             Forget password
           </Link>
-          {/* {data.error?.en && <p className="error">* {data.error?.en}</p>} */}
         </form>
       </div>
     </div>
