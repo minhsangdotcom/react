@@ -5,16 +5,12 @@ import LoadingButton from "@components/LoadingButton";
 
 export default function RequestResetPassword() {
   const [email, setEmail] = useState<string>("");
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const result = await authService.requestResetPassword(email);
-    if (!result.isSuccess) {
-      setError(result.error?.errorDetails.en!);
-    }
+    await authService.requestResetPassword(email);
     setLoading(false);
   };
   return (
@@ -36,7 +32,6 @@ export default function RequestResetPassword() {
           required
         />
         <LoadingButton loading={loading} text="Send Reset Link" type="submit" />
-        {error && <p>{error}</p>}
       </form>
     </div>
   );

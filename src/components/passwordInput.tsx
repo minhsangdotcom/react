@@ -1,4 +1,6 @@
 import { forwardRef, InputHTMLAttributes, useState } from "react";
+import EyeClosed from "@assets/icons/eye-closed.png";
+import Eye from "@assets/icons/eye.png";
 import "./password-input.css";
 
 interface PasswordInputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -40,7 +42,7 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
             onClick={() => setHidden((prev) => !prev)}
             aria-label={hidden ? "Show password" : "Hide password"}
           >
-            <img src={hidden ? "/icons/eye-closed.png" : "/icons/eye.png"} />
+            <img src={hidden ? EyeClosed : Eye} />
           </button>
         </div>
         {error && (

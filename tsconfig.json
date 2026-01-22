@@ -27,6 +27,7 @@
       "@lib/*": ["src/lib/*"],
       "@features/*": ["src/features/*"],
       "@config/*": ["src/config/*"],
+      "@assets/*": ["src/assets/*"],
       "@dscn/*": ["src/design-system/cn/*"]
     }
   },

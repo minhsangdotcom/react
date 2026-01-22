@@ -16,7 +16,6 @@ export default function ResetPassword() {
   const token = search.get("token") ?? "";
   const email = search.get("email") ?? "";
 
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const {
@@ -29,14 +28,11 @@ export default function ResetPassword() {
 
   const submit = async (data: ResetPasswordSchemaType) => {
     setLoading(true);
-    const result = await authService.resetPassword({
+    await authService.resetPassword({
       token,
       password: data.password,
       email,
     });
-    if (!result.isSuccess) {
-      //
-    }
     setLoading(false);
   };
 
@@ -59,7 +55,6 @@ export default function ResetPassword() {
           error={errors.confirmPassword?.message}
         />
         <LoadingButton loading={loading} text="Reset Password" type="submit" />
-        {/* {error && <p className="text-red-600 pt-2">{error}</p>} */}
       </form>
     </div>
   );

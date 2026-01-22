@@ -474,7 +474,7 @@ export default function User() {
 
   if (refDataLoading) {
     return (
-      <div className="p-3 min-h-screen">
+      <div className="px-3 py-3 h-[calc(100vh-64px-105px)] md:h-[calc(100vh-64px-53px)]">
         <Loading />
       </div>
     );

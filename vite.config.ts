@@ -28,6 +28,7 @@ export default defineConfig({
       "@lib": path.resolve(__dirname, "src/lib"),
       "@features": path.resolve(__dirname, "src/features"),
       "@config": path.resolve(__dirname, "src/config"),
+      "@assets": path.resolve(__dirname, "src/assets"),
       "@dscn": path.resolve(__dirname, "src/design-system/cn"),
     },
   },

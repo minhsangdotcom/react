@@ -7,6 +7,7 @@ import { IUserProfileResponse } from "@/features/profile/IUserProfile";
 import Select from "react-select";
 import { Gender, genderOptions } from "@/features/user/Gender";
 import { DateInput } from "@mantine/dates";
+import Edit from "@assets/icons/edit-icon.png";
 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -99,7 +100,11 @@ export default function Profile() {
   }
 
   if (isLoading) {
-    return <Loading />;
+    return (
+      <div className="px-3 py-3 h-[calc(100vh-64px-105px)] md:h-[calc(100vh-64px-53px)]">
+        <Loading />
+      </div>
+    );
   }
 
   return (
@@ -115,7 +120,7 @@ export default function Profile() {
             />
 
             <label className="absolute bottom-0 right-1 flex h-5.5 w-5.5 items-center justify-center rounded-full bg-blue-500 shadow cursor-pointer">
-              <img src="/icons/edit-icon.png" className="h-3 w-3" />
+              <img src={Edit} className="h-3 w-3" />
               <input type="file" hidden onChange={handleFileChange} />
             </label>
           </div>
