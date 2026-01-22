@@ -26,12 +26,19 @@ export default function Login() {
   const dispatch = useAppDispatch();
   const data = useAppSelector((store) => store.auth);
 
-  async function onSubmit(data: loginSchemaType) {
-    dispatch(
-      loginAsync({ identifier: data.identifier, password: data.password })
-    ).then(() => {
+  async function onSubmit(formData: loginSchemaType) {
+    try {
+      await dispatch(
+        loginAsync({
+          identifier: formData.identifier,
+          password: formData.password,
+        })
+      ).unwrap();
+
       navigate("/");
-    });
+    } catch {
+      //
+    }
   }
 
   return (

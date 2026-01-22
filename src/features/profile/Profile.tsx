@@ -71,10 +71,12 @@ export default function Profile() {
 
     setSubmitLoading(true);
     var result = await profileService.updateProfile(formData);
-    const userResult = result.data?.results as IUserProfileResponse;
-    updateProfile(userResult);
+    if (result.success) {
+      const userResult = result.data?.results as IUserProfileResponse;
+      updateProfile(userResult);
+      showSuccessToast("Update profile success!");
+    }
     setSubmitLoading(false);
-    showSuccessToast("Update profile success!");
   };
 
   useEffect(() => {
