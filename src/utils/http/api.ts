@@ -6,6 +6,8 @@ import * as qs from "qs";
 import IResponse from "@/types/IResponse";
 import ErrorType from "@/types/IError";
 import { refreshTokenHandler, toastError, tokenHandler } from "./interceptor";
+import localStorageHelper from "@utils/storages/localStorageHelper";
+import Config from "@config/keyConfig";
 
 const api = axios.create({
   baseURL: env.apiBaseUrl,
@@ -14,8 +16,13 @@ const api = axios.create({
   },
 });
 
-api.interceptors.request.use((config) => {
+api.interceptors.request.use((config: any) => {
   tokenHandler(config);
+  const language = localStorageHelper.get(Config.currentLanguage);
+  config.headers = {
+    ...config.headers,
+    "Accept-Language": language,
+  };
   return config;
 });
 api.interceptors.response.use(
