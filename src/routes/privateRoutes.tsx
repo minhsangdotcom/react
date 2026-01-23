@@ -7,6 +7,7 @@ import UserPage from "@/features/user/User";
 
 import "@/styles/table.css";
 import Layout from "@/layouts/Layout";
+import ChangePassword from "@/features/auth/ChangePassword";
 
 const PrivateRoutes: RouteObject = {
   element: <PrivateRoute />,
@@ -18,6 +19,7 @@ const PrivateRoutes: RouteObject = {
         { path: "/profile", element: <Profile /> },
         { path: "/identity/roles", element: <RolePage /> },
         { path: "/identity/users", element: <UserPage /> },
+        { path: "/settings/change-password", element: <ChangePassword/> },
       ],
     },
   ],

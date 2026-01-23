@@ -1,0 +1,65 @@
+import LoadingButton from "@/components/LoadingButton";
+import PasswordInput from "@/components/PasswordInput";
+import {
+  changePasswordSchema,
+  ChangePasswordSchemaType,
+} from "./changePasswordSchema";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import authService from "./authService";
+import { useState } from "react";
+import { showSuccessToast } from "@/notifications/toastSuccess";
+import { useAppDispatch } from "@/store/hook";
+import { logout } from "./authSlice";
+
+export default function ChangePassword() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ChangePasswordSchemaType>({
+    resolver: zodResolver(changePasswordSchema),
+  });
+  const [loading, setLoading] = useState(false);
+  const dispatch = useAppDispatch();
+
+  async function onsubmit(data: ChangePasswordSchemaType) {
+    setLoading(true);
+    const result = await authService.changePassword({
+      oldPassword: data.oldPassword,
+      newPassword: data.password,
+    });
+
+    if (result.success) {
+      showSuccessToast("Update password success!");
+      dispatch(logout());
+    }
+    setLoading(false);
+  }
+  return (
+    <div className="flex justify-center items-center h-[calc(100vh-64px-105px)] md:h-[calc(100vh-64px-53px)]">
+      <form
+        className="p-5 rounded-lg shadow w-full md:w-md"
+        onSubmit={handleSubmit(onsubmit)}
+      >
+        <h2 className="text-xl font-semibold mb-2">Change your password</h2>
+        <PasswordInput
+          label="Current password"
+          {...register("oldPassword")}
+          error={errors.oldPassword?.message}
+        />
+        <PasswordInput
+          label="New password"
+          {...register("password")}
+          error={errors.password?.message}
+        />
+        <PasswordInput
+          label="Confirm password"
+          {...register("confirmPassword")}
+          error={errors.confirmPassword?.message}
+        />
+        <LoadingButton loading={loading} text="Change password" type="submit" />
+      </form>
+    </div>
+  );
+}

@@ -4,6 +4,10 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuPortal,
+  DropdownMenuSubContent,
 } from "@dscn/components/ui/dropdown-menu";
 
 import { Avatar, AvatarImage } from "@dscn/components/ui/avatar";
@@ -29,10 +33,18 @@ export function UserAvatarMenu({ avatarUrl }: { avatarUrl?: string }) {
         <DropdownMenuItem onClick={() => navigate("/profile")}>
           Profile
         </DropdownMenuItem>
-
-        <DropdownMenuItem onClick={() => navigate("/settings")}>
-          Settings
-        </DropdownMenuItem>
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger>Settings</DropdownMenuSubTrigger>
+          <DropdownMenuPortal>
+            <DropdownMenuSubContent>
+              <DropdownMenuItem
+                onClick={() => navigate("settings/change-password")}
+              >
+                Change password
+              </DropdownMenuItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuPortal>
+        </DropdownMenuSub>
 
         <DropdownMenuSeparator />
 

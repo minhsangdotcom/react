@@ -4,6 +4,7 @@ import IResetpasswordRequest from "@/features/auth/IResetPasswordRequest";
 import { ILoginResponse } from "@features/auth/ILoginResponse";
 import { ITokenResponse } from "@features/auth/ITokenResponse";
 import { ILoginRequest } from "@features/auth/ILoginRequest";
+import IChangePasswordRequest from "./IChangePasswordRequest";
 
 const authService = {
   login: async function (
@@ -34,6 +35,15 @@ const authService = {
   ): Promise<IApiResult<void>> {
     return await send({
       url: "users/reset-password",
+      method: "PUT",
+      data: { ...request },
+    });
+  },
+  changePassword: async function (
+    request: IChangePasswordRequest
+  ): Promise<IApiResult<void>> {
+    return await send({
+      url: "users/change-password",
       method: "PUT",
       data: { ...request },
     });

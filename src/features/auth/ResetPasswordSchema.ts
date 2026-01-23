@@ -9,21 +9,20 @@ const validatePassword = (property: string) =>
       `${property} must be at least 8 characters and include an uppercase letter, a number, and a symbol`
     );
 
-const resetPasswordSchema = z
-  .object({
-    password: validatePassword("password"),
-    confirmPassword: validatePassword("confirmPassword"),
-  })
-  .superRefine((data, ctx) => {
-    if (data.password !== data.confirmPassword) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["confirmPassword"],
-        message: "Passwords do not match",
-      });
-    }
-  });
+const resetPasswordValidator = z.object({
+  password: validatePassword("password"),
+  confirmPassword: validatePassword("confirmPassword"),
+});
+
+const resetPasswordSchema = resetPasswordValidator.superRefine((data, ctx) => {
+  if (data.password !== data.confirmPassword) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["confirmPassword"],
+      message: "Passwords do not match",
+    });
+  }
+});
 
 export type ResetPasswordSchemaType = z.input<typeof resetPasswordSchema>;
-
-export { resetPasswordSchema };
+export { resetPasswordSchema, validatePassword, resetPasswordValidator };

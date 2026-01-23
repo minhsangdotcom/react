@@ -7,7 +7,7 @@ import PasswordInput from "@/components/PasswordInput";
 import {
   resetPasswordSchema,
   ResetPasswordSchemaType,
-} from "./ResetPasswordSchema";
+} from "./resetPasswordSchema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
