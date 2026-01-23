@@ -1,0 +1,34 @@
+{
+  "common": {
+    "actions": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "edit": "Edit",
+      "create": "Create",
+      "publish": "Publish",
+      "draft": "Save as Draft",
+      "search": "Search",
+      "filter": "Filter",
+      "export": "Export",
+      "import": "Import"
+    }
+  },
+  "navigation": {
+    "User": "User Management",
+    "Role": "Role Management"
+  },
+  "navbar": {
+    "profile": {
+      "value": "Profile",
+      "settings": {
+        "value": "Settings",
+        "changePassword": "Change password"
+      },
+      "Logout": "Logout"
+    }
+  },
+  "footer":{
+    "builtBy": "Built by"
+  }
+}

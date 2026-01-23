@@ -15,10 +15,13 @@ import { Avatar, AvatarImage } from "@dscn/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
 import { logout } from "@features/auth/authSlice";
 import { useAppDispatch } from "@/store/hook";
+import { useTranslation } from "react-i18next";
 
 export function UserAvatarMenu({ avatarUrl }: { avatarUrl?: string }) {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
+
   return (
     <DropdownMenu>
       {/* TRIGGER */}
@@ -31,16 +34,18 @@ export function UserAvatarMenu({ avatarUrl }: { avatarUrl?: string }) {
       {/* MENU */}
       <DropdownMenuContent side="bottom" align="end">
         <DropdownMenuItem onClick={() => navigate("/profile")}>
-          Profile
+          {t("navbar.profile.value")}
         </DropdownMenuItem>
         <DropdownMenuSub>
-          <DropdownMenuSubTrigger>Settings</DropdownMenuSubTrigger>
+          <DropdownMenuSubTrigger>
+            {t("navbar.profile.settings.value")}
+          </DropdownMenuSubTrigger>
           <DropdownMenuPortal>
             <DropdownMenuSubContent>
               <DropdownMenuItem
                 onClick={() => navigate("settings/change-password")}
               >
-                Change password
+                {t("navbar.profile.settings.changePassword")}
               </DropdownMenuItem>
             </DropdownMenuSubContent>
           </DropdownMenuPortal>
@@ -54,7 +59,7 @@ export function UserAvatarMenu({ avatarUrl }: { avatarUrl?: string }) {
             dispatch(logout());
           }}
         >
-          Logout
+          {t("navbar.profile.Logout")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

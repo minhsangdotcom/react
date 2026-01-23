@@ -2,6 +2,8 @@ interface ImportMetaEnv {
   readonly VITE_API_BASE_URL: string;
   readonly VITE_HOST_PORT: string;
   readonly VITE_STORAGE_PREFIX: string;
+  readonly VITE_DEFAULT_LANGUAGE : string
+  readonly VITE_SUPPORTED_LANGUAGES : string
 }
 
 interface ImportMeta {

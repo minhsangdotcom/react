@@ -1,0 +1,34 @@
+{
+  "common": {
+    "actions": {
+      "save": "Lưu",
+      "cancel": "Hủy",
+      "delete": "Xóa",
+      "edit": "Chỉnh sửa",
+      "create": "Tạo mới",
+      "publish": "Xuất bản",
+      "draft": "Lưu bản nháp",
+      "search": "Tìm kiếm",
+      "filter": "Lọc",
+      "export": "Xuất",
+      "import": "Nhập"
+    }
+  },
+  "navigation": {
+    "User": "Quản lý người dùng",
+    "Role": "Quản lý vai trò"
+  },
+  "navbar": {
+    "profile": {
+      "value": "Thông tin",
+      "settings": {
+        "value": "Cài đặt",
+        "changePassword": "Đổi mật khẩu"
+      },
+      "Logout": "Đăng xuất"
+    }
+  },
+  "footer":{
+    "builtBy": "Tạo bởi"
+  }
+}

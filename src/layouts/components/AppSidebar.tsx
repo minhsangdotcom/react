@@ -1,4 +1,11 @@
-import { User, Shield, ChevronRight, Lock } from "lucide-react";
+import {
+  User,
+  Shield,
+  ChevronRight,
+  Lock,
+  User2,
+  User2Icon,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -16,25 +23,43 @@ import {
   CollapsibleTrigger,
 } from "@radix-ui/react-collapsible";
 import { NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { ComponentType } from "react";
+import { cn } from "@/design-system/cn/lib/utils";
 
-const groupedItems = [
-  {
-    name: "Identity",
-    icon: Lock,
-    items: [
-      {
-        title: "User",
-        url: "/identity/users",
-        icon: User,
-      },
-      {
-        title: "Role",
-        url: "/identity/roles",
-        icon: Shield,
-      },
-    ],
-  },
-];
+interface SidebarItem {
+  title: string;
+  url: string;
+  icon: ComponentType<{ className?: string }> | null;
+}
+
+interface GroupType {
+  name: string;
+  icon: ComponentType<{ className?: string }> | null;
+  items: SidebarItem[];
+}
+
+function getGroups(): GroupType[] {
+  const { t } = useTranslation();
+  return [
+    {
+      name: "identity",
+      icon: null,
+      items: [
+        {
+          title: t("navigation.User"),
+          url: "/identity/users",
+          icon: User2,
+        },
+        {
+          title: t("navigation.Role"),
+          url: "/identity/roles",
+          icon: Shield,
+        },
+      ],
+    },
+  ];
+}
 
 export function AppSidebar() {
   const { state } = useSidebar();
@@ -61,58 +86,30 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarMenu>
-        {groupedItems.map((group) => (
-          <Collapsible
-            defaultOpen={false}
-            className="group/collapsible"
-            key={group.name}
-          >
-            <SidebarMenuItem>
-              <CollapsibleTrigger asChild>
-                <SidebarMenuButton className="group/menu-button">
-                  {/* ICON — always visible */}
-                  {group.icon && <group.icon className="h-4 w-4 shrink-0" />}
-
-                  {/* TEXT — hide when sidebar is collapsed */}
-                  <span
-                    className="
-                    truncate
-                    group-data-[collapsible=icon]/sidebar:hidden
-                  "
-                  >
-                    {group.name}
-                  </span>
-
-                  {/* CHEVRON — hide when collapsed */}
-                  <ChevronRight
-                    className="
-                        ml-auto h-4 w-4 transition-transform
-                        group-data-[state=open]/collapsible:rotate-90
-                        group-data-[collapsible=icon]/sidebar:hidden
-                      "
+        {getGroups()
+          .find((x) => x.name == "identity")
+          ?.items.map((item) => (
+            <SidebarMenuItem key={item.title}>
+              <NavLink
+                to={item.url}
+                className={`flex items-center gap-2 min-w-0 mx-4 ${state == "collapsed" && "md:justify-center"}`}
+              >
+                {item.icon && (
+                  <item.icon
+                    className={
+                      state === "expanded" ? "h-4 w-4 shrink-0" : "h-5 w-5"
+                    }
                   />
-                </SidebarMenuButton>
-              </CollapsibleTrigger>
+                )}
 
-              <CollapsibleContent>
-                <SidebarMenuSub>
-                  {group.items.map((item) => (
-                    <SidebarMenuSubItem key={item.title}>
-                      <NavLink
-                        to={item.url}
-                        key={item.title}
-                        className="flex items-center gap-2"
-                      >
-                        {item.icon && <item.icon className="h-4 w-4" />}
-                        <span>{item.title}</span>
-                      </NavLink>
-                    </SidebarMenuSubItem>
-                  ))}
-                </SidebarMenuSub>
-              </CollapsibleContent>
+                <span
+                  className={`truncate ${state == "collapsed" && "md:hidden"}`}
+                >
+                  {item.title}
+                </span>
+              </NavLink>
             </SidebarMenuItem>
-          </Collapsible>
-        ))}
+          ))}
       </SidebarMenu>
     </Sidebar>
   );
