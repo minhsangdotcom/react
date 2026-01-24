@@ -1,5 +1,5 @@
 import { DialogContent } from "@radix-ui/react-dialog";
-import { useState, useEffect } from "react";
+import { useState, useEffect, SetStateAction, Dispatch } from "react";
 import {
   Dialog,
   DialogClose,
@@ -7,11 +7,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@dscn/components/ui/dialog";
-import { ulid } from "ulidx";
 import { roleService } from "@/features/role/roleService";
-import permissionService from "@services/permission/permissionService";
 import {
-  IPermissionGroupResponse,
   IPermission,
   IPermissionGroup,
   IPermissionResponse,
@@ -23,34 +20,236 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IApiResult } from "@/utils/http/IApiResult";
 
-function mapPermission(permission: any): IPermission {
-  return {
-    id: ulid(),
-    permissionId: permission.id,
-    code: permission.code,
-    label: permission.codeTranslation,
-    checked: false,
-    expanded: false,
-    children: permission.children?.map(mapPermission) ?? [],
-    createdAt: permission.createdAt,
-  };
-}
-
-export function mapPermissionGroups(
-  response: IPermissionGroupResponse[]
-): IPermissionGroup[] {
-  return response.map((group) => ({
-    name: group.name,
-    label: group.nameTranslation,
-    permissions: group.permissions.map(mapPermission),
-  }));
-}
-
 interface PermissionNodeProps {
   node: IPermission;
   level?: number;
   onToggleCheck: (id: string, checked: boolean) => void;
   onToggleExpand: (id: string) => void;
+}
+
+export default function RoleModal({
+  open,
+  onRequestClose,
+  roleId,
+  onSubmit,
+  group,
+  setGroup,
+}: {
+  open: boolean;
+  onRequestClose: () => void;
+  onSubmit: () => void;
+  roleId: string | null;
+  group: IPermissionGroup[];
+  setGroup: Dispatch<SetStateAction<IPermissionGroup[]>>;
+}) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<roleSchemaType>({
+    resolver: zodResolver(roleSchema),
+  });
+
+  const [submitLoading, setSubmitLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+    if (!roleId) {
+      return;
+    }
+    getRoleById();
+  }, [open]);
+
+  async function getRoleById() {
+    setLoading(true);
+    const result = await roleService.getById(roleId!);
+
+    if (result.success) {
+      const role = result.data?.results as IRoleResponse;
+      reset({ name: role.name, description: role.description });
+
+      const checkedPermissions = getCheckedPermissions(
+        role.permissions,
+        group.flatMap((g) => g.permissions)
+      );
+      const groups = group.map((g) => {
+        const updatedPermission = markAsChecked(
+          g.permissions,
+          checkedPermissions
+        );
+        return {
+          ...g,
+          permissions: updatedPermission,
+        };
+      });
+
+      setGroup([...groups]);
+    }
+    setLoading(false);
+  }
+
+  const onToggleCheck = (id: string, checked: boolean) => {
+    setGroup((prev) =>
+      prev.map((g) => ({
+        ...g,
+        permissions: updatePermissions(g.permissions, id, checked),
+      }))
+    );
+  };
+
+  function toggleExpand(list: IPermission[], id: string): IPermission[] {
+    return list.map((node) => {
+      if (node.id === id) {
+        return { ...node, expanded: !node.expanded };
+      }
+
+      if (node.children.length > 0) {
+        return {
+          ...node,
+          children: toggleExpand(node.children, id),
+        };
+      }
+
+      return node;
+    });
+  }
+
+  const onToggleExpand = (id: string) => {
+    setGroup((prev) =>
+      prev.map((g) => ({
+        ...g,
+        permissions: toggleExpand(g.permissions, id),
+      }))
+    );
+  };
+
+  const submit = async (data: roleSchemaType) => {
+    const permissionIds = collectCheckedParents(
+      group.flatMap((g) => g.permissions)
+    );
+
+    const payload = {
+      name: data.name,
+      description: data.description,
+      permissionIds,
+    };
+    setSubmitLoading(true);
+    const result: IApiResult = roleId
+      ? await roleService.update(roleId!, payload)
+      : await roleService.create(payload);
+
+    if (result.success) {
+      reset({ name: "", description: "" });
+      onSubmit();
+      onRequestClose();
+    }
+    setSubmitLoading(false);
+  };
+
+  return (
+    <Dialog open={open}>
+      <DialogContent
+        aria-describedby={roleId ? "update-role" : "create-role"}
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/40 backdrop-blur-[2px]"
+      >
+        <div className="bg-white rounded-xl p-6 w-200 max-w-full shadow-lg max-h-[90vh] flex flex-col border border:grey-100">
+          <DialogHeader className="mb-2">
+            <DialogTitle className="text-lg font-semibold">
+              {roleId ? "Update Role" : "Create New Role"}
+            </DialogTitle>
+          </DialogHeader>
+
+          {loading ? (
+            <div className="flex items-center justify-center min-h-100">
+              <span className="h-6 w-6 animate-spin rounded-full border-2 border-blue-300 border-t-transparent" />
+            </div>
+          ) : (
+            <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6 flex-1 overflow-hidden">
+              {/* Left side: Name & Description */}
+              <div className="space-y-4">
+                <input
+                  type="text"
+                  className={`w-full border p-2 rounded focus:outline-none ${
+                    errors.name
+                      ? "border-red-300 focus:ring-red-300"
+                      : "focus:border-blue-200 focus:ring-blue-300"
+                  }`}
+                  placeholder="Role Name"
+                  {...register("name")}
+                />
+                {errors.name && (
+                  <p className="text-sm text-red-500">{errors.name?.message}</p>
+                )}
+
+                <textarea
+                  className={`w-full border p-2 rounded focus:outline-none ${
+                    errors.description
+                      ? "border-red-300 focus:ring-red-300"
+                      : "focus:border-blue-200 focus:ring-blue-300"
+                  }`}
+                  placeholder="Description"
+                  {...register("description")}
+                />
+                {errors.description && (
+                  <p className="text-sm text-red-500">
+                    {errors.description?.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Right side: Permissions */}
+              <div className="space-y-4 rounded p-2 overflow-auto">
+                <h3 className="mb-3 text-lg font-semibold text-gray-800">
+                  Permissions
+                </h3>
+
+                {group.map((g) => (
+                  <div key={g.name}>
+                    <h4 className="mb-1 text-md font-medium">{g.label}</h4>
+
+                    {g.permissions.map((p) => (
+                      <PermissionNode
+                        key={p.id}
+                        node={p}
+                        onToggleCheck={onToggleCheck}
+                        onToggleExpand={onToggleExpand}
+                      />
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Action buttons */}
+          <DialogFooter className="flex justify-end space-x-2 pt-6">
+            <DialogClose asChild>
+              <button
+                className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
+                onClick={() => {
+                  reset({ name: "", description: "" });
+                  onRequestClose();
+                }}
+              >
+                Cancel
+              </button>
+            </DialogClose>
+            <LoadingButton
+              loading={submitLoading}
+              text={roleId ? "Update" : "Create"}
+              onClick={handleSubmit(submit)}
+              type="button"
+              className="px-4 py-2 rounded bg-brand-primary text-white hover:bg-brand-primary-hover cursor-pointer"
+            />
+          </DialogFooter>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
 }
 
 function PermissionNode({
@@ -178,237 +377,4 @@ function markAsChecked(
       children: markAsChecked(node.children, checkedCodes, isChecked),
     };
   });
-}
-
-export default function RoleModal({
-  open,
-  onRequestClose,
-  roleId,
-  onSubmit,
-}: {
-  open: boolean;
-  onRequestClose: () => void;
-  onSubmit: () => void;
-  roleId: string | null;
-}) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<roleSchemaType>({
-    resolver: zodResolver(roleSchema),
-  });
-
-  const [groups, setGroups] = useState<IPermissionGroup[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [buttonLoading, setButtonLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-    init();
-  }, [open]);
-
-  async function init() {
-    setLoading(true);
-    try {
-      const result = await permissionService.list();
-
-      const permissions = result.data!.results as IPermissionGroupResponse[];
-      let groups = mapPermissionGroups(permissions);
-
-      if (roleId) {
-        const roleResponse = await roleService.getById(roleId!);
-        const role = roleResponse.data!.results as IRoleResponse;
-
-        reset({
-          name: role.name,
-          description: role.description,
-        });
-
-        const checkedPermissions = getCheckedPermissions(
-          role.permissions,
-          groups.flatMap((g) => g.permissions)
-        );
-        groups = groups.map((g) => {
-          const updatedPermission = markAsChecked(
-            g.permissions,
-            checkedPermissions
-          );
-          return {
-            ...g,
-            permissions: updatedPermission,
-          };
-        });
-      }
-
-      setGroups(groups);
-    } catch (error) {
-      //
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  const onToggleCheck = (id: string, checked: boolean) => {
-    setGroups((prev) =>
-      prev.map((g) => ({
-        ...g,
-        permissions: updatePermissions(g.permissions, id, checked),
-      }))
-    );
-  };
-
-  function toggleExpand(list: IPermission[], id: string): IPermission[] {
-    return list.map((node) => {
-      if (node.id === id) {
-        return { ...node, expanded: !node.expanded };
-      }
-
-      if (node.children.length > 0) {
-        return {
-          ...node,
-          children: toggleExpand(node.children, id),
-        };
-      }
-
-      return node;
-    });
-  }
-
-  const onToggleExpand = (id: string) => {
-    setGroups((prev) =>
-      prev.map((g) => ({
-        ...g,
-        permissions: toggleExpand(g.permissions, id),
-      }))
-    );
-  };
-
-  const submit = async (data: any) => {
-    const permissionIds = collectCheckedParents(
-      groups.flatMap((g) => g.permissions)
-    );
-
-    const payload = {
-      name: data.name,
-      description: data.description,
-      permissionIds,
-    };
-    setButtonLoading(true);
-    const result: IApiResult = roleId
-      ? await roleService.update(roleId!, payload)
-      : await roleService.create(payload);
-    if (result.success) {
-      reset({ name: "", description: "" });
-      setGroups([]);
-      onSubmit();
-      onRequestClose();
-    }
-    setButtonLoading(false);
-  };
-
-  return (
-    <Dialog open={open}>
-      <DialogContent
-        aria-describedby={roleId ? "update-role" : "create-role"}
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/40 backdrop-blur-[2px]"
-      >
-        <div className="bg-white rounded-xl p-6 w-200 max-w-full shadow-lg max-h-[90vh] flex flex-col border border:grey-100">
-          <DialogHeader className="mb-2">
-            <DialogTitle className="text-lg font-semibold">
-              {roleId ? "Update Role" : "Create New Role"}
-            </DialogTitle>
-          </DialogHeader>
-
-          {loading ? (
-            <div className="flex items-center justify-center min-h-100">
-              <span className="h-6 w-6 animate-spin rounded-full border-2 border-gray-400 border-t-transparent" />
-            </div>
-          ) : (
-            <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6 flex-1 overflow-hidden">
-              {/* Left side: Name & Description */}
-              <div className="space-y-4">
-                <input
-                  type="text"
-                  className={`w-full border p-2 rounded focus:outline-none ${
-                    errors.name
-                      ? "border-red-300 focus:ring-red-300"
-                      : "focus:border-blue-200 focus:ring-blue-300"
-                  }`}
-                  placeholder="Role Name"
-                  {...register("name")}
-                />
-                {errors.name && (
-                  <p className="text-sm text-red-500">{errors.name?.message}</p>
-                )}
-
-                <textarea
-                  className={`w-full border p-2 rounded focus:outline-none ${
-                    errors.description
-                      ? "border-red-300 focus:ring-red-300"
-                      : "focus:border-blue-200 focus:ring-blue-300"
-                  }`}
-                  placeholder="Description"
-                  {...register("description")}
-                />
-                {errors.description && (
-                  <p className="text-sm text-red-500">
-                    {errors.description?.message}
-                  </p>
-                )}
-              </div>
-
-              {/* Right side: Permissions */}
-              <div className="space-y-4 rounded p-2 overflow-auto">
-                <h3 className="mb-3 text-lg font-semibold text-gray-800">
-                  Permissions
-                </h3>
-
-                {groups.map((group) => (
-                  <div key={group.name}>
-                    <h4 className="mb-1 text-md font-medium">{group.label}</h4>
-
-                    {group.permissions.map((p) => (
-                      <PermissionNode
-                        key={p.id}
-                        node={p}
-                        onToggleCheck={onToggleCheck}
-                        onToggleExpand={onToggleExpand}
-                      />
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Action buttons */}
-          <DialogFooter className="flex justify-end space-x-2 pt-6">
-            <DialogClose asChild>
-              <button
-                className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
-                onClick={() => {
-                  reset({ name: "", description: "" });
-                  setGroups([]);
-                  onRequestClose();
-                }}
-              >
-                Cancel
-              </button>
-            </DialogClose>
-            <LoadingButton
-              loading={buttonLoading}
-              text={roleId ? "Update" : "Create"}
-              onClick={handleSubmit(submit)}
-              type="button"
-              className="px-4 py-2 rounded bg-brand-primary text-white hover:bg-brand-primary-hover cursor-pointer"
-            />
-          </DialogFooter>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
 }

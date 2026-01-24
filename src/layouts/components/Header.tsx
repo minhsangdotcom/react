@@ -1,33 +1,33 @@
 import { SidebarTrigger } from "@dscn/components/ui/sidebar";
 import { profileAsync } from "@features/profile/profileAction";
-import { useAppDispatch } from "@/store/hook";
+import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { useEffect, useRef, useState } from "react";
 import { UserAvatarMenu } from "./UserAvatarMenu";
 import { IUserProfileResponse } from "@/features/profile/IUserProfile";
 import { defaultAvatarPicker } from "@/utils/defaultAvatarPicker";
-import { CircleLanguagePicker } from "./Language";
+import { Language } from "./Language";
 import {
   Avatar,
   AvatarFallback,
 } from "@/design-system/cn/components/ui/avatar";
 import { Skeleton } from "@/design-system/cn/components/ui/skeleton";
-import { DEFAULT_LANGUAGE } from "@/config/i18nConfig";
 import { useTranslation } from "react-i18next";
-import localStorageHelper from "@/utils/storages/localStorageHelper";
 
-import Config from "@config/keyConfig";
+import { selectLanguage } from "@/store/language/languageSlice";
+import { LanguageCode } from "@/types/LanguageType";
 
 export default function AdminLayout() {
+  const dispatch = useAppDispatch();
+  const { code } = useAppSelector((store) => store.language);
+
   const [loading, setLoading] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<string>();
-  const [language, setLanguage] = useState<string>(DEFAULT_LANGUAGE);
-  const { t, i18n } = useTranslation();
+  const [language, setLanguage] = useState<string>(code);
+  const { i18n } = useTranslation();
 
   const ref = useRef<boolean>(false);
 
-  const dispatch = useAppDispatch();
   useEffect(() => {
-    i18n.changeLanguage(DEFAULT_LANGUAGE);
     if (ref.current) {
       return;
     }
@@ -49,12 +49,12 @@ export default function AdminLayout() {
     <header className="relative flex items-center justify-between px-4 py-3">
       <SidebarTrigger />
       <div className="flex gap-2 items-end">
-        <CircleLanguagePicker
+        <Language
           currentLang={language!}
           onChange={(lang) => {
             setLanguage(lang);
             i18n.changeLanguage(lang);
-            localStorageHelper.set(Config.currentLanguage, lang);
+            dispatch(selectLanguage(lang as LanguageCode));
           }}
         />
         {!loading ? (

@@ -21,6 +21,15 @@ import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { showSuccessToast } from "@/notifications/toastSuccess";
+import { useAppSelector } from "@/store/hook";
+import {
+  IPermission,
+  IPermissionGroup,
+  IPermissionGroupResponse,
+} from "@/types/permission/IPermission";
+import permissionService from "@/services/permission/permissionService";
+import { ulid } from "ulidx";
+import { Loading } from "@/components/Loading";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -28,9 +37,13 @@ export default function Role() {
   const [role, setRole] = useState<Array<IRole>>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [referenceLoading, setReferenceLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [id, setId] = useState<string | null>(null);
+  const [group, setGroup] = useState<IPermissionGroup[]>([]);
+  const { code } = useAppSelector((store) => store.language);
+
   const columns = useMemo<ColumnDef<IRole>[]>(
     () => [
       {
@@ -183,7 +196,7 @@ export default function Role() {
       return;
     }
     fetchRoles();
-  }, [open, dialogOpen]);
+  }, [open, dialogOpen, code]);
 
   async function fetchRoles() {
     setLoading(true);
@@ -197,6 +210,30 @@ export default function Role() {
       setRole([...sortedRoles]);
     }
     setLoading(false);
+  }
+
+  useEffect(() => {
+    loadReferenceData();
+  }, [code]);
+
+  async function loadReferenceData() {
+    setReferenceLoading(true);
+    const result = await permissionService.list();
+    if (result.success) {
+      const permissions = result.data?.results as IPermissionGroupResponse[];
+      let groups = toListPermissionGroup(permissions);
+      setGroup(groups);
+    }
+
+    setReferenceLoading(false);
+  }
+
+  if (referenceLoading) {
+    return (
+      <div className="px-3 py-3 h-[calc(100vh-64px-105px)] md:h-[calc(100vh-64px-53px)]">
+        <Loading />
+      </div>
+    );
   }
 
   return (
@@ -239,15 +276,19 @@ export default function Role() {
       <RoleModal
         open={open}
         roleId={id}
+        group={group}
+        setGroup={setGroup}
         onRequestClose={() => {
           setOpen(false);
           setId(null);
+          setGroup(resetPermissionGroups(group));
         }}
-        onSubmit={() =>
+        onSubmit={() => {
           showSuccessToast(
             `${id ? "Update role success!" : "Create role success"}`
-          )
-        }
+          );
+          setGroup(resetPermissionGroups(group));
+        }}
       />
 
       <ConfirmDialog
@@ -262,4 +303,43 @@ export default function Role() {
       />
     </>
   );
+}
+
+function mapPermission(permission: any): IPermission {
+  return {
+    id: ulid(),
+    permissionId: permission.id,
+    code: permission.code,
+    label: permission.codeTranslation,
+    checked: false,
+    expanded: false,
+    children: permission.children?.map(mapPermission) ?? [],
+    createdAt: permission.createdAt,
+  };
+}
+
+function toListPermissionGroup(
+  response: IPermissionGroupResponse[]
+): IPermissionGroup[] {
+  return response.map((group) => ({
+    name: group.name,
+    label: group.nameTranslation,
+    permissions: group.permissions.map(mapPermission),
+  }));
+}
+
+function resetPermissionGroups(groups: IPermissionGroup[]): IPermissionGroup[] {
+  return groups.map((group) => ({
+    ...group,
+    permissions: resetPermissions(group.permissions),
+  }));
+}
+
+function resetPermissions(permissions: IPermission[]): IPermission[] {
+  return permissions.map((permission) => ({
+    ...permission,
+    checked: false,
+    expanded: false,
+    children: resetPermissions(permission.children ?? []),
+  }));
 }

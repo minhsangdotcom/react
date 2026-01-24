@@ -44,6 +44,7 @@ import { IRole } from "../role/IRole";
 import { Loading } from "@/components/Loading";
 import { defaultAvatarPicker } from "@/utils/defaultAvatarPicker";
 import { showSuccessToast } from "@/notifications/toastSuccess";
+import { useAppSelector } from "@/store/hook";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -84,6 +85,7 @@ export default function User() {
 
   const [permissions, setPermissions] = useState<IPermissionModel[]>([]);
   const [roles, setRoles] = useState<IRoleModel[]>([]);
+  const { code } = useAppSelector((store) => store.language);
 
   const columns = useMemo<ColumnDef<IUser>[]>(
     () => [
@@ -430,14 +432,9 @@ export default function User() {
     setLoading(false);
   }
 
-  const referenceDataRef = useRef<boolean>(false);
   useEffect(() => {
-    if (referenceDataRef.current) {
-      return;
-    }
     loadReferenceData();
-    referenceDataRef.current = true;
-  }, []);
+  }, [code]);
 
   async function loadReferenceData() {
     setRefDataLoading(true);

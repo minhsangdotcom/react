@@ -9,7 +9,7 @@ export interface IRole extends IEntity {
 
 export interface IRoleRequest {
   name: string;
-  description: string;
+  description?: string | null;
   permissionIds: Array<string>;
 }
 

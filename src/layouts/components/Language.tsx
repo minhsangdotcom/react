@@ -12,7 +12,7 @@ type Props = {
   onChange: (lang: string) => void;
 };
 
-export function CircleLanguagePicker({ currentLang, onChange }: Props) {
+export function Language({ currentLang, onChange }: Props) {
   const activeLang = LANGUAGES.filter((lang) =>
     SUPPORTED_LANGUAGES.includes(lang.code)
   ).find((x) => x.code === currentLang);
@@ -21,16 +21,15 @@ export function CircleLanguagePicker({ currentLang, onChange }: Props) {
     <DropdownMenu>
       <DropdownMenuTrigger
         className="
-            h-8 w-8 md:h-9 md:w-9
-            rounded-full
-            overflow-hidden
-            border
-            border-border
-            flex items-center justify-center
-            hover:bg-muted
-            transition
-            cursor-pointer
-        "
+          h-6 w-9 md:h-7 md:w-10
+          rounded-sm
+          overflow-hidden
+          border
+          border-border
+          flex items-center justify-center
+          hover:bg-muted
+          transition
+          cursor-pointer"
       >
         <img
           src={activeLang?.flag}
@@ -49,8 +48,9 @@ export function CircleLanguagePicker({ currentLang, onChange }: Props) {
             <img
               src={lang.flag}
               alt={lang.name}
-              className="h-5 w-5 rounded-full object-cover"
+              className="h-4 w-6 object-cover"
             />
+
             <span className="flex-1">{lang.name}</span>
 
             {lang.code === currentLang && (
