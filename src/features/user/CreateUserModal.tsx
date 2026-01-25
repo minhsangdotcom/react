@@ -5,7 +5,7 @@ import {
   DialogHeader,
 } from "@/design-system/cn/components/ui/dialog";
 import { DialogContent, DialogTitle } from "@radix-ui/react-dialog";
-import { genderOptions } from "./Gender";
+import { createGenderOptions } from "./Gender";
 import { MultiValue } from "react-select";
 import Select from "react-select";
 import PasswordInput from "@/components/PasswordInput";
@@ -30,6 +30,7 @@ import {
 import { createUserSchema, createUserSchemaType } from "./userSchema";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslation } from "react-i18next";
 dayjs.extend(utc);
 
 interface CreateUserProps {
@@ -50,7 +51,8 @@ export default function CreateUserModal({
   const [user, setUser] = useState<IUser>(DefaultUser);
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<File | null>(null);
-
+  const { t } = useTranslation();
+  const genderOptions = createGenderOptions(t);
   const {
     register,
     handleSubmit,

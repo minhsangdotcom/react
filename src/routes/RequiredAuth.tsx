@@ -2,7 +2,7 @@ import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAppSelector } from "@/store/hook";
 
-const PrivateRoute: React.FC = () => {
+const RequiredAuth: React.FC = () => {
   const { token } = useAppSelector((store) => store.auth);
 
   if (!token) {
@@ -11,4 +11,4 @@ const PrivateRoute: React.FC = () => {
   return <Outlet />;
 };
 
-export default PrivateRoute;
+export default RequiredAuth;

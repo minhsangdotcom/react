@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from "@dscn/components/ui/select";
 import { cn } from "@dscn/lib/utils";
-import localStorageHelper from "@utils/storages/localStorageHelper";
+import { localStorageUtil } from "@/utils/storages/localStorageUtil";
 import queryString from "query-string";
 import { Params } from "@/types/Params";
 interface DataTablePaginationProps<TData> extends React.ComponentProps<"div"> {
@@ -128,7 +128,7 @@ export function DataTablePagination<TData>({
                 return;
               }
               const params = new URLSearchParams(window.location.search);
-              const pageInfo = localStorageHelper.get<{
+              const pageInfo = localStorageUtil.get<{
                 previous: string;
                 next: string;
               }>("paginationInfo");
@@ -164,7 +164,7 @@ export function DataTablePagination<TData>({
 }
 
 function getCursorPagedInfo() {
-  return localStorageHelper.get<{
+  return localStorageUtil.get<{
     previous: string;
     next: string;
     hasNextPage: number;

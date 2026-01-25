@@ -10,6 +10,8 @@ import {
 } from "./resetPasswordSchema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslation } from "react-i18next";
+import { TRANSLATION_KEYS } from "@/config/translationKey";
 
 export default function ResetPassword() {
   const [search] = useSearchParams();
@@ -17,7 +19,7 @@ export default function ResetPassword() {
   const email = search.get("email") ?? "";
 
   const [loading, setLoading] = useState(false);
-
+  const { t } = useTranslation();
   const {
     register,
     handleSubmit,
@@ -37,24 +39,32 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="w-full md:w-md my-20 md:my-10">
       <form
         onSubmit={handleSubmit(submit)}
-        className="p-5 rounded-lg shadow w-full md:w-md"
+        className="rounded-lg shadow p-5 h-auto"
       >
-        <h2 className="text-xl font-semibold mb-2">Reset your password</h2>
+        <h2 className="text-xl font-semibold mb-2">
+          {t(TRANSLATION_KEYS.resetPassword.title)}
+        </h2>
+
         <PasswordInput
-          label="New password"
+          label={t(TRANSLATION_KEYS.resetPassword.form.newPassword)}
           {...register("password")}
           error={errors.password?.message}
         />
 
         <PasswordInput
-          label="Confirm password"
+          label={t(TRANSLATION_KEYS.resetPassword.form.confirmPassword)}
           {...register("confirmPassword")}
           error={errors.confirmPassword?.message}
         />
-        <LoadingButton loading={loading} text="Reset Password" type="submit" />
+
+        <LoadingButton
+          loading={loading}
+          text={t(TRANSLATION_KEYS.resetPassword.button.send)}
+          type="submit"
+        />
       </form>
     </div>
   );

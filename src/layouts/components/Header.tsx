@@ -2,7 +2,7 @@ import { SidebarTrigger } from "@dscn/components/ui/sidebar";
 import { profileAsync } from "@features/profile/profileAction";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { useEffect, useRef, useState } from "react";
-import { UserAvatarMenu } from "./UserAvatarMenu";
+import { NavbarAvatar } from "./NavbarAvatar";
 import { IUserProfileResponse } from "@/features/profile/IUserProfile";
 import { defaultAvatarPicker } from "@/utils/defaultAvatarPicker";
 import { Language } from "./Language";
@@ -58,7 +58,7 @@ export default function AdminLayout() {
           }}
         />
         {!loading ? (
-          <UserAvatarMenu avatarUrl={avatar} />
+          <NavbarAvatar avatarUrl={avatar} />
         ) : (
           <Avatar className="h-8 w-8 md:h-10 md:w-10 cursor-pointer">
             <AvatarFallback>

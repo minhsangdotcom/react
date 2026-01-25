@@ -15,8 +15,8 @@ export default function Layout() {
 
         <div className="overflow-y-auto">
           <Outlet />
+          <Footer />
         </div>
-        <Footer />
       </SidebarInset>
     </SidebarProvider>
   );

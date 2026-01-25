@@ -1,13 +1,13 @@
 import { LanguageCode } from "@/types/LanguageType";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import Config from "@config/keyConfig";
+import { APP_KEY } from "@/config/key";
 import { DEFAULT_LANGUAGE } from "@config/i18nConfig";
-import localStorageHelper from "@/utils/storages/localStorageHelper";
+import { localStorageUtil } from "@/utils/storages/localStorageUtil";
 const getInitialLanguage = (): LanguageCode => {
   if (typeof window === "undefined") return DEFAULT_LANGUAGE as LanguageCode;
   return (
-    (localStorageHelper.get<string>(Config.currentLanguage) as LanguageCode) ??
+    (localStorageUtil.get<string>(APP_KEY.language) as LanguageCode) ??
     DEFAULT_LANGUAGE
   );
 };
@@ -25,7 +25,7 @@ const languageSlice = createSlice({
   initialState,
   reducers: {
     selectLanguage(state, action: PayloadAction<LanguageCode>) {
-      localStorageHelper.set<string>(Config.currentLanguage, action.payload);
+      localStorageUtil.set<string>(APP_KEY.language, action.payload);
       return { ...state, code: action.payload };
     },
   },

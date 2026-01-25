@@ -3,7 +3,7 @@ import { IStorage, ICookieOptions } from "./IStorage";
 import { env } from "@config/env";
 import Cookies from "js-cookie";
 
-const cookieStorageHelper: IStorage = {
+export const cookieUtil: IStorage = {
   set: function <T>(key: string, value: T, options?: ICookieOptions): void {
     const prefixKey = `${env.storagePrefix}_${key}`;
     const cookieOptions: Cookies.CookieAttributes = {
@@ -38,7 +38,7 @@ const cookieStorageHelper: IStorage = {
     Cookies.remove(prefixKey, { path: "/" });
   },
   clear: function (prefix: string = ""): void {
-    const all = Cookies.get(); // returns Record<string, string>
+    const all = Cookies.get();
     Object.keys(all).forEach((cookieKey) => {
       if (cookieKey.startsWith(prefix)) {
         Cookies.remove(cookieKey, { path: "/" });
@@ -46,5 +46,3 @@ const cookieStorageHelper: IStorage = {
     });
   },
 };
-
-export default cookieStorageHelper;

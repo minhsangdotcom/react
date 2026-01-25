@@ -1,8 +1,8 @@
-import localStorageHelper from "@utils/storages/localStorageHelper";
-import Config from "@config/keyConfig";
+import { localStorageUtil } from "@/utils/storages/localStorageUtil";
+import { APP_KEY } from "@/config/key";
 
 export const DEFAULT_LANGUAGE =
-  localStorageHelper.get<string>(Config.currentLanguage) ??
+  localStorageUtil.get<string>(APP_KEY.language) ??
   (import.meta.env.VITE_DEFAULT_LANGUAGE as string);
 
 export const SUPPORTED_LANGUAGES = (

@@ -1,9 +1,9 @@
-import { IStorage, ICookieOptions } from "./IStorage";
+import { IStorage } from "./IStorage";
 
 import { env } from "@config/env";
 
-const localStorageHelper: IStorage = {
-  set: function <T>(key: string, value: T, options?: ICookieOptions): void {
+export const localStorageUtil: IStorage = {
+  set: function <T>(key: string, value: T): void {
     const prefixKey = `${env.storagePrefix}_${key}`;
     try {
       localStorage.setItem(prefixKey, JSON.stringify(value));
@@ -35,5 +35,3 @@ const localStorageHelper: IStorage = {
     });
   },
 };
-
-export default localStorageHelper;

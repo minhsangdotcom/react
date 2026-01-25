@@ -30,7 +30,7 @@ import { userService } from "@/features/user/userService";
 import filterParser from "@utils/queryParams/filterParser";
 import { IPageInfo, IPagination } from "@/types/IResponse";
 import { Checkbox } from "@dscn/components/ui/checkbox";
-import localStorageHelper from "@utils/storages/localStorageHelper";
+import { localStorageUtil } from "@/utils/storages/localStorageUtil";
 import { DataTableFilterMenu } from "@/design-system/cn/components/data-table/data-table-filter-menu";
 import SearchBar from "@components/SearchBar";
 import CreateUserModal from "./CreateUserModal";
@@ -372,7 +372,7 @@ export default function User() {
   //         const paging = result?.data?.results?.paging as IPageInfo;
   //         setUser([...new Set(data)]);
   //         setPageInfo({ ...paging });
-  //         localStorageHelper.set("paginationInfo", {
+  //         localStorageUtil.set("paginationInfo", {
   //           previous: paging?.before ?? "",
   //           next: paging?.after ?? "",
   //           hasNextPage: paging?.hasNextPage,
@@ -421,7 +421,7 @@ export default function User() {
 
       setUser([...new Set([...users])]);
       setPageInfo({ ...paging });
-      localStorageHelper.set("paginationInfo", {
+      localStorageUtil.set("paginationInfo", {
         previous: paging?.before ?? "",
         next: paging?.after ?? "",
         hasNextPage: paging?.hasNextPage,

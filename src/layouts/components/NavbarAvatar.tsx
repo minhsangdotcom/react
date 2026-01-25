@@ -16,8 +16,9 @@ import { useNavigate } from "react-router-dom";
 import { logout } from "@features/auth/authSlice";
 import { useAppDispatch } from "@/store/hook";
 import { useTranslation } from "react-i18next";
+import { TRANSLATION_KEYS } from "@/config/translationKey";
 
-export function UserAvatarMenu({ avatarUrl }: { avatarUrl?: string }) {
+export function NavbarAvatar({ avatarUrl }: { avatarUrl?: string }) {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
@@ -34,18 +35,19 @@ export function UserAvatarMenu({ avatarUrl }: { avatarUrl?: string }) {
       {/* MENU */}
       <DropdownMenuContent side="bottom" align="end">
         <DropdownMenuItem onClick={() => navigate("/profile")}>
-          {t("navbar.profile.value")}
+          {t(TRANSLATION_KEYS.navbar.profile.value)}
         </DropdownMenuItem>
+
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>
-            {t("navbar.profile.settings.value")}
+            {t(TRANSLATION_KEYS.navbar.profile.settings.value)}
           </DropdownMenuSubTrigger>
           <DropdownMenuPortal>
             <DropdownMenuSubContent>
               <DropdownMenuItem
                 onClick={() => navigate("settings/change-password")}
               >
-                {t("navbar.profile.settings.changePassword")}
+                {t(TRANSLATION_KEYS.navbar.profile.settings.changePassword)}
               </DropdownMenuItem>
             </DropdownMenuSubContent>
           </DropdownMenuPortal>
@@ -59,7 +61,7 @@ export function UserAvatarMenu({ avatarUrl }: { avatarUrl?: string }) {
             dispatch(logout());
           }}
         >
-          {t("navbar.profile.Logout")}
+          {t(TRANSLATION_KEYS.navbar.profile.logout)}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

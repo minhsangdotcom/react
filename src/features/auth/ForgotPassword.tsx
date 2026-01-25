@@ -2,10 +2,13 @@ import { FormEvent, useState } from "react";
 import authService from "@features/auth/authService";
 import Input from "@/components/Input";
 import LoadingButton from "@components/LoadingButton";
+import { useTranslation } from "react-i18next";
+import { TRANSLATION_KEYS } from "@/config/translationKey";
 
-export default function RequestResetPassword() {
+export default function ForgotPassword() {
   const [email, setEmail] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -14,24 +17,33 @@ export default function RequestResetPassword() {
     setLoading(false);
   };
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="my-20 md:my-10">
       <form
         onSubmit={handleSubmit}
-        className="rounded-lg shadow p-5 w-full md:w-md"
+        className="rounded-lg shadow p-5 w-full md:w-md h-auto"
       >
-        <h2 className="text-xl font-semibold mb-2">Forgot your password?</h2>
+        <h2 className="text-xl font-semibold mb-2">
+          {t(TRANSLATION_KEYS.forgotPassword.title)}
+        </h2>
+
         <p className="text-muted-foreground mb-6">
-          Enter your email address and we will send you a reset link.
+          {t(TRANSLATION_KEYS.forgotPassword.description)}
         </p>
+
         <Input
-          label="Email"
+          label={t(TRANSLATION_KEYS.forgotPassword.form.email)}
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           inputName="email"
           required
         />
-        <LoadingButton loading={loading} text="Send Reset Link" type="submit" />
+
+        <LoadingButton
+          loading={loading}
+          text={t(TRANSLATION_KEYS.forgotPassword.button.send)}
+          type="submit"
+        />
       </form>
     </div>
   );

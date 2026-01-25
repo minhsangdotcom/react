@@ -51,6 +51,12 @@ export function tokenHandler(config: InternalAxiosRequestConfig<any>) {
   }
 }
 
+export function languageHandler(config: InternalAxiosRequestConfig<any>) {
+  const store = getStore();
+  const language = store.getState().language.code;
+  config.headers["Accept-Language"] = language;
+}
+
 export async function refreshTokenHandler(
   error: AxiosError,
   api: AxiosInstance

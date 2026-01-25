@@ -15,8 +15,8 @@
     }
   },
   "navigation": {
-    "User": "User Management",
-    "Role": "Role Management"
+    "User": "User",
+    "Role": "Role"
   },
   "navbar": {
     "profile": {
@@ -28,7 +28,56 @@
       "Logout": "Logout"
     }
   },
-  "footer":{
+  "footer": {
     "builtBy": "Built by"
+  },
+  "login": {
+    "title": "Login",
+    "form": {
+      "identifier": "Username or Email",
+      "password": "Password"
+    },
+    "button": {
+      "signin": "Sign In"
+    },
+    "link": {
+      "forgotPassword": "Forgot password"
+    }
+  },
+  "forgotPassword": {
+    "title": "Forgot your password",
+    "description": "Enter your email address and we will send you a reset link",
+    "form": {
+      "email": "Email"
+    },
+    "button": {
+      "send": "Send Reset Link"
+    }
+  },
+  "resetPassword": {
+    "title": "Reset your password",
+    "form": {
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password"
+    },
+    "button": {
+      "send": "Reset Password"
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "form": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email Address",
+      "phoneNumber": "Phone Number",
+      "dateOfBirth": "Date of Birth",
+      "gender": "Gender"
+    },
+    "gender": {
+      "male": "Male",
+      "female": "Female",
+      "other": "Other"
+    }
   }
 }

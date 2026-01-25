@@ -1,17 +1,18 @@
+import { TRANSLATION_KEYS } from "@/config/translationKey";
 import { Github, Linkedin, Mail, Facebook } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export default function Footer() {
   const { t } = useTranslation();
   return (
-    <footer className="border-t bg-background px-6 py-4 text-sm text-muted-foreground">
+    <footer className="border-t bg-background px-6 py-4 text-sm text-muted-foreground mt-5">
       <div className="flex flex-col gap-2 items-center justify-between md:flex-row">
         {/* Left: Author */}
         <div className="flex flex-col md:flex-row gap-2">
           <span className="text-center">© {new Date().getFullYear()} CMS</span>
           <span className="hidden md:inline">•</span>
           <span>
-            {t("footer.builtBy")}{" "}
+            {t(TRANSLATION_KEYS.footer.builtBy)}{"\t"}
             <strong className="text-foreground">Tran Minh Sang</strong>
           </span>
         </div>

@@ -1,15 +1,15 @@
-import localStorageHelper from "@/utils/storages/localStorageHelper";
+import { localStorageUtil } from "@/utils/storages/localStorageUtil";
 import { createSlice } from "@reduxjs/toolkit";
-import keyConfig from "@/config/keyConfig";
+import { APP_KEY } from "@/config/key";
 import { profileAsync } from "./profileAction";
 import { IUserProfileResponse } from "./IUserProfile";
 import IResponse from "@/types/IResponse";
 
-interface IProfileInfo {
+interface ProfileInfo {
   user?: IUserProfileResponse | null;
 }
 
-interface IProfileState extends IProfileInfo {
+interface ProfileState extends ProfileInfo {
   isLoading: boolean;
   error: any;
 }
@@ -18,7 +18,7 @@ const initialState = {
   user: null,
   isLoading: false,
   error: null,
-} as IProfileState;
+} as ProfileState;
 
 const profileSlice = createSlice({
   name: "profile",
@@ -26,17 +26,17 @@ const profileSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(profileAsync.pending, (state: IProfileState) => {
+      .addCase(profileAsync.pending, (state: ProfileState) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(profileAsync.fulfilled, (state: IProfileState, action) => {
+      .addCase(profileAsync.fulfilled, (state: ProfileState, action) => {
         const result = action.payload.data as
           | IResponse<IUserProfileResponse>
           | undefined;
         const user = result?.results as IUserProfileResponse | undefined;
 
-        localStorageHelper.set<IProfileInfo>(keyConfig.profileInfoKey, {
+        localStorageUtil.set<ProfileInfo>(APP_KEY.profileState, {
           user,
         });
 
@@ -47,7 +47,7 @@ const profileSlice = createSlice({
           user,
         };
       })
-      .addCase(profileAsync.rejected, (state: IProfileState, action) => {
+      .addCase(profileAsync.rejected, (state: ProfileState, action) => {
         return {
           ...state,
           isLoading: false,

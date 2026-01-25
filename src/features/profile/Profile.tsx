@@ -5,7 +5,7 @@ import profileService from "@features/profile/profileService";
 import LoadingButton from "@components/LoadingButton";
 import { IUserProfileResponse } from "@/features/profile/IUserProfile";
 import Select from "react-select";
-import { Gender, genderOptions } from "@/features/user/Gender";
+import { Gender, createGenderOptions } from "@/features/user/Gender";
 import { DateInput } from "@mantine/dates";
 import Edit from "@assets/icons/edit-icon.png";
 
@@ -17,6 +17,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { defaultAvatarPicker } from "@/utils/defaultAvatarPicker";
 import { showSuccessToast } from "@/notifications/toastSuccess";
+import { TRANSLATION_KEYS } from "@/config/translationKey";
+import { useTranslation } from "react-i18next";
 
 dayjs.extend(utc);
 
@@ -26,6 +28,8 @@ export default function Profile() {
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
   const [userAvatar, setUserAvatar] = useState<string | null>(null);
   const [avatar, setAvatar] = useState<File | null>(null);
+  const { t } = useTranslation();
+  const genderOptions = createGenderOptions(t);
 
   const {
     register,
@@ -109,7 +113,7 @@ export default function Profile() {
 
   return (
     <div className="flex items-center justify-between">
-      <div className="w-full px-4 sm:px-0 sm:max-w-md md:max-w-lg 2xl:max-w-2xl mt-3 mx-auto">
+      <div className="w-full px-4 py-4 sm:px-0 sm:max-w-md md:max-w-lg 2xl:max-w-2xl mt-3 mx-auto">
         <div className="flex items-center gap-4 mb-3 p-5">
           {/* Avatar */}
           <div className="relative shrink-0">
@@ -136,7 +140,7 @@ export default function Profile() {
         <form className="profile-form" onSubmit={handleSubmit(submit)}>
           <div className="row">
             <div className="field">
-              <label>First Name</label>
+              <label>{t(TRANSLATION_KEYS.profile.form.firstName)}</label>
               <input {...register("firstName")} />
               {errors.firstName?.message && (
                 <span className="text-xs text-red-500">
@@ -144,8 +148,9 @@ export default function Profile() {
                 </span>
               )}
             </div>
+
             <div className="field">
-              <label>Last Name</label>
+              <label>{t(TRANSLATION_KEYS.profile.form.lastName)}</label>
               <input {...register("lastName")} />
             </div>
             {errors.lastName?.message && (
@@ -157,7 +162,7 @@ export default function Profile() {
 
           <div className="row">
             <div className="field">
-              <label>Email Address</label>
+              <label>{t(TRANSLATION_KEYS.profile.form.email)}</label>
               <input type="email" {...register("email")} />
               {errors.email?.message && (
                 <span className="text-xs text-red-500">
@@ -165,8 +170,9 @@ export default function Profile() {
                 </span>
               )}
             </div>
+
             <div className="field">
-              <label>Phone Number</label>
+              <label>{t(TRANSLATION_KEYS.profile.form.phoneNumber)}</label>
               <input {...register("phoneNumber")} />
               {errors.phoneNumber?.message && (
                 <span className="text-xs text-red-500">
@@ -178,7 +184,7 @@ export default function Profile() {
 
           <div className="row">
             <div className="field">
-              <label>Date of Birth</label>
+              <label>{t(TRANSLATION_KEYS.profile.form.dateOfBirth)}</label>
               <Controller
                 name="dateOfBirth"
                 control={control}
@@ -190,14 +196,14 @@ export default function Profile() {
                     maxDate={new Date(new Date().getFullYear() - 18, 11, 31)}
                     minDate={new Date(new Date().getFullYear() - 100, 0, 1)}
                     valueFormat="DD/MM/YYYY"
-                    placeholder="Date of Birth"
+                    placeholder={t(TRANSLATION_KEYS.profile.form.dateOfBirth)}
                   />
                 )}
               />
             </div>
 
             <div className="field">
-              <label>Gender</label>
+              <label>{t(TRANSLATION_KEYS.profile.form.gender)}</label>
               <Controller
                 name="gender"
                 control={control}
@@ -228,7 +234,7 @@ export default function Profile() {
           <div className="btn-wrapper">
             <LoadingButton
               loading={submitLoading}
-              text="Save Changes"
+              text={t(TRANSLATION_KEYS.common.actions.save)}
               type="submit"
               className="save-btn"
             />

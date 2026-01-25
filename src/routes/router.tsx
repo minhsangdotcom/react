@@ -1,6 +1,6 @@
 import { BrowserRouter, useRoutes } from "react-router-dom";
-import PublicRoutes from "@/routes/PublicRoutes";
-import PrivateRoutes from "@/routes/PrivateRoutes";
+import PublicRoutes from "@/routes/PublicRoute";
+import PrivateRoutes from "@/routes/PrivateRoute";
 
 const AppRoutes = () => {
   const routes = useRoutes([...PublicRoutes, PrivateRoutes]);

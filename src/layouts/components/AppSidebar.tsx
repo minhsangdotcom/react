@@ -1,31 +1,16 @@
-import {
-  User,
-  Shield,
-  ChevronRight,
-  Lock,
-  User2,
-  User2Icon,
-} from "lucide-react";
+import { Shield, User2 } from "lucide-react";
 
 import {
   Sidebar,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubItem,
   useSidebar,
 } from "@dscn/components/ui/sidebar";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@radix-ui/react-collapsible";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ComponentType } from "react";
-import { cn } from "@/design-system/cn/lib/utils";
+import { TRANSLATION_KEYS } from "@/config/translationKey";
 
 interface SidebarItem {
   title: string;
@@ -47,12 +32,12 @@ function getGroups(): GroupType[] {
       icon: null,
       items: [
         {
-          title: t("navigation.User"),
+          title: t(TRANSLATION_KEYS.navigation.user),
           url: "/identity/users",
           icon: User2,
         },
         {
-          title: t("navigation.Role"),
+          title: t(TRANSLATION_KEYS.navigation.role),
           url: "/identity/roles",
           icon: Shield,
         },
