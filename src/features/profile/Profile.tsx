@@ -114,7 +114,7 @@ export default function Profile() {
 
   return (
     <div className="flex items-center justify-between">
-      <div className="w-full px-4 py-4 sm:px-0 sm:max-w-md md:max-w-lg 2xl:max-w-2xl mt-3 mx-auto">
+      <div className="w-full px-4 pb-10 sm:px-0 sm:max-w-md md:max-w-lg 2xl:max-w-2xl mt-3 mx-auto">
         <div className="flex items-center gap-4 mb-3 p-5">
           {/* Avatar */}
           <div className="relative shrink-0">
