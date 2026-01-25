@@ -79,5 +79,16 @@
       "female": "Nữ",
       "other": "Khác"
     }
+  },
+  "changePassword": {
+    "title": "Đổi mật khẩu",
+    "form": {
+      "currentPassword": "Mật khẩu hiện tại",
+      "newPassword": "Mật khẩu mới",
+      "confirmPassword": "Xác nhận mật khẩu"
+    },
+    "button": {
+      "submit": "Đổi mật khẩu"
+    }
   }
 }

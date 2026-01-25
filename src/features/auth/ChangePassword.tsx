@@ -11,6 +11,8 @@ import { useState } from "react";
 import { showSuccessToast } from "@/notifications/toastSuccess";
 import { useAppDispatch } from "@/store/hook";
 import { logout } from "./authSlice";
+import { TRANSLATION_KEYS } from "@/config/translationKey";
+import { useTranslation } from "react-i18next";
 
 export default function ChangePassword() {
   const {
@@ -22,6 +24,7 @@ export default function ChangePassword() {
   });
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   async function onsubmit(data: ChangePasswordSchemaType) {
     setLoading(true);
@@ -42,23 +45,33 @@ export default function ChangePassword() {
         className="p-5 rounded-lg shadow w-full md:w-md"
         onSubmit={handleSubmit(onsubmit)}
       >
-        <h2 className="text-xl font-semibold mb-2">Change your password</h2>
+        <h2 className="text-xl font-semibold mb-2">
+          {t(TRANSLATION_KEYS.changePassword.title)}
+        </h2>
+
         <PasswordInput
-          label="Current password"
+          label={t(TRANSLATION_KEYS.changePassword.form.currentPassword)}
           {...register("oldPassword")}
           error={errors.oldPassword?.message}
         />
+
         <PasswordInput
-          label="New password"
+          label={t(TRANSLATION_KEYS.changePassword.form.newPassword)}
           {...register("password")}
           error={errors.password?.message}
         />
+
         <PasswordInput
-          label="Confirm password"
+          label={t(TRANSLATION_KEYS.changePassword.form.confirmPassword)}
           {...register("confirmPassword")}
           error={errors.confirmPassword?.message}
         />
-        <LoadingButton loading={loading} text="Change password" type="submit" />
+
+        <LoadingButton
+          loading={loading}
+          text={t(TRANSLATION_KEYS.common.actions.save)}
+          type="submit"
+        />
       </form>
     </div>
   );

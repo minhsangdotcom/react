@@ -86,4 +86,12 @@ export const TRANSLATION_KEYS = {
       other: "profile.gender.other",
     },
   },
+  changePassword: {
+    title: "changePassword.title",
+    form: {
+      currentPassword: "changePassword.form.currentPassword",
+      newPassword: "changePassword.form.newPassword",
+      confirmPassword: "changePassword.form.confirmPassword",
+    },
+  },
 } as const;

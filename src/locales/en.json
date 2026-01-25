@@ -79,5 +79,13 @@
       "female": "Female",
       "other": "Other"
     }
+  },
+  "changePassword": {
+    "title": "Change your password",
+    "form": {
+      "currentPassword": "Current password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password"
+    }
   }
 }
