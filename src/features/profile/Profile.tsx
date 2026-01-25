@@ -19,6 +19,7 @@ import { defaultAvatarPicker } from "@/utils/defaultAvatarPicker";
 import { showSuccessToast } from "@/notifications/toastSuccess";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
 import { useTranslation } from "react-i18next";
+import clsx from "clsx";
 
 dayjs.extend(utc);
 
@@ -141,7 +142,10 @@ export default function Profile() {
           <div className="row">
             <div className="field">
               <label>{t(TRANSLATION_KEYS.profile.form.firstName)}</label>
-              <input {...register("firstName")} />
+              <input
+                {...register("firstName")}
+                className={errors.firstName && "border-red-500!"}
+              />
               {errors.firstName?.message && (
                 <span className="text-xs text-red-500">
                   {errors.firstName?.message}
@@ -151,19 +155,26 @@ export default function Profile() {
 
             <div className="field">
               <label>{t(TRANSLATION_KEYS.profile.form.lastName)}</label>
-              <input {...register("lastName")} />
+              <input
+                className={errors.lastName?.message && "border-red-500!"}
+                {...register("lastName")}
+              />
+              {errors.lastName?.message && (
+                <span className="text-xs text-red-500">
+                  {errors.lastName?.message}
+                </span>
+              )}
             </div>
-            {errors.lastName?.message && (
-              <span className="text-xs text-red-500">
-                {errors.lastName?.message}
-              </span>
-            )}
           </div>
 
           <div className="row">
             <div className="field">
               <label>{t(TRANSLATION_KEYS.profile.form.email)}</label>
-              <input type="email" {...register("email")} />
+              <input
+                type="email"
+                {...register("email")}
+                className={errors.email?.message && "border-red-500!"}
+              />
               {errors.email?.message && (
                 <span className="text-xs text-red-500">
                   {errors.email?.message}
