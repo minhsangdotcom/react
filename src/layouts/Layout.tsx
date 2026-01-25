@@ -15,7 +15,6 @@ export default function Layout() {
 
         <main className="flex-1 overflow-y-auto overflow-x-hidden">
           <Outlet />
-          <Footer />
         </main>
       </SidebarInset>
     </SidebarProvider>

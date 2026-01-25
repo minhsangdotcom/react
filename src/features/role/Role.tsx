@@ -230,7 +230,7 @@ export default function Role() {
 
   if (referenceLoading) {
     return (
-      <div className="px-3 py-3 h-[calc(100vh-64px-105px)] md:h-[calc(100vh-64px-53px)]">
+      <div className="px-4 h-[calc(100vh-64px)]">
         <Loading />
       </div>
     );
@@ -238,7 +238,7 @@ export default function Role() {
 
   return (
     <>
-      <div className="p-3 min-h-screen">
+      <div className="p-4 md:p-6 w-full">
         {/* Header with Title */}
         <h1 className="text-xl font-semibold text-gray-800 mt-5 ml-2">Role</h1>
 
