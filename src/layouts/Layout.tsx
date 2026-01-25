@@ -8,15 +8,15 @@ export default function Layout() {
   return (
     <SidebarProvider defaultOpen={false}>
       <AppSidebar />
-      <SidebarInset className="flex flex-col min-h-screen w-full p-0 m-0">
-        <div className="sticky top-0 z-40">
+      <SidebarInset className="flex flex-col h-screen w-full overflow-hidden">
+        <div className="shrink-0">
           <Header />
         </div>
 
-        <div className="overflow-y-auto">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden">
           <Outlet />
           <Footer />
-        </div>
+        </main>
       </SidebarInset>
     </SidebarProvider>
   );
