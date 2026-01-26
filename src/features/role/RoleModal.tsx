@@ -19,6 +19,8 @@ import { roleSchema, roleSchemaType } from "./roleSchema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IApiResult } from "@/utils/http/IApiResult";
+import { useTranslation } from "react-i18next";
+import { TRANSLATION_KEYS } from "@/config/translationKey";
 
 interface PermissionNodeProps {
   node: IPermission;
@@ -53,6 +55,7 @@ export default function RoleModal({
 
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!open) {
@@ -178,11 +181,13 @@ export default function RoleModal({
                       ? "border-red-300 focus:ring-red-300"
                       : "focus:border-blue-200 focus:ring-blue-300"
                   }`}
-                  placeholder="Role Name"
+                  placeholder={t(TRANSLATION_KEYS.role.form.name)}
                   {...register("name")}
                 />
                 {errors.name && (
-                  <p className="text-sm text-red-500">{errors.name?.message}</p>
+                  <p className="text-sm text-red-500">
+                    {t(errors.name?.message as any)}
+                  </p>
                 )}
 
                 <textarea
@@ -191,12 +196,12 @@ export default function RoleModal({
                       ? "border-red-300 focus:ring-red-300"
                       : "focus:border-blue-200 focus:ring-blue-300"
                   }`}
-                  placeholder="Description"
+                  placeholder={t(TRANSLATION_KEYS.role.form.description)}
                   {...register("description")}
                 />
                 {errors.description && (
                   <p className="text-sm text-red-500">
-                    {errors.description?.message}
+                    {t(errors.description?.message as any)}
                   </p>
                 )}
               </div>
@@ -229,18 +234,18 @@ export default function RoleModal({
           <DialogFooter className="flex justify-end space-x-2 pt-6">
             <DialogClose asChild>
               <button
-                className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
+                className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer w-full"
                 onClick={() => {
                   reset({ name: "", description: "" });
                   onRequestClose();
                 }}
               >
-                Cancel
+                {t(TRANSLATION_KEYS.common.actions.cancel)}
               </button>
             </DialogClose>
             <LoadingButton
               loading={submitLoading}
-              text={roleId ? "Update" : "Create"}
+              text={t(TRANSLATION_KEYS.common.actions.save)}
               onClick={handleSubmit(submit)}
               type="button"
               className="px-4 py-2 rounded bg-brand-primary text-white hover:bg-brand-primary-hover cursor-pointer"

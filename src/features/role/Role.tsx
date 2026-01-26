@@ -30,6 +30,8 @@ import {
 import permissionService from "@/services/permission/permissionService";
 import { ulid } from "ulidx";
 import { Loading } from "@/components/Loading";
+import { useTranslation } from "react-i18next";
+import { TRANSLATION_KEYS } from "@/config/translationKey";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -43,6 +45,7 @@ export default function Role() {
   const [id, setId] = useState<string | null>(null);
   const [group, setGroup] = useState<IPermissionGroup[]>([]);
   const { code } = useAppSelector((store) => store.language);
+  const { t } = useTranslation();
 
   const columns = useMemo<ColumnDef<IRole>[]>(
     () => [
@@ -53,51 +56,43 @@ export default function Role() {
           <DataTableColumnHeader column={column} title="Id" />
         ),
         cell: ({ row }) => <div>{row.getValue("id")}</div>,
-        meta: {
-          label: "Id",
-          placeholder: "Search by Id...",
-          variant: "text",
-        },
-        enableColumnFilter: false,
       },
       {
         id: "name",
         accessorKey: "name",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Name" />
+          <DataTableColumnHeader
+            column={column}
+            id="name"
+            title={t(TRANSLATION_KEYS.role.table.fields.name)}
+          />
         ),
         cell: ({ row }) => <div>{row.getValue("name")}</div>,
-        meta: {
-          label: "Name",
-          placeholder: "Search by name...",
-          variant: "text",
-          //icon: Text,
-        },
-        enableColumnFilter: true,
       },
       {
         id: "description",
         accessorKey: "description",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Description" />
+          <DataTableColumnHeader
+            column={column}
+            id="description"
+            title={t(TRANSLATION_KEYS.role.table.fields.description)}
+          />
         ),
         cell: ({ row }) => {
           const description: string = row.getValue("description");
           return <div>{description ? description : "_"}</div>;
         },
-        meta: {
-          label: "Description",
-          placeholder: "Search by description...",
-          variant: "text",
-          //icon: Text,
-        },
-        enableColumnFilter: true,
       },
       {
         id: "createdAt",
         accessorKey: "createdAt",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Created At" />
+          <DataTableColumnHeader
+            column={column}
+            id="createdAt"
+            title={t(TRANSLATION_KEYS.common.table.fields.createdAt)}
+          />
         ),
         cell: ({ row }) => (
           <div>
@@ -107,13 +102,6 @@ export default function Role() {
               .format("DD/MM/YYYY")}
           </div>
         ),
-        meta: {
-          label: "Created At",
-          placeholder: "Search by description...",
-          variant: "dateRange",
-          //icon: Text ,
-        },
-        enableColumnFilter: true,
       },
       {
         id: "actions",
@@ -142,7 +130,7 @@ export default function Role() {
                     setOpen(true);
                   }}
                 >
-                  Edit
+                  {t(TRANSLATION_KEYS.common.actions.edit)}
                 </DropdownMenuItem>
 
                 <DropdownMenuItem
@@ -152,7 +140,7 @@ export default function Role() {
                     setDialogOpen(true);
                   }}
                 >
-                  Delete
+                  {t(TRANSLATION_KEYS.common.actions.delete)}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

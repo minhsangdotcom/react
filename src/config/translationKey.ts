@@ -13,6 +13,11 @@ export const TRANSLATION_KEYS = {
       export: "common.actions.export",
       import: "common.actions.import",
     },
+    table: {
+      fields: {
+        createdAt: "common.table.fields.createdAt",
+      },
+    },
   },
 
   navigation: {
@@ -151,6 +156,28 @@ export const TRANSLATION_KEYS = {
       gender: {
         required: "user.errors.gender.required",
         invalid: "user.errors.gender.invalid",
+      },
+    },
+  },
+  role: {
+    title: "role.title",
+    table: {
+      fields: {
+        name: "role.table.fields.name",
+        description: "role.table.fields.description",
+      },
+    },
+    form: {
+      name: "role.form.name",
+      description: "role.form.description",
+    },
+    errors: {
+      name: {
+        required: "role.errors.name.required",
+        tooLong: "role.errors.name.tooLong",
+      },
+      description: {
+        tooLong: "role.errors.description.tooLong",
       },
     },
   },

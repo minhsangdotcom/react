@@ -5,13 +5,18 @@
       "cancel": "Cancel",
       "delete": "Delete",
       "edit": "Edit",
-      "create": "Create",
+      "create": "Create New",
       "publish": "Publish",
       "draft": "Save as Draft",
       "search": "Search",
       "filter": "Filter",
       "export": "Export",
       "import": "Import"
+    },
+    "table": {
+      "fields": {
+        "createdAt": "Created At"
+      }
     }
   },
   "navigation": {
@@ -145,6 +150,28 @@
       "gender": {
         "required": "Gender is required",
         "invalid": "Invalid gender selection"
+      }
+    }
+  },
+  "role": {
+    "title": "Role",
+    "table": {
+      "fields": {
+        "name": "Name",
+        "description": "Description"
+      }
+    },
+    "form": {
+      "name": "Name",
+      "description": "Description"
+    },
+    "errors": {
+      "name": {
+        "required": "Role name is required",
+        "tooLong": "Role name is too long"
+      },
+      "description": {
+        "tooLong": "Description is too long"
       }
     }
   }

@@ -12,6 +12,11 @@
       "filter": "Lọc",
       "export": "Xuất",
       "import": "Nhập"
+    },
+    "table": {
+      "fields": {
+        "createdAt": "Ngày tạo"
+      }
     }
   },
   "navigation": {
@@ -148,6 +153,28 @@
       "gender": {
         "required": "Giới tính là bắt buộc",
         "invalid": "Giới tính không hợp lệ"
+      }
+    }
+  },
+  "role": {
+    "title": "Vai trò",
+    "table": {
+      "fields": {
+        "name": "Tên",
+        "description": "Mô tả"
+      }
+    },
+    "form": {
+      "name": "Tên",
+      "description": "Mô tả"
+    },
+    "errors": {
+      "name": {
+        "required": "Tên vai trò là bắt buộc",
+        "tooLong": "Tên vai trò quá dài"
+      },
+      "description": {
+        "tooLong": "Mô tả quá dài"
       }
     }
   }
