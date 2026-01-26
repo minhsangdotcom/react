@@ -42,6 +42,15 @@
     },
     "link": {
       "forgotPassword": "Forgot password"
+    },
+    "errors": {
+      "identifier": {
+        "required": "Username or email is required",
+        "invalid": "Username can only contain letters, numbers, dots, and underscores"
+      },
+      "password": {
+        "required": "Password is required"
+      }
     }
   },
   "forgotPassword": {
@@ -62,6 +71,17 @@
     },
     "button": {
       "send": "Reset Password"
+    },
+    "errors": {
+      "password": {
+        "required": "Password cannot be empty",
+        "invalid": "Password must be at least 8 characters and include an uppercase letter, a number, and a symbol"
+      },
+      "confirmPassword": {
+        "required": "Confirm password cannot be empty",
+        "invalid": "Confirm password must be at least 8 characters and include an uppercase letter, a number, and a symbol",
+        "notMatch": "Passwords do not match"
+      }
     }
   },
   "profile": {
@@ -86,6 +106,46 @@
       "currentPassword": "Current password",
       "newPassword": "New password",
       "confirmPassword": "Confirm password"
+    },
+    "errors": {
+      "currentPassword": {
+        "required": "Current password cannot be empty"
+      }
+    }
+  },
+  "user": {
+    "errors": {
+      "firstName": {
+        "required": "First name is required",
+        "tooLong": "First name is too long"
+      },
+      "lastName": {
+        "required": "Last name is required",
+        "tooLong": "Last name is too long"
+      },
+      "email": {
+        "required": "Email is required",
+        "invalid": "Email is invalid"
+      },
+      "phoneNumber": {
+        "invalidLength": "Phone number must contain 10–15 digits"
+      },
+      "dateOfBirth": {
+        "invalid": "Please enter a valid date",
+        "future": "Date of birth cannot be in the future"
+      },
+      "username": {
+        "required": "Username is required",
+        "invalid": "Username can only contain letters, numbers, dots, and underscores"
+      },
+      "password": {
+        "required": "Password is required",
+        "invalid": "Password must be at least 8 characters and include an uppercase letter, a number, and a symbol"
+      },
+      "gender": {
+        "required": "Gender is required",
+        "invalid": "Invalid gender selection"
+      }
     }
   }
 }

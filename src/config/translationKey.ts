@@ -47,6 +47,15 @@ export const TRANSLATION_KEYS = {
     link: {
       forgotPassword: "login.link.forgotPassword",
     },
+    errors: {
+      identifier: {
+        required: "login.errors.identifier.required",
+        invalid: "login.errors.identifier.invalid",
+      },
+      password: {
+        required: "login.errors.password.required",
+      },
+    },
   },
 
   forgotPassword: {
@@ -68,6 +77,17 @@ export const TRANSLATION_KEYS = {
     },
     button: {
       send: "resetPassword.button.send",
+    },
+    errors: {
+      password: {
+        required: "resetPassword.errors.password.required",
+        invalid: "resetPassword.errors.password.invalid",
+      },
+      confirmPassword: {
+        required: "resetPassword.errors.confirmPassword.required",
+        invalid: "resetPassword.errors.confirmPassword.invalid",
+        notMatch: "resetPassword.errors.confirmPassword.notMatch",
+      },
     },
   },
   profile: {
@@ -92,6 +112,46 @@ export const TRANSLATION_KEYS = {
       currentPassword: "changePassword.form.currentPassword",
       newPassword: "changePassword.form.newPassword",
       confirmPassword: "changePassword.form.confirmPassword",
+    },
+    errors: {
+      currentPassword: {
+        required: "changePassword.errors.currentPassword.required",
+      },
+    },
+  },
+  user: {
+    errors: {
+      firstName: {
+        required: "user.errors.firstName.required",
+        tooLong: "user.errors.firstName.tooLong",
+      },
+      lastName: {
+        required: "user.errors.lastName.required",
+        tooLong: "user.errors.lastName.tooLong",
+      },
+      email: {
+        required: "user.errors.email.required",
+        invalid: "user.errors.email.invalid",
+      },
+      phoneNumber: {
+        invalidLength: "user.errors.phoneNumber.invalidLength",
+      },
+      dateOfBirth: {
+        invalid: "user.errors.dateOfBirth.invalid",
+        future: "user.errors.dateOfBirth.future",
+      },
+      username: {
+        required: "user.errors.username.required",
+        invalid: "user.errors.username.invalid",
+      },
+      password: {
+        required: "user.errors.password.required",
+        invalid: "user.errors.password.invalid",
+      },
+      gender: {
+        required: "user.errors.gender.required",
+        invalid: "user.errors.gender.invalid",
+      },
     },
   },
 } as const;

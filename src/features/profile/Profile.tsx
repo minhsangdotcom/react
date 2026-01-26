@@ -19,7 +19,6 @@ import { defaultAvatarPicker } from "@/utils/defaultAvatarPicker";
 import { showSuccessToast } from "@/notifications/toastSuccess";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
 import { useTranslation } from "react-i18next";
-import clsx from "clsx";
 
 dayjs.extend(utc);
 
@@ -148,7 +147,7 @@ export default function Profile() {
               />
               {errors.firstName?.message && (
                 <span className="text-xs text-red-500">
-                  {errors.firstName?.message}
+                  {t(errors.firstName?.message as any)}
                 </span>
               )}
             </div>
@@ -161,7 +160,7 @@ export default function Profile() {
               />
               {errors.lastName?.message && (
                 <span className="text-xs text-red-500">
-                  {errors.lastName?.message}
+                  {t(errors.lastName?.message as any)}
                 </span>
               )}
             </div>
@@ -177,7 +176,7 @@ export default function Profile() {
               />
               {errors.email?.message && (
                 <span className="text-xs text-red-500">
-                  {errors.email?.message}
+                  {t(errors.email?.message as any)}
                 </span>
               )}
             </div>
@@ -187,7 +186,7 @@ export default function Profile() {
               <input {...register("phoneNumber")} />
               {errors.phoneNumber?.message && (
                 <span className="text-xs text-red-500">
-                  {errors.phoneNumber?.message}
+                  {t(errors.phoneNumber?.message as any)}
                 </span>
               )}
             </div>
@@ -204,8 +203,14 @@ export default function Profile() {
                     value={field.value}
                     onChange={field.onChange}
                     allowDeselect
-                    maxDate={new Date(new Date().getFullYear() - 18, 11, 31)}
-                    minDate={new Date(new Date().getFullYear() - 100, 0, 1)}
+                    maxDate={dayjs()
+                      .subtract(18, "year")
+                      .endOf("year")
+                      .toDate()}
+                    minDate={dayjs()
+                      .subtract(100, "year")
+                      .startOf("year")
+                      .toDate()}
                     valueFormat="DD/MM/YYYY"
                     placeholder={t(TRANSLATION_KEYS.profile.form.dateOfBirth)}
                   />
@@ -234,11 +239,6 @@ export default function Profile() {
                   />
                 )}
               />
-              {errors.gender?.message && (
-                <span className="text-xs text-red-500">
-                  {errors.gender?.message}
-                </span>
-              )}
             </div>
           </div>
 

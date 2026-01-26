@@ -1,17 +1,21 @@
+import { TRANSLATION_KEYS } from "@/config/translationKey";
 import { z } from "zod";
 
-const validatePassword = (property: string) =>
+const validatePassword = (notNullMessage: string, invalidMessage: string) =>
   z
     .string()
-    .nonempty(`${property} cannot be null`)
-    .regex(
-      /^(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/,
-      `${property} must be at least 8 characters and include an uppercase letter, a number, and a symbol`
-    );
+    .nonempty(notNullMessage)
+    .regex(/^(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/, invalidMessage);
 
 const resetPasswordValidator = z.object({
-  password: validatePassword("password"),
-  confirmPassword: validatePassword("confirmPassword"),
+  password: validatePassword(
+    TRANSLATION_KEYS.resetPassword.errors.password.required,
+    TRANSLATION_KEYS.resetPassword.errors.password.invalid
+  ),
+  confirmPassword: validatePassword(
+    TRANSLATION_KEYS.resetPassword.errors.confirmPassword.required,
+    TRANSLATION_KEYS.resetPassword.errors.confirmPassword.invalid
+  ),
 });
 
 const resetPasswordSchema = resetPasswordValidator.superRefine((data, ctx) => {
@@ -19,7 +23,7 @@ const resetPasswordSchema = resetPasswordValidator.superRefine((data, ctx) => {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       path: ["confirmPassword"],
-      message: "Passwords do not match",
+      message: TRANSLATION_KEYS.resetPassword.errors.confirmPassword.notMatch,
     });
   }
 });

@@ -51,7 +51,7 @@ export default function Login() {
           label={t(TRANSLATION_KEYS.login.form.identifier)}
           type="text"
           inputName="identifier"
-          error={errors.identifier?.message}
+          error={t(errors.identifier?.message as any)}
           autoComplete={t(TRANSLATION_KEYS.login.form.identifier)}
           {...register("identifier")}
         />
@@ -59,7 +59,7 @@ export default function Login() {
         <PasswordInput
           label={t(TRANSLATION_KEYS.login.form.password)}
           {...register("password")}
-          error={errors.password?.message}
+          error={t(errors.password?.message as any)}
         />
 
         <LoadingButton

@@ -8,6 +8,8 @@ type ManualDateInputProps = {
   placeholder?: string;
   className?: string;
   format?: string;
+  minDate?: Date;
+  maxDate?: Date;
 };
 
 export function DateInput({
@@ -16,14 +18,13 @@ export function DateInput({
   placeholder = "Date of Birth",
   className,
   format = "DD/MM/YYYY",
+  maxDate = dayjs().add(100, "year").endOf("year").toDate(),
+  minDate = dayjs().subtract(100, "year").startOf("year").toDate(),
 }: ManualDateInputProps) {
   const [opened, setOpened] = useState(false);
   const [dateInput, setDateInput] = useState<string>();
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const currentDate = new Date();
-  const max = new Date(currentDate.getFullYear() + 100, 11, 31);
-  const min = new Date(currentDate.getFullYear() - 100, 0, 1);
 
   useEffect(() => {
     if (value) {
@@ -63,7 +64,7 @@ export function DateInput({
 
             const date = parsed.toDate();
 
-            if (date < min || date > max) {
+            if (date < minDate || date > maxDate) {
               return;
             }
 
@@ -102,8 +103,8 @@ export function DateInput({
               onChange(date);
               setOpened(false);
             }}
-            maxDate={max}
-            minDate={min}
+            maxDate={maxDate}
+            minDate={minDate}
             allowDeselect
           />
         </div>

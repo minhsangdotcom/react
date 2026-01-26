@@ -52,19 +52,19 @@ export default function ChangePassword() {
         <PasswordInput
           label={t(TRANSLATION_KEYS.changePassword.form.currentPassword)}
           {...register("oldPassword")}
-          error={errors.oldPassword?.message}
+          error={t(errors.oldPassword?.message as any)}
         />
 
         <PasswordInput
           label={t(TRANSLATION_KEYS.changePassword.form.newPassword)}
           {...register("password")}
-          error={errors.password?.message}
+          error={t(errors.password?.message as any)}
         />
 
         <PasswordInput
           label={t(TRANSLATION_KEYS.changePassword.form.confirmPassword)}
           {...register("confirmPassword")}
-          error={errors.confirmPassword?.message}
+          error={t(errors.confirmPassword?.message as any)}
         />
 
         <LoadingButton

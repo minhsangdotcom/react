@@ -1,16 +1,23 @@
 import z from "zod";
 import { Gender } from "./Gender";
+import { TRANSLATION_KEYS } from "@/config/translationKey";
 
 const userSchema = z.object({
   firstName: z
     .string()
-    .nonempty("First name is required")
-    .max(100, "First name is too long"),
+    .nonempty(TRANSLATION_KEYS.user.errors.firstName.required)
+    .max(100, TRANSLATION_KEYS.user.errors.firstName.tooLong),
+
   lastName: z
     .string()
-    .nonempty("Last name is required")
-    .max(100, "Last name is too long"),
-  email: z.string().nonempty("Email is required").email("Email is invalid"),
+    .nonempty(TRANSLATION_KEYS.user.errors.lastName.required)
+    .max(100, TRANSLATION_KEYS.user.errors.lastName.tooLong),
+
+  email: z
+    .string()
+    .nonempty(TRANSLATION_KEYS.user.errors.email.required)
+    .email(TRANSLATION_KEYS.user.errors.email.invalid),
+
   phoneNumber: z
     .string()
     .nullable()
@@ -23,10 +30,11 @@ const userSchema = z.object({
       if (digits.length < 10 || digits.length > 15) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Phone number must contain 10–15 digits",
+          message: TRANSLATION_KEYS.user.errors.phoneNumber.invalidLength,
         });
       }
     }),
+
   dateOfBirth: z
     .string()
     .nullable()
@@ -40,7 +48,7 @@ const userSchema = z.object({
       if (isNaN(date.getTime())) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Please enter a valid date",
+          message: TRANSLATION_KEYS.user.errors.dateOfBirth.invalid,
         });
         return;
       }
@@ -48,7 +56,7 @@ const userSchema = z.object({
       if (date > new Date()) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Date of birth cannot be in the future",
+          message: TRANSLATION_KEYS.user.errors.dateOfBirth.future,
         });
       }
     }),
@@ -58,22 +66,21 @@ const createUserSchema = userSchema.extend({
   username: z
     .string()
     .trim()
-    .nonempty("Username is required")
-    .regex(
-      /^[a-zA-Z0-9_.@]+$/,
-      "Username can only contain letters, numbers, dot and underscores"
-    ),
+    .nonempty(TRANSLATION_KEYS.user.errors.username.required)
+    .regex(/^[a-zA-Z0-9_.@]+$/, TRANSLATION_KEYS.user.errors.username.invalid),
+
   password: z
     .string()
-    .nonempty("Password is required")
+    .nonempty(TRANSLATION_KEYS.user.errors.password.required)
     .regex(
       /^(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/,
-      `Password must be at least 8 characters and include an uppercase letter, a number, and a symbol`
+      TRANSLATION_KEYS.user.errors.password.invalid
     ),
+
   gender: z
     .enum(Object.values(Gender) as [string, ...string[]], {
-      required_error: "Gender is required",
-      invalid_type_error: "Invalid gender selection",
+      required_error: TRANSLATION_KEYS.user.errors.gender.required,
+      invalid_type_error: TRANSLATION_KEYS.user.errors.gender.invalid,
     })
     .nullable(),
 });

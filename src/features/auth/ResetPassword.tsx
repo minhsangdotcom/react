@@ -51,13 +51,13 @@ export default function ResetPassword() {
         <PasswordInput
           label={t(TRANSLATION_KEYS.resetPassword.form.newPassword)}
           {...register("password")}
-          error={errors.password?.message}
+          error={t(errors.password?.message as any)}
         />
 
         <PasswordInput
           label={t(TRANSLATION_KEYS.resetPassword.form.confirmPassword)}
           {...register("confirmPassword")}
-          error={errors.confirmPassword?.message}
+          error={t(errors.confirmPassword?.message as any)}
         />
 
         <LoadingButton

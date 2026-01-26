@@ -3,20 +3,22 @@ import {
   resetPasswordValidator,
   validatePassword,
 } from "./resetPasswordSchema";
+import { TRANSLATION_KEYS } from "@/config/translationKey";
 
 const changePasswordSchema = resetPasswordValidator
   .extend({
-    oldPassword: validatePassword("Current password"),
+    oldPassword: z.string().nonempty(TRANSLATION_KEYS.changePassword.errors.currentPassword.required),
   })
   .superRefine((data, ctx) => {
     if (data.password !== data.confirmPassword) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["confirmPassword"],
-        message: "Passwords do not match",
+        message: TRANSLATION_KEYS.resetPassword.errors.confirmPassword.notMatch,
       });
     }
   });
+
 export type ChangePasswordSchemaType = z.input<typeof changePasswordSchema>;
 
 export { changePasswordSchema };
