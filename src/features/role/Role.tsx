@@ -250,7 +250,7 @@ export default function Role() {
             setOpen(true);
           }}
         >
-          Create new
+          {t(TRANSLATION_KEYS.common.actions.create)}
         </button>
 
         <DataTable
