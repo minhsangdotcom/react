@@ -228,7 +228,9 @@ export default function Role() {
     <>
       <div className="p-4 md:p-6 w-full">
         {/* Header with Title */}
-        <h1 className="text-xl font-semibold text-gray-800 mt-5 ml-2">Role</h1>
+        <h1 className="text-xl font-semibold text-gray-800 mt-5 ml-2">
+          {t(TRANSLATION_KEYS.role.title)}
+        </h1>
 
         {/* Add Button aligned to the right */}
         <button
