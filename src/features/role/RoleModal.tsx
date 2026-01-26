@@ -232,23 +232,21 @@ export default function RoleModal({
 
           {/* Action buttons */}
           <DialogFooter className="flex justify-end space-x-2 pt-6">
-            <DialogClose asChild>
-              <button
-                className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer w-full"
-                onClick={() => {
-                  reset({ name: "", description: "" });
-                  onRequestClose();
-                }}
-              >
-                {t(TRANSLATION_KEYS.common.actions.cancel)}
-              </button>
-            </DialogClose>
+            <button
+              className="w-full md:w-auto px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
+              onClick={() => {
+                reset({ name: "", description: "" });
+                onRequestClose();
+              }}
+            >
+              {t(TRANSLATION_KEYS.common.actions.cancel)}
+            </button>
             <LoadingButton
               loading={submitLoading}
               text={t(TRANSLATION_KEYS.common.actions.save)}
               onClick={handleSubmit(submit)}
               type="button"
-              className="px-4 py-2 rounded bg-brand-primary text-white hover:bg-brand-primary-hover cursor-pointer"
+              className="w-full md:w-auto px-4 py-2 rounded bg-brand-primary text-white hover:bg-brand-primary-hover cursor-pointer"
             />
           </DialogFooter>
         </div>
