@@ -19,10 +19,10 @@
     "Role": "Role"
   },
   "navbar": {
-    "profile": {
-      "value": "Profile",
-      "settings": {
-        "value": "Settings",
+    "profileMenu": {
+      "profile": "Profile",
+      "settingAndSecurity": {
+        "value": "Settings & Security",
         "changePassword": "Change password"
       },
       "Logout": "Logout"

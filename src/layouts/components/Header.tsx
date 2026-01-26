@@ -22,6 +22,7 @@ export default function AdminLayout() {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<string>();
+  const [user, setUser] = useState<IUserProfileResponse>();
   const [language, setLanguage] = useState<string>(code);
   const { i18n } = useTranslation();
 
@@ -37,6 +38,7 @@ export default function AdminLayout() {
       .unwrap()
       .then((result) => {
         const user = result.data?.results as IUserProfileResponse;
+        setUser(user);
         setAvatar(user.avatar ?? defaultAvatarPicker.getAvatar(user.gender));
       })
       .finally(() => {
@@ -58,7 +60,11 @@ export default function AdminLayout() {
           }}
         />
         {!loading ? (
-          <NavbarAvatar avatarUrl={avatar} />
+          <NavbarAvatar
+            avatarUrl={avatar}
+            fullName={`${user?.firstName} ${user?.lastName}`}
+            email={user?.email ?? ""}
+          />
         ) : (
           <Avatar className="h-8 w-8 md:h-10 md:w-10 cursor-pointer">
             <AvatarFallback>

@@ -19,10 +19,10 @@
     "Role": "Quản lý vai trò"
   },
   "navbar": {
-    "profile": {
-      "value": "Thông tin",
-      "settings": {
-        "value": "Cài đặt",
+    "profileMenu": {
+      "profile": "Thông tin",
+      "settingAndSecurity": {
+        "value": "Cài đặt và bảo mật",
         "changePassword": "Đổi mật khẩu"
       },
       "Logout": "Đăng xuất"

@@ -21,13 +21,13 @@ export const TRANSLATION_KEYS = {
   },
 
   navbar: {
-    profile: {
-      value: "navbar.profile.value",
-      settings: {
-        value: "navbar.profile.settings.value",
-        changePassword: "navbar.profile.settings.changePassword",
+    profileMenu: {
+      profile: "navbar.profileMenu.profile",
+      settingAndSecurity: {
+        value: "navbar.profileMenu.settingAndSecurity.value",
+        changePassword: "navbar.profileMenu.settingAndSecurity.changePassword",
       },
-      logout: "navbar.profile.Logout",
+      logout: "navbar.profileMenu.Logout",
     },
   },
 
