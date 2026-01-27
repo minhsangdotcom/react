@@ -11,9 +11,38 @@
       "search": "Tìm kiếm",
       "filter": "Lọc",
       "export": "Xuất",
-      "import": "Nhập"
+      "import": "Nhập",
+      "upload": "Tải lên"
     },
     "table": {
+      "toolbar": {
+        "search": {
+          "placeholder": "Tìm kiếm..."
+        },
+        "filter": {
+          "column": {
+            "placeholder": "Tìm kiếm cột..."
+          },
+          "value": {
+            "placeholder": "Nhập giá trị để lọc..."
+          }
+        },
+        "sort": {
+          "title": "Sắp xếp theo",
+          "field": {
+            "label": "Trường"
+          },
+          "direction": {
+            "asc": "Tăng dần",
+            "desc": "Giảm dần"
+          },
+          "actions": {
+            "add": "Thêm sắp xếp",
+            "reset": "Đặt lại sắp xếp",
+            "remove": "Xóa sắp xếp"
+          }
+        }
+      },
       "fields": {
         "createdAt": "Ngày tạo"
       }
@@ -122,6 +151,83 @@
     }
   },
   "user": {
+    "title": "Người dùng",
+    "table": {
+      "fields": {
+        "username": "Tên đăng nhập",
+        "fullName": "Họ và tên",
+        "email": "Email",
+        "phoneNumber": "Số điện thoại",
+        "dateOfBirth": "Ngày sinh",
+        "status": "Trạng thái"
+      }
+    },
+    "modal": {
+      "create": {
+        "title": "Tạo người dùng mới"
+      },
+      "update": {
+        "title": "Cập nhật người dùng"
+      }
+    },
+    "form": {
+      "fields": {
+        "firstName": {
+          "label": "Tên",
+          "placeholder": "Nhập tên"
+        },
+        "lastName": {
+          "label": "Họ",
+          "placeholder": "Nhập họ"
+        },
+        "email": {
+          "label": "Email",
+          "placeholder": "Nhập địa chỉ email"
+        },
+        "phoneNumber": {
+          "label": "Số điện thoại",
+          "placeholder": "Nhập số điện thoại"
+        },
+        "username": {
+          "label": "Tên đăng nhập",
+          "placeholder": "Nhập tên đăng nhập"
+        },
+        "password": {
+          "label": "Mật khẩu",
+          "placeholder": "Nhập mật khẩu"
+        },
+        "dateOfBirth": {
+          "label": "Ngày sinh",
+          "placeholder": "Ngày/Tháng/Năm"
+        },
+        "gender": {
+          "label": "Giới tính",
+          "placeholder": "Chọn giới tính"
+        },
+        "roles": {
+          "label": "Vai trò",
+          "description": "Chọn một hoặc nhiều vai trò"
+        },
+        "permissions": {
+          "label": "Quyền",
+          "description": "Chọn quyền cho người dùng"
+        },
+        "avatar": {
+          "label": "Tải ảnh đại diện",
+          "description": "Dung lượng tối đa 2MB",
+          "button": {
+            "label": "Thay đổi ảnh đại diện"
+          }
+        },
+        "status": {
+          "label": "Trạng thái"
+        }
+      },
+      "sections": {
+        "contactAndAccount": "Thông tin liên hệ & tài khoản",
+        "accessControl": "Quản lý quyền truy cập"
+      }
+    },
     "errors": {
       "firstName": {
         "required": "Tên không được để trống",
@@ -154,6 +260,10 @@
         "required": "Giới tính là bắt buộc",
         "invalid": "Giới tính không hợp lệ"
       }
+    },
+      "status": {
+      "active": "Kích hoạt",
+      "inactive": "Ngừng hoạt động"
     }
   },
   "role": {
@@ -164,9 +274,30 @@
         "description": "Mô tả"
       }
     },
+    "modal": {
+      "create": {
+        "title": "Tạo vai trò mới"
+      },
+      "update": {
+        "title": "Cập nhật vai trò"
+      }
+    },
     "form": {
-      "name": "Tên",
-      "description": "Mô tả"
+      "fields": {
+        "name": {
+          "label": "Tên",
+          "placeholder": "Nhập tên vai trò"
+        },
+        "description": {
+          "label": "Mô tả",
+          "placeholder": "Nhập mô tả"
+        }
+      },
+      "sections": {
+        "permission": {
+          "label": "Danh sách quyền"
+        }
+      }
     },
     "errors": {
       "name": {

@@ -45,6 +45,8 @@ import { Loading } from "@/components/Loading";
 import { defaultAvatarPicker } from "@/utils/defaultAvatarPicker";
 import { showSuccessToast } from "@/notifications/toastSuccess";
 import { useAppSelector } from "@/store/hook";
+import { useTranslation } from "react-i18next";
+import { TRANSLATION_KEYS } from "@/config/translationKey";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -86,6 +88,7 @@ export default function User() {
   const [permissions, setPermissions] = useState<IPermissionModel[]>([]);
   const [roles, setRoles] = useState<IRoleModel[]>([]);
   const { code } = useAppSelector((store) => store.language);
+  const { t } = useTranslation();
 
   const columns = useMemo<ColumnDef<IUser>[]>(
     () => [
@@ -132,7 +135,11 @@ export default function User() {
         id: "username",
         accessorKey: "username",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Username" />
+          <DataTableColumnHeader
+            column={column}
+            id="username"
+            title={t(TRANSLATION_KEYS.user.table.fields.username)}
+          />
         ),
         cell: ({ row }) => {
           return (
@@ -140,7 +147,7 @@ export default function User() {
           );
         },
         meta: {
-          label: "Username",
+          label: "Usernames",
           placeholder: "Search by Username...",
           variant: "text",
         },
@@ -150,7 +157,11 @@ export default function User() {
         id: "fullName",
         accessorKey: "fullName",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Full Name" />
+          <DataTableColumnHeader
+            column={column}
+            id="fullName"
+            title={t(TRANSLATION_KEYS.user.table.fields.fullName)}
+          />
         ),
         cell: ({ row }) => {
           const avatarUrl =
@@ -181,7 +192,11 @@ export default function User() {
         id: "email",
         accessorKey: "email",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Email" />
+          <DataTableColumnHeader
+            column={column}
+            id="email"
+            title={t(TRANSLATION_KEYS.user.table.fields.email)}
+          />
         ),
         cell: ({ row }) => <div>{row.getValue("email")}</div>,
         meta: {
@@ -195,7 +210,11 @@ export default function User() {
         id: "phoneNumber",
         accessorKey: "phoneNumber",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="PhoneNumber" />
+          <DataTableColumnHeader
+            column={column}
+            id="phoneNumber"
+            title={t(TRANSLATION_KEYS.user.table.fields.phoneNumber)}
+          />
         ),
         cell: ({ row }) => {
           const phoneNumber: string = row.getValue("phoneNumber");
@@ -212,7 +231,11 @@ export default function User() {
         id: "dateOfBirth",
         accessorKey: "dateOfBirth",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Date of birth" />
+          <DataTableColumnHeader
+            column={column}
+            id="dateOfBirth"
+            title={t(TRANSLATION_KEYS.user.table.fields.dateOfBirth)}
+          />
         ),
         cell: ({ row }) => {
           const dateOfBirth: string = row.getValue("dateOfBirth");
@@ -238,7 +261,11 @@ export default function User() {
         id: "status",
         accessorKey: "status",
         header: ({ column }: { column: Column<IUser, unknown> }) => (
-          <DataTableColumnHeader column={column} title="Status" />
+          <DataTableColumnHeader
+            column={column}
+            id="status"
+            title={t(TRANSLATION_KEYS.user.table.fields.status)}
+          />
         ),
         cell: ({ cell }) => {
           const status = cell.getValue<IUser["status"]>();
@@ -274,7 +301,11 @@ export default function User() {
         id: "createdAt",
         accessorKey: "createdAt",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Created At" />
+          <DataTableColumnHeader
+            column={column}
+            id="createdAt"
+            title={t(TRANSLATION_KEYS.common.table.fields.createdAt)}
+          />
         ),
         cell: ({ row }) => (
           <div>
@@ -318,7 +349,7 @@ export default function User() {
                     setOpenUpdatePopup(true);
                   }}
                 >
-                  Edit
+                  {t(TRANSLATION_KEYS.common.actions.edit)}
                 </DropdownMenuItem>
 
                 <DropdownMenuItem
@@ -328,7 +359,7 @@ export default function User() {
                     setConfirmDialogOpen(true);
                   }}
                 >
-                  Delete
+                  {t(TRANSLATION_KEYS.common.actions.delete)}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -483,7 +514,9 @@ export default function User() {
     <>
       <div className="p-4 md:p-6 w-full">
         {/*Title */}
-        <h1 className="text-xl font-semibold text-gray-800 mt-3 ml-2">User</h1>
+        <h1 className="text-xl font-semibold text-gray-800 mt-3 ml-2">
+          {t(TRANSLATION_KEYS.user.title)}
+        </h1>
 
         {/* Actions */}
         <button
@@ -503,7 +536,7 @@ export default function User() {
           "
           onClick={() => setOpenCreatePopup(true)}
         >
-          Create new
+          {t(TRANSLATION_KEYS.common.actions.create)}
         </button>
 
         {/* {table} */}
@@ -512,7 +545,9 @@ export default function User() {
             <SearchBar
               value={search}
               onChange={setSearch}
-              placeholder="Search anything..."
+              placeholder={t(
+                TRANSLATION_KEYS.common.table.toolbar.search.placeholder
+              )}
               className="w-full sm:max-w-xs"
               inputClassName="max-sm:h-11 h-9 py-2 text-sm border border-gray-200 bg-white hover:bg-gray-100 focus:bg-gray-100"
             />

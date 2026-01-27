@@ -11,9 +11,38 @@
       "search": "Search",
       "filter": "Filter",
       "export": "Export",
-      "import": "Import"
+      "import": "Import",
+      "upload": "Upload"
     },
     "table": {
+      "toolbar": {
+        "search": {
+          "placeholder": "Search anything..."
+        },
+        "filter": {
+          "column": {
+            "placeholder": "Search fields..."
+          },
+          "value": {
+            "placeholder": "Type to add filter..."
+          }
+        },
+        "sort": {
+          "title": "Sort by",
+          "field": {
+            "label": "Field"
+          },
+          "direction": {
+            "asc": "Asc",
+            "desc": "Desc"
+          },
+          "actions": {
+            "add": "Add sort",
+            "reset": "Reset sorting",
+            "remove": "Remove sort"
+          }
+        }
+      },
       "fields": {
         "createdAt": "Created At"
       }
@@ -119,6 +148,83 @@
     }
   },
   "user": {
+    "title": "User",
+    "table": {
+      "fields": {
+        "username": "Username",
+        "fullName": "Full Name",
+        "email": "Email",
+        "phoneNumber": "Phone Number",
+        "dateOfBirth": "Date of Birth",
+        "status": "Status"
+      }
+    },
+    "modal": {
+      "create": {
+        "title": "Create new user"
+      },
+      "update": {
+        "title": "Update user"
+      }
+    },
+    "form": {
+      "fields": {
+        "firstName": {
+          "label": "First Name",
+          "placeholder": "Enter first name"
+        },
+        "lastName": {
+          "label": "Last Name",
+          "placeholder": "Enter last name"
+        },
+        "email": {
+          "label": "Email",
+          "placeholder": "Enter email address"
+        },
+        "phoneNumber": {
+          "label": "Phone Number",
+          "placeholder": "Enter phone number"
+        },
+        "username": {
+          "label": "Username",
+          "placeholder": "Enter username"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "Enter password"
+        },
+        "dateOfBirth": {
+          "label": "Date of Birth",
+          "placeholder": "dd/MM/yyyy"
+        },
+        "gender": {
+          "label": "Gender",
+          "placeholder": "Select gender"
+        },
+        "roles": {
+          "label": "Roles",
+          "description": "Select one or more roles"
+        },
+        "permissions": {
+          "label": "Permissions",
+          "description": "Select permissions for the user"
+        },
+        "avatar": {
+          "label": "Upload Avatar",
+          "description": "Max 2MB",
+          "button": {
+            "label": "Change Photo"
+          }
+        },
+        "status": {
+          "label": "Active Status"
+        }
+      },
+      "sections": {
+        "contactAndAccount": "Contact & Account",
+        "accessControl": "Access Control"
+      }
+    },
     "errors": {
       "firstName": {
         "required": "First name is required",
@@ -151,6 +257,10 @@
         "required": "Gender is required",
         "invalid": "Invalid gender selection"
       }
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
     }
   },
   "role": {
@@ -161,9 +271,28 @@
         "description": "Description"
       }
     },
+    "modal": {
+      "create": {
+        "title": "Create new role"
+      },
+      "update": {
+        "title": "Update role"
+      }
+    },
     "form": {
-      "name": "Name",
-      "description": "Description"
+      "fields": {
+        "name": {
+          "placeholder": "Name"
+        },
+        "description": {
+          "placeholder": "Description"
+        }
+      },
+      "sections": {
+        "permission": {
+          "label": "Permission list"
+        }
+      }
     },
     "errors": {
       "name": {

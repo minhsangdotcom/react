@@ -12,8 +12,37 @@ export const TRANSLATION_KEYS = {
       filter: "common.actions.filter",
       export: "common.actions.export",
       import: "common.actions.import",
+      upload: "common.actions.upload",
     },
     table: {
+      toolbar: {
+        search: {
+          placeholder: "common.table.toolbar.search.placeholder",
+        },
+        filter: {
+          column: {
+            placeholder: "common.table.toolbar.filter.column.placeholder",
+          },
+          value: {
+            placeholder: "common.table.toolbar.filter.value.placeholder",
+          },
+        },
+        sort: {
+          title: "common.table.toolbar.sort.title",
+          field: {
+            label: "common.table.toolbar.sort.field.label",
+          },
+          direction: {
+            asc: "common.table.toolbar.sort.direction.asc",
+            desc: "common.table.toolbar.sort.direction.desc",
+          },
+          actions: {
+            add: "common.table.toolbar.sort.actions.add",
+            reset: "common.table.toolbar.sort.actions.reset",
+            remove: "common.table.toolbar.sort.actions.remove",
+          },
+        },
+      },
       fields: {
         createdAt: "common.table.fields.createdAt",
       },
@@ -125,6 +154,7 @@ export const TRANSLATION_KEYS = {
     },
   },
   user: {
+    title: "user.title",
     errors: {
       firstName: {
         required: "user.errors.firstName.required",
@@ -158,6 +188,86 @@ export const TRANSLATION_KEYS = {
         invalid: "user.errors.gender.invalid",
       },
     },
+    modal: {
+      create: {
+        title: "user.modal.create.title",
+      },
+      update: {
+        title: "user.modal.update.title",
+      },
+    },
+    form: {
+      fields: {
+        firstName: {
+          label: "user.form.fields.firstName.label",
+          placeholder: "user.form.fields.firstName.placeholder",
+        },
+        lastName: {
+          label: "user.form.fields.lastName.label",
+          placeholder: "user.form.fields.lastName.placeholder",
+        },
+        email: {
+          label: "user.form.fields.email.label",
+          placeholder: "user.form.fields.email.placeholder",
+        },
+        phoneNumber: {
+          label: "user.form.fields.phoneNumber.label",
+          placeholder: "user.form.fields.phoneNumber.placeholder",
+        },
+        username: {
+          label: "user.form.fields.username.label",
+          placeholder: "user.form.fields.username.placeholder",
+        },
+        password: {
+          label: "user.form.fields.password.label",
+          placeholder: "user.form.fields.password.placeholder",
+        },
+        dateOfBirth: {
+          label: "user.form.fields.dateOfBirth.label",
+          placeholder: "user.form.fields.dateOfBirth.placeholder",
+        },
+        gender: {
+          label: "user.form.fields.gender.label",
+          placeholder: "user.form.fields.gender.placeholder",
+        },
+        roles: {
+          label: "user.form.fields.roles.label",
+          description: "user.form.fields.roles.description",
+        },
+        permissions: {
+          label: "user.form.fields.permissions.label",
+          description: "user.form.fields.permissions.description",
+        },
+        avatar: {
+          label: "user.form.fields.avatar.label",
+          description: "user.form.fields.avatar.description",
+          button: {
+            label: "user.form.fields.avatar.button.label",
+          },
+        },
+        status: {
+          label: "user.form.fields.status.label",
+        },
+      },
+      sections: {
+        contactAndAccount: "user.form.sections.contactAndAccount",
+        accessControl: "user.form.sections.accessControl",
+      },
+    },
+    table: {
+      fields: {
+        username: "user.table.fields.username",
+        fullName: "user.table.fields.fullName",
+        email: "user.table.fields.email",
+        phoneNumber: "user.table.fields.phoneNumber",
+        dateOfBirth: "user.table.fields.dateOfBirth",
+        status: "user.table.fields.status",
+      },
+    },
+    status: {
+      active: "user.status.active",
+      inactive: "user.status.inactive",
+    },
   },
   role: {
     title: "role.title",
@@ -167,9 +277,30 @@ export const TRANSLATION_KEYS = {
         description: "role.table.fields.description",
       },
     },
+    modal: {
+      create: {
+        title: "role.modal.create.title",
+      },
+      update: {
+        title: "role.modal.update.title",
+      },
+    },
     form: {
-      name: "role.form.name",
-      description: "role.form.description",
+      fields: {
+        name: {
+          label: "role.form.fields.name.label",
+          placeholder: "role.form.fields.name.placeholder",
+        },
+        description: {
+          label: "role.form.fields.description.label",
+          placeholder: "role.form.fields.description.placeholder",
+        },
+      },
+      sections: {
+        permission: {
+          label: "role.form.sections.permission.label",
+        },
+      },
     },
     errors: {
       name: {

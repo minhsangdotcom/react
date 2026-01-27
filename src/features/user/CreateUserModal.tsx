@@ -31,6 +31,7 @@ import { createUserSchema, createUserSchemaType } from "./userSchema";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
+import { TRANSLATION_KEYS } from "@/config/translationKey";
 dayjs.extend(utc);
 
 interface CreateUserProps {
@@ -164,7 +165,7 @@ export default function CreateUserModal({
           {/*Header*/}
           <DialogHeader className="flex justify-between px-6 py-5 border-b border-gray-200 dark:border-border-dark bg-background-light dark:bg-background-dark shrink-0">
             <DialogTitle className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">
-              Create new user
+              {t(TRANSLATION_KEYS.user.modal.create.title)}
             </DialogTitle>
           </DialogHeader>
 
@@ -187,7 +188,7 @@ export default function CreateUserModal({
                       </span>
                       <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                         <span className="material-symbols-outlined text-white">
-                          upload
+                          {t(TRANSLATION_KEYS.common.actions.upload)}
                         </span>
                       </div>
                       <input
@@ -200,29 +201,31 @@ export default function CreateUserModal({
                     </div>
                   </div>
                   <p className="text-sm text-gray-500 dark:text-text-muted text-center">
-                    Upload Avatar
+                    {t(TRANSLATION_KEYS.user.form.fields.avatar.label)}
                     <br />
-                    <span className="text-xs opacity-70">Max 2MB</span>
+                    <span className="text-xs opacity-70">
+                      {t(TRANSLATION_KEYS.user.form.fields.avatar.description)}
+                    </span>
                   </p>
                 </div>
 
                 <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-5">
                   <Input
-                    label="First Name"
+                    label={t(TRANSLATION_KEYS.user.form.fields.firstName.label)}
                     type="text"
                     {...register("firstName")}
-                    error={errors.firstName?.message}
+                    error={t(errors.firstName?.message as any)}
                   />
                   <Input
-                    label="Last Name"
+                    label={t(TRANSLATION_KEYS.user.form.fields.lastName.label)}
                     type="text"
                     {...register("lastName")}
-                    error={errors.lastName?.message}
+                    error={t(errors.lastName?.message as any)}
                   />
 
                   <div className="flex flex-col gap-2">
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-                      Gender
+                      {t(TRANSLATION_KEYS.user.form.fields.gender.label)}
                     </span>
                     <div className="relative">
                       <Controller
@@ -233,6 +236,10 @@ export default function CreateUserModal({
                             {...field}
                             options={genderOptions}
                             styles={genderSelectStyles}
+                            placeholder={t(
+                              TRANSLATION_KEYS.user.form.fields.gender
+                                .placeholder
+                            )}
                             value={
                               genderOptions.find(
                                 (x) => x.value.toString() == field.value
@@ -250,7 +257,7 @@ export default function CreateUserModal({
 
                   <div className="date-wrapper flex flex-col gap-2">
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-                      Date of Birth
+                      {t(TRANSLATION_KEYS.user.form.fields.dateOfBirth.label)}
                     </span>
                     <Controller
                       name="dateOfBirth"
@@ -259,6 +266,10 @@ export default function CreateUserModal({
                         <DateInput
                           value={field.value}
                           onChange={field.onChange}
+                          placeholder={t(
+                            TRANSLATION_KEYS.user.form.fields.dateOfBirth
+                              .placeholder
+                          )}
                         />
                       )}
                     />
@@ -270,38 +281,42 @@ export default function CreateUserModal({
               {/* Contact & Account */}
               <div>
                 <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-4">
-                  Contact & Account
+                  {t(TRANSLATION_KEYS.user.form.sections.contactAndAccount)}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <Input
-                    label="Email Address"
+                    label={t(TRANSLATION_KEYS.user.form.fields.email.label)}
                     type="email"
                     icon={<Mail />}
                     {...register("email")}
-                    error={errors.email?.message}
+                    error={t(errors.email?.message as any)}
                   />
                   <Input
-                    label="Phone Number"
+                    label={t(
+                      TRANSLATION_KEYS.user.form.fields.phoneNumber.label
+                    )}
                     type="tel"
                     icon={<Phone />}
                     {...register("phoneNumber")}
-                    error={errors.phoneNumber?.message}
+                    error={t(errors.phoneNumber?.message as any)}
                   />
                   <Input
-                    label="Username"
+                    label={t(TRANSLATION_KEYS.user.form.fields.username.label)}
                     type="text"
                     autoComplete="username"
                     {...register("username")}
-                    error={errors.username?.message}
+                    error={t(errors.username?.message as any)}
                   />
                   <div className="flex flex-col gap-2">
                     <PasswordInput
-                      label="Password"
+                      label={t(
+                        TRANSLATION_KEYS.user.form.fields.password.label
+                      )}
                       labelClassName="text-sm font-medium text-gray-700 dark:text-gray-200"
                       inputClassName="w-full rounded-lg border focus:outline-none border-gray-300 bg-white text-gray-900 h-12 px-4 focus:ring-2 focus:ring-blue-300"
                       errorClassName="text-xs text-red-500 mt-0.5"
                       {...register("password")}
-                      error={errors.password?.message}
+                      error={t(errors.password?.message as any)}
                     />
                   </div>
                 </div>
@@ -313,11 +328,11 @@ export default function CreateUserModal({
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-base font-semibold text-gray-900 dark:text-white">
-                    Access Control
+                    {t(TRANSLATION_KEYS.user.form.sections.accessControl)}
                   </h3>
                   <label className="inline-flex items-center cursor-pointer gap-3">
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Active Status
+                      {t(TRANSLATION_KEYS.user.form.fields.status.label)}
                     </span>
                     <div className="relative">
                       <input
@@ -335,13 +350,15 @@ export default function CreateUserModal({
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="flex flex-col gap-2">
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-                      Roles
+                      {t(TRANSLATION_KEYS.user.form.fields.roles.label)}
                     </span>
                     <Select
                       isMulti
                       className="w-full"
                       classNamePrefix="permission-select"
-                      placeholder="Add permissions..."
+                      placeholder={t(
+                        TRANSLATION_KEYS.user.form.fields.roles.description
+                      )}
                       name="permissions"
                       options={roles.map((role) => ({
                         label: role.name,
@@ -361,13 +378,16 @@ export default function CreateUserModal({
                   </div>
                   <div className="flex flex-col gap-2">
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-                      Permissions
+                      {t(TRANSLATION_KEYS.user.form.fields.permissions.label)}
                     </span>
                     <Select
                       isMulti
                       className="w-full"
                       classNamePrefix="permission-select"
-                      placeholder="Add permissions..."
+                      placeholder={t(
+                        TRANSLATION_KEYS.user.form.fields.permissions
+                          .description
+                      )}
                       name="permissions"
                       options={permissions.map((per) => ({
                         label: per.code,
@@ -401,14 +421,14 @@ export default function CreateUserModal({
                   resetForm();
                 }}
               >
-                Cancel
+                {t(TRANSLATION_KEYS.common.actions.cancel)}
               </button>
             </DialogClose>
             <LoadingButton
               onClick={handleSubmit(submit)}
               type="button"
               loading={submitLoading}
-              text="Create"
+              text={t(TRANSLATION_KEYS.common.actions.save)}
               className="px-4 py-2 rounded bg-brand-primary text-white hover:bg-brand-primary-hover cursor-pointer"
             />
           </DialogFooter>
@@ -417,55 +437,3 @@ export default function CreateUserModal({
     </Dialog>
   );
 }
-
-const Skeleton = () => {
-  return (
-    <div className="flex flex-col gap-8 animate-pulse">
-      {/* Avatar & Basic Info */}
-      <div className="flex flex-col md:flex-row gap-8">
-        {/* Avatar */}
-        <div className="flex flex-col items-center gap-4 min-w-40">
-          <div className="w-32 h-32 rounded-full bg-gray-200" />
-          <div className="h-4 w-24 rounded bg-gray-200" />
-          <div className="h-3 w-20 rounded bg-gray-200 opacity-70" />
-        </div>
-
-        {/* Basic info inputs */}
-        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-5">
-          <SkeletonInput />
-          <SkeletonInput />
-          <SkeletonSelect />
-          <SkeletonInput />
-        </div>
-      </div>
-
-      <DividerSkeleton />
-
-      {/* Contact & Account */}
-      <div>
-        <div className="h-5 w-48 rounded bg-gray-200 mb-4" />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <SkeletonInput />
-          <SkeletonInput />
-          <SkeletonInput />
-          <SkeletonInput />
-        </div>
-      </div>
-
-      <DividerSkeleton />
-
-      {/* Access Control */}
-      <div>
-        <div className="flex items-center justify-between mb-4">
-          <div className="h-5 w-40 rounded bg-gray-200" />
-          <div className="h-6 w-14 rounded-full bg-gray-200" />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <SkeletonSelect />
-          <SkeletonSelect />
-        </div>
-      </div>
-    </div>
-  );
-};

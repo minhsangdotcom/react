@@ -14,7 +14,7 @@ const GENDER_TRANSLATION_MAP = Object.values(Gender)
     return acc;
   }, {});
 
-function getTranslation(value: Gender): string {
+export default function getTranslation(value: Gender): string {
   switch (value) {
     case Gender.Male:
       return TRANSLATION_KEYS.profile.gender.male;

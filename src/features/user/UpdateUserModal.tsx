@@ -18,8 +18,8 @@ import DefaultUser, {
   IUser,
   IUserResponse,
 } from "./IUser";
-import { Gender } from "./Gender";
-import { UserStatus } from "./UserStatus";
+import getGenderTranslation, { Gender } from "./Gender";
+import getStatusTranslation, { UserStatus } from "./UserStatus";
 import { userService } from "./userService";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -34,6 +34,8 @@ import { userSchema, userSchemaType } from "./userSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { defaultAvatarPicker } from "@/utils/defaultAvatarPicker";
+import { TRANSLATION_KEYS } from "@/config/translationKey";
+import { useTranslation } from "react-i18next";
 dayjs.extend(utc);
 
 const toUserSchema = (
@@ -75,6 +77,7 @@ export default function UpdateUserModal({
   const [loading, setLoading] = useState<boolean>(false);
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<File | null>(null);
+  const { t } = useTranslation();
 
   const {
     register,
@@ -215,7 +218,7 @@ export default function UpdateUserModal({
           {/* Header title */}
           <DialogHeader className="flex justify-between px-6 py-5 border-b border-background-border shrink-0 bg-background-card">
             <DialogTitle className="text-black tracking-tight text-xl font-bold leading-tight">
-              Update User
+              {t(TRANSLATION_KEYS.user.modal.update.title)}
             </DialogTitle>
           </DialogHeader>
 
@@ -242,11 +245,13 @@ export default function UpdateUserModal({
                       {firstName} {lastName}
                     </h4>
                     <p className="text-sm font-normal text-gray-500">
-                      Username: @{user.username}
+                      {t(TRANSLATION_KEYS.user.form.fields.username.label)}: @
+                      {user.username}
                     </p>
                     {user.gender && (
                       <p className="text-sm font-normal text-gray-500">
-                        Gender: {Gender[user.gender as Gender]}
+                        {t(TRANSLATION_KEYS.user.form.fields.gender.label)}:{" "}
+                        {t(getGenderTranslation(user.gender as Gender) as any)}
                       </p>
                     )}
                     <div className="flex gap-2 mt-2">
@@ -257,7 +262,9 @@ export default function UpdateUserModal({
                             : "bg-red-200 text-red-400"
                         }`}
                       >
-                        {UserStatus[user.status as UserStatus]}
+                        {t(
+                          getStatusTranslation(user.status as UserStatus) as any
+                        )}
                       </span>
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-blue-200 text-blue-400">
                         {user.roles[0]?.name}
@@ -273,7 +280,11 @@ export default function UpdateUserModal({
                       <span className="material-symbols-outlined text-[20px]">
                         <Upload />
                       </span>
-                      <span>Change Photo</span>
+                      <span>
+                        {t(
+                          TRANSLATION_KEYS.user.form.fields.avatar.button.label
+                        )}
+                      </span>
                     </button>
                     <input
                       type="file"
@@ -285,34 +296,36 @@ export default function UpdateUserModal({
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <Input
-                    label="First Name"
+                    label={t(TRANSLATION_KEYS.user.form.fields.firstName.label)}
                     type="text"
                     {...register("firstName")}
-                    error={errors.firstName?.message}
+                    error={t(errors.firstName?.message as any)}
                   />
                   <Input
-                    label="Last Name"
+                    label={t(TRANSLATION_KEYS.user.form.fields.lastName.label)}
                     type="text"
                     {...register("lastName")}
-                    error={errors.lastName?.message}
+                    error={t(errors.lastName?.message as any)}
                   />
                   <Input
-                    label="Email Address"
+                    label={t(TRANSLATION_KEYS.user.form.fields.email.label)}
                     type="email"
                     icon={<Mail />}
                     {...register("email")}
-                    error={errors.email?.message}
+                    error={t(errors.email?.message as any)}
                   />
                   <Input
-                    label="Phone Number"
+                    label={t(
+                      TRANSLATION_KEYS.user.form.fields.phoneNumber.label
+                    )}
                     type="tel"
                     icon={<Phone />}
                     {...register("phoneNumber")}
-                    error={errors.phoneNumber?.message}
+                    error={t(errors.phoneNumber?.message as any)}
                   />
                   <div className="date-wrapper flex flex-col gap-2">
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-                      Date of Birth
+                      {t(TRANSLATION_KEYS.user.form.fields.dateOfBirth.label)}
                     </span>
                     <Controller
                       name="dateOfBirth"
@@ -321,6 +334,10 @@ export default function UpdateUserModal({
                         <DateInput
                           value={field.value}
                           onChange={field.onChange}
+                          placeholder={t(
+                            TRANSLATION_KEYS.user.form.fields.dateOfBirth
+                              .placeholder
+                          )}
                         />
                       )}
                     />
@@ -340,7 +357,7 @@ export default function UpdateUserModal({
                         />
                         <div className="relative w-11 h-6 bg-[#324467] peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary" />
                         <span className="ms-3 text-sm font-medium ">
-                          Active User
+                          {t(TRANSLATION_KEYS.user.form.fields.status.label)}
                         </span>
                       </label>
                     </div>
@@ -349,13 +366,15 @@ export default function UpdateUserModal({
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="flex flex-col gap-2">
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-                      Roles
+                      {t(TRANSLATION_KEYS.user.form.fields.roles.label)}
                     </span>
                     <Select
                       isMulti
                       className="w-full"
                       classNamePrefix="permission-select"
-                      placeholder="Add Roles..."
+                      placeholder={t(
+                        TRANSLATION_KEYS.user.form.fields.roles.description
+                      )}
                       name="permissions"
                       options={roles.map((role) => ({
                         label: role.name,
@@ -379,13 +398,16 @@ export default function UpdateUserModal({
                   </div>
                   <div className="flex flex-col gap-2">
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
-                      Permissions
+                      {t(TRANSLATION_KEYS.user.form.fields.permissions.label)}
                     </span>
                     <Select
                       isMulti
                       className="w-full"
                       classNamePrefix="permission-select"
-                      placeholder="Add permissions..."
+                      placeholder={t(
+                        TRANSLATION_KEYS.user.form.fields.permissions
+                          .description
+                      )}
                       name="permissions"
                       styles={permissionSelectStyles}
                       options={permissions.map((per) => ({
@@ -422,14 +444,14 @@ export default function UpdateUserModal({
                   setUser(DefaultUser);
                 }}
               >
-                Cancel
+                {t(TRANSLATION_KEYS.common.actions.cancel)}
               </button>
             </DialogClose>
             <LoadingButton
               onClick={handleSubmit(submit)}
               type="button"
               loading={submitLoading}
-              text="Update"
+              text={t(TRANSLATION_KEYS.common.actions.save)}
               className="px-4 py-2 rounded bg-brand-primary text-white hover:bg-brand-primary-hover cursor-pointer"
             />
           </DialogFooter>

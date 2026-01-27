@@ -162,7 +162,9 @@ export default function RoleModal({
         <div className="bg-white rounded-xl p-6 w-200 max-w-full shadow-lg max-h-[90vh] flex flex-col border border:grey-100">
           <DialogHeader className="mb-2">
             <DialogTitle className="text-lg font-semibold">
-              {roleId ? "Update Role" : "Create New Role"}
+              {roleId
+                ? t(TRANSLATION_KEYS.role.modal.update.title)
+                : t(TRANSLATION_KEYS.role.modal.create.title)}
             </DialogTitle>
           </DialogHeader>
 
@@ -181,7 +183,9 @@ export default function RoleModal({
                       ? "border-red-300 focus:ring-red-300"
                       : "focus:border-blue-200 focus:ring-blue-300"
                   }`}
-                  placeholder={t(TRANSLATION_KEYS.role.form.name)}
+                  placeholder={t(
+                    TRANSLATION_KEYS.role.form.fields.name.placeholder
+                  )}
                   {...register("name")}
                 />
                 {errors.name && (
@@ -196,7 +200,9 @@ export default function RoleModal({
                       ? "border-red-300 focus:ring-red-300"
                       : "focus:border-blue-200 focus:ring-blue-300"
                   }`}
-                  placeholder={t(TRANSLATION_KEYS.role.form.description)}
+                  placeholder={t(
+                    TRANSLATION_KEYS.role.form.fields.description.placeholder
+                  )}
                   {...register("description")}
                 />
                 {errors.description && (
@@ -209,7 +215,7 @@ export default function RoleModal({
               {/* Right side: Permissions */}
               <div className="space-y-4 rounded p-2 overflow-auto">
                 <h3 className="mb-3 text-lg font-semibold text-gray-800">
-                  Permissions
+                  {t(TRANSLATION_KEYS.role.form.sections.permission.label)}
                 </h3>
 
                 {group.map((g) => (
@@ -231,22 +237,26 @@ export default function RoleModal({
           )}
 
           {/* Action buttons */}
-          <DialogFooter className="flex justify-end space-x-2 pt-6">
-            <button
-              className="w-full md:w-auto px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
-              onClick={() => {
-                reset({ name: "", description: "" });
-                onRequestClose();
-              }}
-            >
-              {t(TRANSLATION_KEYS.common.actions.cancel)}
-            </button>
+          <DialogFooter className="flex justify-end gap-3 px-2 py-2 border-t border-gray-200 dark:border-border-dark shrink-0">
+            <DialogClose asChild>
+              <button
+                className="
+              px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
+                onClick={() => {
+                  reset({ name: "", description: "" });
+                  onRequestClose();
+                }}
+              >
+                {t(TRANSLATION_KEYS.common.actions.cancel)}
+              </button>
+            </DialogClose>
+
             <LoadingButton
               loading={submitLoading}
               text={t(TRANSLATION_KEYS.common.actions.save)}
               onClick={handleSubmit(submit)}
               type="button"
-              className="w-full md:w-auto px-4 py-2 rounded bg-brand-primary text-white hover:bg-brand-primary-hover cursor-pointer"
+              className="px-4 py-2 rounded bg-brand-primary text-white hover:bg-brand-primary-hover cursor-pointer"
             />
           </DialogFooter>
         </div>
