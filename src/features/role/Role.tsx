@@ -285,7 +285,21 @@ export default function Role() {
         }}
         onSubmit={() => {
           showSuccessToast(
-            `${id ? "Update role success!" : "Create role success"}`
+            `${
+              id
+                ? t(
+                    TRANSLATION_KEYS.common.notification.action.success.update,
+                    {
+                      entity: t(TRANSLATION_KEYS.role.entity),
+                    }
+                  )
+                : t(
+                    TRANSLATION_KEYS.common.notification.action.success.create,
+                    {
+                      entity: t(TRANSLATION_KEYS.role.entity),
+                    }
+                  )
+            }`
           );
           setGroup(resetPermissionGroups(group));
         }}

@@ -562,12 +562,24 @@ export default function User() {
         onRequestClose={() => setOpenCreatePopup(false)}
         roles={roles}
         permissions={permissions}
-        onSubmit={() => onSubmit("Create user success!")}
+        onSubmit={() =>
+          onSubmit(
+            t(TRANSLATION_KEYS.common.notification.action.success.create, {
+              entity: t(TRANSLATION_KEYS.user.entity),
+            })
+          )
+        }
       />
       <UpdateUserModal
         open={openUpdatePopup}
         onRequestClose={() => setOpenUpdatePopup(false)}
-        onSubmit={() => onSubmit("Update user success")}
+        onSubmit={() =>
+          onSubmit(
+            t(TRANSLATION_KEYS.common.notification.action.success.update, {
+              entity: t(TRANSLATION_KEYS.user.entity),
+            })
+          )
+        }
         roles={roles}
         permissions={permissions}
         userId={id!}

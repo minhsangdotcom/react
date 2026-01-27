@@ -14,6 +14,14 @@
       "import": "Import",
       "upload": "Upload"
     },
+    "notification": {
+      "action": {
+        "success": {
+          "create": "Create {{entity}} Successfully!",
+          "update": "Update {{entity}} Successfully!"
+        }
+      }
+    },
     "table": {
       "toolbar": {
         "search": {
@@ -148,6 +156,7 @@
     }
   },
   "user": {
+    "entity": "user",
     "title": "User",
     "table": {
       "fields": {
@@ -264,6 +273,7 @@
     }
   },
   "role": {
+    "entity": "role",
     "title": "Role",
     "table": {
       "fields": {

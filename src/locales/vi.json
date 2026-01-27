@@ -14,6 +14,14 @@
       "import": "Nhập",
       "upload": "Tải lên"
     },
+    "notification": {
+      "action": {
+        "success": {
+          "create": "Tạo {{entity}} thành công",
+          "update": "Cập nhật {{entity}} thành công!"
+        }
+      }
+    },
     "table": {
       "toolbar": {
         "search": {
@@ -151,6 +159,7 @@
     }
   },
   "user": {
+    "entity": "người dùng",
     "title": "Người dùng",
     "table": {
       "fields": {
@@ -261,12 +270,13 @@
         "invalid": "Giới tính không hợp lệ"
       }
     },
-      "status": {
+    "status": {
       "active": "Kích hoạt",
       "inactive": "Ngừng hoạt động"
     }
   },
   "role": {
+    "entity": "vai trò",
     "title": "Vai trò",
     "table": {
       "fields": {

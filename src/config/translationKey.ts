@@ -14,6 +14,14 @@ export const TRANSLATION_KEYS = {
       import: "common.actions.import",
       upload: "common.actions.upload",
     },
+    notification: {
+      action: {
+        success: {
+          create: "common.notification.action.success.create",
+          update: "common.notification.action.success.update",
+        },
+      },
+    },
     table: {
       toolbar: {
         search: {
@@ -154,6 +162,7 @@ export const TRANSLATION_KEYS = {
     },
   },
   user: {
+    entity: "user.entity",
     title: "user.title",
     errors: {
       firstName: {
@@ -270,6 +279,7 @@ export const TRANSLATION_KEYS = {
     },
   },
   role: {
+    entity: "role.entity",
     title: "role.title",
     table: {
       fields: {
