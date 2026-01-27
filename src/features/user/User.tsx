@@ -464,40 +464,40 @@ export default function User() {
   }
 
   useEffect(() => {
-    loadReferenceData();
+    // used to cancel second call of the api in react strict mode
+    const controller = new AbortController();
+    loadReferenceData(controller.signal);
+    return () => {
+      controller.abort();
+    };
   }, [code]);
 
-  async function loadReferenceData() {
+  async function loadReferenceData(signal: AbortSignal) {
     setRefDataLoading(true);
     const [roleResult, permissionResult] = await Promise.all([
-      roleService.list({}),
-      permissionService.list(),
+      roleService.list({}, signal),
+      permissionService.list(signal),
     ]);
 
     if (roleResult.success && permissionResult.success) {
-      const rolesData = roleResult.data?.results as IRole[];
-      setRoles(rolesData.map((x) => ({ id: x.id, name: x.name })));
+      const roles = roleResult.data?.results as IRole[];
+      setRoles(roles.map((role) => ({ id: role.id, name: role.name })));
 
       const groups = permissionResult.data
         ?.results as IPermissionGroupResponse[];
-      const permissionsData = groups
+      const rootedPermissionGroup = groups
         .flatMap((group) => group.permissions)
         .map((per) => ({ id: per.id, code: per.codeTranslation }));
-      setPermissions(permissionsData);
+      setPermissions(rootedPermissionGroup);
     }
     setRefDataLoading(false);
   }
 
   async function handleConfirm() {
     setLoading(true);
-    try {
-      await userService.delete(id!);
-    } catch (error) {
-      //
-    } finally {
-      setLoading(false);
-      setConfirmDialogOpen(false);
-    }
+    await userService.delete(id!);
+    setLoading(false);
+    setConfirmDialogOpen(false);
   }
 
   if (refDataLoading) {

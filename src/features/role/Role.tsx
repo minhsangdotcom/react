@@ -183,12 +183,27 @@ export default function Role() {
     if (open || dialogOpen) {
       return;
     }
-    fetchRoles();
+    const controller = new AbortController();
+
+    fetchRoles(controller.signal);
+
+    return () => {
+      controller.abort();
+    };
   }, [open, dialogOpen, code]);
 
-  async function fetchRoles() {
+  useEffect(() => {
+    const controller = new AbortController();
+    loadReferenceData(controller.signal);
+
+    return () => {
+      controller.abort();
+    };
+  }, [code]);
+
+  async function fetchRoles(signal: AbortSignal) {
     setLoading(true);
-    const result = await roleService.list({});
+    const result = await roleService.list({}, signal);
     if (result.success) {
       const roles = result.data?.results as IRole[];
       const sortedRoles = roles.sort(
@@ -200,19 +215,14 @@ export default function Role() {
     setLoading(false);
   }
 
-  useEffect(() => {
-    loadReferenceData();
-  }, [code]);
-
-  async function loadReferenceData() {
+  async function loadReferenceData(signal: AbortSignal) {
     setReferenceLoading(true);
-    const result = await permissionService.list();
+    const result = await permissionService.list(signal);
     if (result.success) {
       const permissions = result.data?.results as IPermissionGroupResponse[];
       let groups = toListPermissionGroup(permissions);
       setGroup(groups);
     }
-
     setReferenceLoading(false);
   }
 

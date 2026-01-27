@@ -5,4 +5,5 @@ export default interface IApiRequest<T> {
   method: Method;
   data?: T | null;
   headers?: {};
+  signal?: AbortSignal | null
 }

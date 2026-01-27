@@ -36,7 +36,7 @@ api.interceptors.response.use(
     return response;
   },
   (error: AxiosError) => {
-    toastError(error);
+    toastError(error, axios.isCancel(error));
     return Promise.reject(error);
   }
 );
@@ -49,6 +49,7 @@ async function send<TRequest, TResult>(
     method: request.method,
     data: request.data,
     headers: request.headers,
+    signal: request.signal,
   } as AxiosRequestConfig;
 
   if (config.method === "GET") {

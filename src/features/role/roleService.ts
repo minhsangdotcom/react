@@ -6,8 +6,16 @@ import { send } from "@utils/http/api";
 import { IApiResult } from "@utils/http/IApiResult";
 
 export const roleService = {
-  list: async function (params: IQueryParam): Promise<IApiResult<IRole[]>> {
-    return await send({ url: "roles", method: "GET", data: params });
+  list: async function (
+    params: IQueryParam,
+    signal?: AbortSignal
+  ): Promise<IApiResult<IRole[]>> {
+    return await send({
+      url: "roles",
+      method: "GET",
+      data: params,
+      signal,
+    });
   },
   create: async function (
     request: ICreateRoleRequest

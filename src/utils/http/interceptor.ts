@@ -114,49 +114,54 @@ export async function refreshTokenHandler(
   }
 }
 
-export function toastError(error: AxiosError) {
-  if (!error.response) {
-    // No response = network error or server down
-    if (error.code === "ECONNABORTED" || error.message.includes("timeout")) {
-      showNetworkErrorToast(
-        "Request timeout. Please check your connection.",
-        "timeout-error"
-      );
-    } else if (
-      error.code === "ERR_NETWORK" ||
-      error.message.includes("Network Error")
-    ) {
-      showNetworkErrorToast(
-        "Unable to connect to server. Please try again later.",
-        "network-error"
-      );
-    } else {
-      showNetworkErrorToast(
-        "Something went wrong. Please try again.",
-        "unknown-error"
-      );
-    }
+export function toastError(error: AxiosError, isCancel: boolean) {
+  if (
+    isCancel ||
+    error.code === "ERR_CANCELED" ||
+    error.name === "CanceledError"
+  ) {
     return;
   }
 
-  const errorResult = error.response.data as any;
-  switch (error.response.status) {
-    case 400:
-      if (errorResult?.["invalid-params"]?.length) {
-        showBadRequestToast(
-          errorResult["invalid-params"][0]?.reasons?.[0]?.description
-        );
-      }
+  if (error.response) {
+    const errorResult = error.response.data as any;
+    switch (error.response.status) {
+      case 400:
+        if (errorResult?.["invalid-params"]?.length) {
+          showBadRequestToast(
+            errorResult["invalid-params"][0]?.reasons?.[0]?.description
+          );
+        }
 
-      if (errorResult?.message?.translation) {
-        showBadRequestToast(errorResult.message.translation);
-      }
-      break;
-    case 404:
-      showNotFoundToast();
-      break;
-    case 500:
-      showServerErrorToast();
-      break;
+        if (errorResult?.message?.translation) {
+          showBadRequestToast(errorResult.message.translation);
+        }
+        break;
+      case 404:
+        showNotFoundToast();
+        break;
+      case 500:
+        showServerErrorToast();
+        break;
+    }
   }
+
+  if (error.code === "ECONNABORTED" || error.message.includes("timeout")) {
+    showNetworkErrorToast(
+      "Request timeout. Please check your connection.",
+      "timeout-error"
+    );
+    return;
+  }
+  if (error.code === "ERR_NETWORK" || error.message.includes("Network Error")) {
+    showNetworkErrorToast(
+      "Unable to connect to server. Please try again later.",
+      "network-error"
+    );
+    return;
+  }
+  showNetworkErrorToast(
+    "Something went wrong. Please try again.",
+    "unknown-error"
+  );
 }
