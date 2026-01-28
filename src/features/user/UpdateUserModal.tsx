@@ -258,7 +258,7 @@ export default function UpdateUserModal({
                     <div className="flex gap-2 mt-2">
                       <span
                         className={`inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium ${
-                          true
+                          user.status == UserStatus.Active
                             ? "bg-green-200 text-green-400"
                             : "bg-red-200 text-red-400"
                         }`}
