@@ -44,9 +44,9 @@ export default function Login() {
   }
 
   return (
-    <div className="login-form-container p-5 w-full md:w-md my-20 md:my-10">
+    <div className="login-form-container w-full md:w-md py-5">
       <h2 className="login-form-title">{t(TRANSLATION_KEYS.login.title)}</h2>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form className="px-3 py-2" onSubmit={handleSubmit(onSubmit)}>
         <Input
           label={t(TRANSLATION_KEYS.login.form.identifier)}
           type="text"

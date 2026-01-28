@@ -17,33 +17,35 @@ export default function ForgotPassword() {
     setLoading(false);
   };
   return (
-    <div className="my-20 md:my-10">
+    <div className="w-full max-w-md py-5">
       <form
         onSubmit={handleSubmit}
-        className="rounded-lg shadow p-5 w-full md:w-md h-auto"
+        className="rounded-xl bg-background p-6 shadow-lg border border-border"
       >
-        <h2 className="text-xl font-semibold mb-2">
+        <h2 className="text-2xl font-semibold tracking-tight mb-2">
           {t(TRANSLATION_KEYS.forgotPassword.title)}
         </h2>
 
-        <p className="text-muted-foreground mb-6">
+        <p className="text-sm text-muted-foreground mb-6">
           {t(TRANSLATION_KEYS.forgotPassword.description)}
         </p>
 
-        <Input
-          label={t(TRANSLATION_KEYS.forgotPassword.form.email)}
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          inputName="email"
-          required
-        />
+        <div className="space-y-4">
+          <Input
+            label={t(TRANSLATION_KEYS.forgotPassword.form.email)}
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            inputName="email"
+            required
+          />
 
-        <LoadingButton
-          loading={loading}
-          text={t(TRANSLATION_KEYS.forgotPassword.button.send)}
-          type="submit"
-        />
+          <LoadingButton
+            loading={loading}
+            text={t(TRANSLATION_KEYS.forgotPassword.button.send)}
+            type="submit"
+          />
+        </div>
       </form>
     </div>
   );

@@ -40,9 +40,9 @@ export default function ChangePassword() {
     setLoading(false);
   }
   return (
-    <div className="flex justify-center items-center h-[calc(100vh-64px-105px)] md:h-[calc(100vh-64px-53px)]">
+    <div className="flex justify-center items-center px-3 min-h-screen">
       <form
-        className="p-5 rounded-lg shadow w-full md:w-md"
+        className="w-full md:w-md rounded-xl bg-background p-6 shadow-lg border border-border"
         onSubmit={handleSubmit(onsubmit)}
       >
         <h2 className="text-xl font-semibold mb-2">

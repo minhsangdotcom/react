@@ -32,6 +32,7 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
+import { Switch } from "@/design-system/cn/components/ui/switch";
 dayjs.extend(utc);
 
 interface CreateUserProps {
@@ -75,21 +76,6 @@ export default function CreateUserModal({
     }
     setAvatar(img);
     setUser((pre) => ({ ...pre, avatar: URL.createObjectURL(img) }));
-  };
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value, type } = e.target;
-    setUser((prev) => ({
-      ...prev,
-      [name]:
-        type === "checkbox"
-          ? (e.target as HTMLInputElement).checked
-            ? UserStatus.Active
-            : UserStatus.Inactive
-          : value,
-    }));
   };
 
   const submit = async (data: createUserSchemaType) => {
@@ -325,28 +311,34 @@ export default function CreateUserModal({
               <div className="h-px bg-gray-200 dark:bg-border-dark w-full" />
 
               {/* Access Control */}
-              <div>
+              <>
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-base font-semibold text-gray-900 dark:text-white">
                     {t(TRANSLATION_KEYS.user.form.sections.accessControl)}
                   </h3>
-                  <label className="inline-flex items-center cursor-pointer gap-3">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  <div className="flex gap-3 items-center py-3 px-2">
+                    <Switch
+                      className="scale-135 cursor-pointer  data-[state=checked]:bg-brand-primary"
+                      checked={user.status === UserStatus.Active}
+                      onCheckedChange={(checked) => {
+                        console.log("🚀 ~ CreateUserModal ~ checked:", checked);
+                        setUser((pre) => ({
+                          ...pre,
+                          status:
+                            checked === true
+                              ? UserStatus.Active
+                              : UserStatus.Inactive,
+                        }));
+                      }}
+                    />
+                    <span className="text-sm font-medium  text-gray-700 dark:text-gray-200">
                       {t(TRANSLATION_KEYS.user.form.fields.status.label)}
                     </span>
-                    <div className="relative">
-                      <input
-                        type="checkbox"
-                        name="status"
-                        checked={user.status == UserStatus.Active}
-                        onChange={handleInputChange}
-                        className="sr-only peer"
-                      />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
-                    </div>
-                  </label>
+                    <br />
+                  </div>
                 </div>
 
+                {/* role & permission */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="flex flex-col gap-2">
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
@@ -406,7 +398,7 @@ export default function CreateUserModal({
                     />
                   </div>
                 </div>
-              </div>
+              </>
             </form>
           </div>
 

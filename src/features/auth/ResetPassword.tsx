@@ -39,10 +39,10 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="w-full md:w-md my-20 md:my-10">
+    <div className="w-full max-w-md py-5">
       <form
         onSubmit={handleSubmit(submit)}
-        className="rounded-lg shadow p-5 h-auto"
+        className="rounded-xl bg-background p-6 shadow-lg border border-border"
       >
         <h2 className="text-xl font-semibold mb-2">
           {t(TRANSLATION_KEYS.resetPassword.title)}

@@ -36,6 +36,7 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 import { defaultAvatarPicker } from "@/utils/defaultAvatarPicker";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
 import { useTranslation } from "react-i18next";
+import { Switch } from "@/design-system/cn/components/ui/switch";
 dayjs.extend(utc);
 
 const toUserSchema = (
@@ -294,6 +295,8 @@ export default function UpdateUserModal({
                     />
                   </div>
                 </div>
+
+                {/* User info */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <Input
                     label={t(TRANSLATION_KEYS.user.form.fields.firstName.label)}
@@ -342,27 +345,29 @@ export default function UpdateUserModal({
                       )}
                     />
                   </div>
-                  <div className="flex flex-col gap-2">
-                    <p className="text-white text-sm font-medium">
-                      Account Status
-                    </p>
-                    <div className="h-12 flex items-center px-1">
-                      <label className="inline-flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          name="status"
-                          checked={user.status === UserStatus.Active}
-                          onChange={handleInputChange}
-                          className="sr-only peer"
-                        />
-                        <div className="relative w-11 h-6 bg-[#324467] peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary rounded-full peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary" />
-                        <span className="ms-3 text-sm font-medium ">
-                          {t(TRANSLATION_KEYS.user.form.fields.status.label)}
-                        </span>
-                      </label>
-                    </div>
+                  <div className="flex gap-3 items-center py-3 px-2">
+                    <Switch
+                      className="scale-135 cursor-pointer  data-[state=checked]:bg-brand-primary"
+                      checked={user.status === UserStatus.Active}
+                      onCheckedChange={(checked) => {
+                        handleInputChange({
+                          target: {
+                            name: "status",
+                            value: checked
+                              ? UserStatus.Active
+                              : UserStatus.Inactive,
+                          },
+                        } as any);
+                      }}
+                    />
+
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                      {t(TRANSLATION_KEYS.user.form.fields.status.label)}
+                    </span>
                   </div>
                 </div>
+
+                {/* roles and permissions */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="flex flex-col gap-2">
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
