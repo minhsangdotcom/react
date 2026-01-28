@@ -21,12 +21,7 @@ import { userService } from "./userService";
 import LoadingButton from "@/components/LoadingButton";
 import Input from "./UserInput";
 import genderSelectStyles from "./gender-select-style";
-import permissionSelectStyles from "./permission-select-style";
-import {
-  DividerSkeleton,
-  SkeletonInput,
-  SkeletonSelect,
-} from "@/components/Skeleton";
+import {permissionSelectStyles, roleSelectStyles} from "./select-style";
 import { createUserSchema, createUserSchemaType } from "./userSchema";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -345,25 +340,26 @@ export default function CreateUserModal({
                       {t(TRANSLATION_KEYS.user.form.fields.roles.label)}
                     </span>
                     <Select
-                      isMulti
                       className="w-full"
-                      classNamePrefix="permission-select"
+                      classNamePrefix="role-select"
                       placeholder={t(
                         TRANSLATION_KEYS.user.form.fields.roles.description
                       )}
-                      name="permissions"
+                      name="roles"
                       options={roles.map((role) => ({
                         label: role.name,
                         value: role.id,
                       }))}
-                      styles={permissionSelectStyles}
-                      onChange={(options: MultiValue<any>) => {
+                      styles={roleSelectStyles}
+                      onChange={(option: any) => {
                         setUser((prev) => ({
                           ...prev,
-                          roles: options.map((o) => ({
-                            id: o.value,
-                            name: o.label,
-                          })),
+                          roles: [
+                            {
+                              id: option.value,
+                              name: option.label,
+                            },
+                          ],
                         }));
                       }}
                     />

@@ -212,7 +212,7 @@
         },
         "roles": {
           "label": "Roles",
-          "description": "Select one or more roles"
+          "description": "Select role"
         },
         "permissions": {
           "label": "Permissions",

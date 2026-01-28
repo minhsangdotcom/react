@@ -23,7 +23,7 @@ import getStatusTranslation, { UserStatus } from "./UserStatus";
 import { userService } from "./userService";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import permissionSelectStyles from "./permission-select-style";
+import { permissionSelectStyles, roleSelectStyles } from "./select-style";
 import {
   SkeletonBlock,
   SkeletonInput,
@@ -374,29 +374,30 @@ export default function UpdateUserModal({
                       {t(TRANSLATION_KEYS.user.form.fields.roles.label)}
                     </span>
                     <Select
-                      isMulti
                       className="w-full"
-                      classNamePrefix="permission-select"
+                      classNamePrefix="role-select"
                       placeholder={t(
                         TRANSLATION_KEYS.user.form.fields.roles.description
                       )}
-                      name="permissions"
+                      name="roles"
                       options={roles.map((role) => ({
                         label: role.name,
                         value: role.id,
                       }))}
-                      styles={permissionSelectStyles}
+                      styles={roleSelectStyles}
                       defaultValue={user.roles.map((x) => ({
                         label: x.name,
                         value: x.id,
                       }))}
-                      onChange={(options: MultiValue<any>) => {
+                      onChange={(option: any) => {
                         setUser((prev) => ({
                           ...prev,
-                          roles: options.map((o) => ({
-                            id: o.value,
-                            name: o.label,
-                          })),
+                          roles: [
+                            {
+                              id: option.value,
+                              name: option.label,
+                            },
+                          ],
                         }));
                       }}
                     />

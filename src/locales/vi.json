@@ -215,7 +215,7 @@
         },
         "roles": {
           "label": "Vai trò",
-          "description": "Chọn một hoặc nhiều vai trò"
+          "description": "Chọn vai trò"
         },
         "permissions": {
           "label": "Quyền",
