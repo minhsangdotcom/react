@@ -40,7 +40,7 @@ export default function ChangePassword() {
     setLoading(false);
   }
   return (
-    <div className="flex justify-center items-center px-3 min-h-screen">
+    <div className="flex justify-center items-center px-3 py-10 h-auto">
       <form
         className="w-full md:w-md rounded-xl bg-background p-6 shadow-lg border border-border"
         onSubmit={handleSubmit(onsubmit)}
