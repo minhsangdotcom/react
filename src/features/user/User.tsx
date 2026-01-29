@@ -174,7 +174,7 @@ export default function User() {
             defaultAvatarPicker.getAvatar(row.original.gender);
           return (
             <div className="flex items-center gap-3">
-              <Avatar className="h-9 w-9 overflow-hidden rounded-full">
+              <Avatar className="h-8 w-8 overflow-hidden rounded-full">
                 <AvatarImage
                   src={avatarUrl}
                   className="w-full h-full object-cover"
