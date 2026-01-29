@@ -47,6 +47,11 @@ import { showSuccessToast } from "@/notifications/toastSuccess";
 import { useAppSelector } from "@/store/hook";
 import { useTranslation } from "react-i18next";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/design-system/cn/components/ui/avatar";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -169,11 +174,12 @@ export default function User() {
             defaultAvatarPicker.getAvatar(row.original.gender);
           return (
             <div className="flex items-center gap-3">
-              <img
-                src={avatarUrl}
-                alt="fullName"
-                className="h-8 w-8 rounded-full object-cover"
-              />
+              <Avatar className="h-9 w-9 overflow-hidden rounded-full">
+                <AvatarImage
+                  src={avatarUrl}
+                  className="w-full h-full object-cover"
+                />
+              </Avatar>
 
               <span className="text-sm font-medium text-gray-900">
                 {row.original.firstName} {row.original.lastName}
