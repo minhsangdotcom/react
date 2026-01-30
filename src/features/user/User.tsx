@@ -47,11 +47,7 @@ import { showSuccessToast } from "@/notifications/toastSuccess";
 import { useAppSelector } from "@/store/hook";
 import { useTranslation } from "react-i18next";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/design-system/cn/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/design-system/cn/components/ui/avatar";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -152,8 +148,9 @@ export default function User() {
           );
         },
         meta: {
-          label: "Usernames",
-          placeholder: "Search by Username...",
+          label: TRANSLATION_KEYS.user.table.filter.items.username.label,
+          placeholder:
+            TRANSLATION_KEYS.user.table.filter.items.username.placeholder,
           variant: "text",
         },
         enableColumnFilter: true,
@@ -188,8 +185,9 @@ export default function User() {
           );
         },
         meta: {
-          label: "Full Name",
-          placeholder: "Search by Full Name...",
+          label: TRANSLATION_KEYS.user.table.filter.items.fullName.label,
+          placeholder:
+            TRANSLATION_KEYS.user.table.filter.items.fullName.placeholder,
           variant: "text",
         },
         enableColumnFilter: true,
@@ -206,8 +204,9 @@ export default function User() {
         ),
         cell: ({ row }) => <div>{row.getValue("email")}</div>,
         meta: {
-          label: "Email",
-          placeholder: "Search by Email...",
+          label: TRANSLATION_KEYS.user.table.filter.items.email.label,
+          placeholder:
+            TRANSLATION_KEYS.user.table.filter.items.email.placeholder,
           variant: "text",
         },
         enableColumnFilter: true,
@@ -227,8 +226,9 @@ export default function User() {
           return <div>{phoneNumber ? phoneNumber : "_"}</div>;
         },
         meta: {
-          label: "PhoneNumber",
-          placeholder: "Search by PhoneNumber...",
+          label: TRANSLATION_KEYS.user.table.filter.items.phoneNumber.label,
+          placeholder:
+            TRANSLATION_KEYS.user.table.filter.items.phoneNumber.placeholder,
           variant: "text",
         },
         enableColumnFilter: true,
@@ -257,8 +257,9 @@ export default function User() {
           );
         },
         meta: {
-          label: "Date of birth",
-          placeholder: "Search by Date of birth...",
+          label: TRANSLATION_KEYS.user.table.filter.items.dateOfBirth.label,
+          placeholder:
+            TRANSLATION_KEYS.user.table.filter.items.dateOfBirth.placeholder,
           variant: "date",
         },
         enableColumnFilter: true,
@@ -286,16 +287,16 @@ export default function User() {
           );
         },
         meta: {
-          label: "Status",
+          label: TRANSLATION_KEYS.user.table.filter.items.status.label,
           variant: "multiSelect",
           options: [
             {
-              label: "Active",
+              label: TRANSLATION_KEYS.user.status.active,
               value: UserStatus.Active.toString(),
               icon: CheckCircle,
             },
             {
-              label: "Inactive",
+              label: TRANSLATION_KEYS.user.status.inactive,
               value: UserStatus.Inactive.toString(),
               icon: XCircle,
             },
@@ -322,8 +323,7 @@ export default function User() {
           </div>
         ),
         meta: {
-          label: "Created At",
-          placeholder: "Search by description...",
+          label: t(TRANSLATION_KEYS.common.table.fields.createdAt),
           variant: "dateRange",
         },
         enableColumnFilter: false,
@@ -558,7 +558,7 @@ export default function User() {
               inputClassName="max-sm:h-11 h-9 py-2 text-sm border border-gray-200 bg-white hover:bg-gray-100 focus:bg-gray-100"
             />
 
-            <DataTableFilterMenu table={table} />
+            <DataTableFilterMenu table={table} language={code} />
             <DataTableSortList table={table} />
           </DataTableAdvancedToolbar>
         </DataTable>

@@ -49,6 +49,8 @@ import type {
   ExtendedColumnFilter,
   FilterOperator,
 } from "@dscn/types/data-table";
+import { useTranslation } from "react-i18next";
+import { TRANSLATION_KEYS } from "@/config/translationKey";
 
 const FILTERS_KEY = "filters";
 const DEBOUNCE_MS = 300;
@@ -56,12 +58,14 @@ const THROTTLE_MS = 50;
 const OPEN_MENU_SHORTCUT = "f";
 const REMOVE_FILTER_SHORTCUTS = ["backspace", "delete"];
 
-interface DataTableFilterMenuProps<TData>
-  extends React.ComponentProps<typeof PopoverContent> {
+interface DataTableFilterMenuProps<TData> extends React.ComponentProps<
+  typeof PopoverContent
+> {
   table: Table<TData>;
   debounceMs?: number;
   throttleMs?: number;
   shallow?: boolean;
+  language: string;
 }
 
 export function DataTableFilterMenu<TData>({
@@ -70,15 +74,18 @@ export function DataTableFilterMenu<TData>({
   throttleMs = THROTTLE_MS,
   shallow = true,
   align = "start",
+  language,
   ...props
 }: DataTableFilterMenuProps<TData>) {
   const id = React.useId();
 
   const columns = React.useMemo(() => {
-    return table
-      .getAllColumns()
-      .filter((column) => column.columnDef.enableColumnFilter);
+    return table.getAllColumns().filter((column) => {
+      return column.columnDef.enableColumnFilter;
+    });
   }, [table]);
+
+  const { t } = useTranslation();
 
   const [open, setOpen] = React.useState(false);
   const [selectedColumn, setSelectedColumn] =
@@ -238,16 +245,18 @@ export function DataTableFilterMenu<TData>({
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      {filters.map((filter) => (
-        <DataTableFilterItem
-          key={filter.filterId}
-          filter={filter}
-          filterItemId={`${id}-filter-${filter.filterId}`}
-          columns={columns}
-          onFilterUpdate={onFilterUpdate}
-          onFilterRemove={onFilterRemove}
-        />
-      ))}
+      {filters.map((filter) => {
+        return (
+          <DataTableFilterItem
+            key={filter.filterId}
+            filter={filter}
+            filterItemId={`${id}-filter-${filter.filterId}`}
+            columns={columns}
+            onFilterUpdate={onFilterUpdate}
+            onFilterRemove={onFilterRemove}
+          />
+        );
+      })}
       {filters.length > 0 && (
         <Button
           aria-label="Reset all filters"
@@ -279,12 +288,19 @@ export function DataTableFilterMenu<TData>({
           {...props}
         >
           <Command loop className="[&_[cmdk-input-wrapper]_svg]:hidden">
+            {/**
+             // * input value to filter
+             */}
             <CommandInput
               ref={inputRef}
               placeholder={
                 selectedColumn
-                  ? selectedColumn.columnDef.meta?.label ?? selectedColumn.id
-                  : "Search fields..."
+                  ? (t(selectedColumn.columnDef.meta?.label as any) ??
+                    t(selectedColumn.id as any))
+                  : t(
+                      TRANSLATION_KEYS.common.table.toolbar.filter.fields
+                        .searchPlaceholder
+                    )
               }
               value={inputValue}
               onValueChange={setInputValue}
@@ -322,7 +338,11 @@ export function DataTableFilterMenu<TData>({
                           <column.columnDef.meta.icon />
                         )}
                         <span className="truncate">
-                          {column.columnDef.meta?.label ?? column.id}
+                          {/*
+                            //* list field filter
+                          */}
+                          {t(column.columnDef.meta?.label as any) ??
+                            (column.id as any)}
                         </span>
                       </CommandItem>
                     ))}
@@ -360,6 +380,7 @@ function DataTableFilterItem<TData>({
     const [showOperatorSelector, setShowOperatorSelector] =
       React.useState(false);
     const [showValueSelector, setShowValueSelector] = React.useState(false);
+    const { t } = useTranslation();
 
     const column = columns.find((column) => column.id === filter.id);
     if (!column) return null;
@@ -406,6 +427,9 @@ function DataTableFilterItem<TData>({
         onKeyDown={onItemKeyDown}
       >
         <Popover open={showFieldSelector} onOpenChange={setShowFieldSelector}>
+          {/**
+           //* 
+           */}
           <PopoverTrigger asChild>
             <Button
               variant="ghost"
@@ -415,7 +439,7 @@ function DataTableFilterItem<TData>({
               {columnMeta?.icon && (
                 <columnMeta.icon className="text-muted-foreground" />
               )}
-              {columnMeta?.label ?? column.id}
+              {t(columnMeta?.label as any) ?? t(column.id as any)}
             </Button>
           </PopoverTrigger>
           <PopoverContent
@@ -423,8 +447,16 @@ function DataTableFilterItem<TData>({
             className="w-48 origin-[var(--radix-popover-content-transform-origin)] p-0"
           >
             <Command loop>
-              <CommandInput placeholder="Search fields..." />
+              <CommandInput
+                placeholder={t(
+                  TRANSLATION_KEYS.common.table.toolbar.filter.fields
+                    .searchPlaceholder
+                )}
+              />
               <CommandList>
+                {/**
+                 //*
+                 */}
                 <CommandEmpty>No fields found.</CommandEmpty>
                 <CommandGroup>
                   {columns.map((column) => (
@@ -448,7 +480,10 @@ function DataTableFilterItem<TData>({
                         <column.columnDef.meta.icon />
                       )}
                       <span className="truncate">
-                        {column.columnDef.meta?.label ?? column.id}
+                        {t(
+                          (column.columnDef.meta?.label as any) ??
+                            (column.id as any)
+                        )}
                       </span>
                       <Check
                         className={cn(
@@ -493,7 +528,7 @@ function DataTableFilterItem<TData>({
                 className="lowercase"
                 value={operator.value}
               >
-                {operator.label}
+                {t(operator.label as any)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -532,7 +567,7 @@ function FilterValueSelector<TData>({
   onSelect,
 }: FilterValueSelectorProps<TData>) {
   const variant = column.columnDef.meta?.variant ?? "text";
-
+  const { t } = useTranslation();
   switch (variant) {
     case "boolean":
       return (
@@ -550,6 +585,9 @@ function FilterValueSelector<TData>({
     case "multiSelect":
       return (
         <CommandGroup>
+          {/**
+           //* 
+           */}
           {column.columnDef.meta?.options?.map((option) => (
             <CommandItem
               key={option.value}
@@ -557,7 +595,7 @@ function FilterValueSelector<TData>({
               onSelect={() => onSelect(option.value)}
             >
               {option.icon && <option.icon />}
-              <span className="truncate">{option.label}</span>
+              <span className="truncate">{t(option.label as any)}</span>
               {option.count && (
                 <span className="ml-auto font-mono text-xs">
                   {option.count}
@@ -593,12 +631,25 @@ function FilterValueSelector<TData>({
             {isEmpty ? (
               <>
                 <Text />
-                <span>Type to add filter...</span>
+                <span>
+                  {t(
+                    TRANSLATION_KEYS.common.table.toolbar.filter.value
+                      .placeholder
+                  )}
+                </span>
               </>
             ) : (
               <>
                 <BadgeCheck />
-                <span className="truncate">Filter by &quot;{value}&quot;</span>
+                <span className="truncate">
+                  {t(
+                    TRANSLATION_KEYS.common.table.toolbar.filter.suggestion
+                      .byValue,
+                    {
+                      value: value,
+                    }
+                  )}
+                </span>
               </>
             )}
           </CommandItem>
@@ -626,6 +677,7 @@ function onFilterInputRender<TData>({
   showValueSelector: boolean;
   setShowValueSelector: (value: boolean) => void;
 }) {
+  const { t } = useTranslation();
   if (filter.operator === "isEmpty" || filter.operator === "isNotEmpty") {
     return (
       <div
@@ -736,6 +788,9 @@ function onFilterInputRender<TData>({
               ) : (
                 <>
                   <div className="-space-x-2 flex items-center rtl:space-x-reverse">
+                    {/**
+                     // * enum selected
+                     */}
                     {selectedOptions.map((selectedOption) =>
                       selectedOption.icon ? (
                         <div
@@ -750,7 +805,7 @@ function onFilterInputRender<TData>({
                   <span className="truncate">
                     {selectedOptions.length > 1
                       ? `${selectedOptions.length} selected`
-                      : selectedOptions[0]?.label}
+                      : t(selectedOptions[0]?.label as any)}
                   </span>
                 </>
               )}
@@ -766,6 +821,9 @@ function onFilterInputRender<TData>({
               <CommandList>
                 <CommandEmpty>No options found.</CommandEmpty>
                 <CommandGroup>
+                  {/**
+                   //*
+                   */}
                   {options.map((option) => (
                     <CommandItem
                       key={option.value}
@@ -781,7 +839,7 @@ function onFilterInputRender<TData>({
                       }}
                     >
                       {option.icon && <option.icon />}
-                      <span className="truncate">{option.label}</span>
+                      <span className="truncate">{t(option.label as any)}</span>
                       {filter.variant === "multiSelect" && (
                         <Check
                           className={cn(
@@ -816,8 +874,8 @@ function onFilterInputRender<TData>({
               new Date(Number(dateValue[1]))
             )}`
           : dateValue[0]
-          ? formatDate(new Date(Number(dateValue[0])))
-          : "Pick date...";
+            ? formatDate(new Date(Number(dateValue[0])))
+            : "Pick date...";
 
       return (
         <Popover open={showValueSelector} onOpenChange={setShowValueSelector}>

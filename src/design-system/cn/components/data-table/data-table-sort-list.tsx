@@ -46,12 +46,15 @@ import {
 import { dataTableConfig } from "@dscn/config/data-table";
 import { cn } from "@dscn/lib/utils";
 import queryString from "query-string";
+import { useTranslation } from "react-i18next";
+import { TRANSLATION_KEYS } from "@/config/translationKey";
 
 const OPEN_MENU_SHORTCUT = "s";
 const REMOVE_SORT_SHORTCUTS = ["backspace", "delete"];
 
-interface DataTableSortListProps<TData>
-  extends React.ComponentProps<typeof PopoverContent> {
+interface DataTableSortListProps<TData> extends React.ComponentProps<
+  typeof PopoverContent
+> {
   table: Table<TData>;
 }
 
@@ -64,6 +67,7 @@ export function DataTableSortList<TData>({
   const descriptionId = React.useId();
   const [open, setOpen] = React.useState(false);
   const addButtonRef = React.useRef<HTMLButtonElement>(null);
+  const { t } = useTranslation();
 
   const sorting = table.getState().sorting;
   const onSortingChange = table.setSorting;
@@ -217,7 +221,14 @@ export function DataTableSortList<TData>({
         >
           <div className="flex flex-col gap-1">
             <h4 id={labelId} className="font-medium leading-none">
-              {sorting.length > 0 ? "Sort by" : "No sorting applied"}
+              {sorting.length > 0
+                ? t(
+                    TRANSLATION_KEYS.common.table.toolbar.sort.title.hasSort
+                      .text
+                  )
+                : t(
+                    TRANSLATION_KEYS.common.table.toolbar.sort.title.noSort.text
+                  )}
             </h4>
             <p
               id={descriptionId}
@@ -228,7 +239,10 @@ export function DataTableSortList<TData>({
             >
               {sorting.length > 0
                 ? "Modify sorting to organize your rows."
-                : "Add sorting to organize your rows."}
+                : t(
+                    TRANSLATION_KEYS.common.table.toolbar.sort.title.noSort
+                      .description
+                  )}
             </p>
           </div>
           {sorting.length > 0 && (
@@ -259,7 +273,7 @@ export function DataTableSortList<TData>({
               onClick={onSortAdd}
               disabled={columns.length === 0}
             >
-              Add sort
+              {t(TRANSLATION_KEYS.common.table.toolbar.sort.actions.add)}
             </Button>
             {sorting.length > 0 && (
               <Button
@@ -268,7 +282,7 @@ export function DataTableSortList<TData>({
                 className="rounded"
                 onClick={onSortingReset}
               >
-                Reset sorting
+                {t(TRANSLATION_KEYS.common.table.toolbar.sort.actions.reset)}
               </Button>
             )}
           </div>
@@ -310,6 +324,7 @@ function DataTableSortItem({
   const [showFieldSelector, setShowFieldSelector] = React.useState(false);
   const [showDirectionSelector, setShowDirectionSelector] =
     React.useState(false);
+  const { t } = useTranslation();
 
   const onItemKeyDown = React.useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -360,7 +375,7 @@ function DataTableSortItem({
             className="w-[var(--radix-popover-trigger-width)] origin-[var(--radix-popover-content-transform-origin)] p-0"
           >
             <Command>
-              <CommandInput placeholder="Search fields..." />
+              <CommandInput placeholder={t(TRANSLATION_KEYS.common.table.toolbar.search.placeholder)} />
               <CommandList>
                 <CommandEmpty>No fields found.</CommandEmpty>
                 <CommandGroup>
@@ -372,7 +387,7 @@ function DataTableSortItem({
                         onSortUpdate(sort.id, { id: value })
                       }
                     >
-                      <span className="truncate">{column.label}</span>
+                      <span className="truncate">{t(column.label as any)}</span>
                     </CommandItem>
                   ))}
                 </CommandGroup>
@@ -398,11 +413,13 @@ function DataTableSortItem({
             id={directionListboxId}
             className="min-w-[var(--radix-select-trigger-width)] origin-[var(--radix-select-content-transform-origin)]"
           >
-            {dataTableConfig.sortOrders.map((order: any) => (
-              <SelectItem key={order.value} value={order.value}>
-                {order.label}
-              </SelectItem>
-            ))}
+            {dataTableConfig.sortOrders.map((order: any) => {
+              return (
+                <SelectItem key={order.value} value={order.value}>
+                  <span className="text-sm">{t(order.label)}</span>
+                </SelectItem>
+              );
+            })}
           </SelectContent>
         </Select>
         <Button

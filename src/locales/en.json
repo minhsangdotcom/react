@@ -33,10 +33,45 @@
           },
           "value": {
             "placeholder": "Type to add filter..."
+          },
+          "suggestion": {
+            "byValue": "Filter by \"{{value}}\""
+          },
+          "fields": {
+            "searchPlaceholder": "Search fields..."
+          },
+          "operators": {
+            "iLike": "Contains",
+            "notILike": "Does not contain",
+            "eq": "Is",
+            "ne": "Is not",
+            "lt": "Is less than",
+            "lte": "Is less than or equal to",
+            "gt": "Is greater than",
+            "gte": "Is greater than or equal to",
+            "isBetween": "Is between",
+            "isRelativeToToday": "Is relative to today",
+            "isEmpty": "Is empty",
+            "isNotEmpty": "Is not empty",
+            "inArray": "Has any of",
+            "notInArray": "Has none of"
+          },
+          "join": {
+            "and": "And",
+            "or": "Or"
           }
         },
         "sort": {
-          "title": "Sort by",
+          "title": {
+            "hasSort": {
+              "text": "Sort by",
+              "description": "Modify sorting to organize your rows."
+            },
+            "noSort": {
+              "text": "No sorting applied",
+              "description": "Add sorting to organize your rows."
+            }
+          },
           "field": {
             "label": "Field"
           },
@@ -159,6 +194,34 @@
     "entity": "user",
     "title": "User",
     "table": {
+      "filter": {
+        "items": {
+          "username": {
+            "label": "Username",
+            "placeholder": "Search by username"
+          },
+          "fullName": {
+            "label": "Full name",
+            "placeholder": "Search by full name"
+          },
+          "email": {
+            "label": "Email",
+            "placeholder": "Search by email"
+          },
+          "phoneNumber": {
+            "label": "Phone number",
+            "placeholder": "Search by phone number"
+          },
+          "dateOfBirth": {
+            "label": "Date of birth",
+            "placeholder": "Filter by date of birth"
+          },
+          "status": {
+            "label": "Status",
+            "placeholder": "Filter by status"
+          }
+        }
+      },
       "fields": {
         "username": "Username",
         "fullName": "Full Name",

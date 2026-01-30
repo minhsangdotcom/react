@@ -34,9 +34,45 @@ export const TRANSLATION_KEYS = {
           value: {
             placeholder: "common.table.toolbar.filter.value.placeholder",
           },
+          suggestion: {
+            byValue: "common.table.toolbar.filter.suggestion.byValue",
+          },
+          fields: {
+            searchPlaceholder:
+              "common.table.toolbar.filter.fields.searchPlaceholder",
+          },
+          operators: {
+            iLike: "common.table.toolbar.filter.operators.iLike",
+            notILike: "common.table.toolbar.filter.operators.notILike",
+            eq: "common.table.toolbar.filter.operators.eq",
+            ne: "common.table.toolbar.filter.operators.ne",
+            lt: "common.table.toolbar.filter.operators.lt",
+            lte: "common.table.toolbar.filter.operators.lte",
+            gt: "common.table.toolbar.filter.operators.gt",
+            gte: "common.table.toolbar.filter.operators.gte",
+            isBetween: "common.table.toolbar.filter.operators.isBetween",
+            isEmpty: "common.table.toolbar.filter.operators.isEmpty",
+            isNotEmpty: "common.table.toolbar.filter.operators.isNotEmpty",
+            isRelativeToToday:
+              "common.table.toolbar.filter.operators.isRelativeToToday",
+            isArray: "common.table.toolbar.filter.operators.isArray",
+            notInArray: "common.table.toolbar.filter.operators.notInArray",
+          },
+          join: {
+            and: "common.table.toolbar.filter.join.and",
+            or: "common.table.toolbar.filter.join.or",
+          },
         },
         sort: {
-          title: "common.table.toolbar.sort.title",
+          title: {
+            hasSort: {
+              text: "common.table.toolbar.sort.title.hasSort.text",
+            },
+            noSort: {
+              text: "common.table.toolbar.sort.title.noSort.text",
+              description: "common.table.toolbar.sort.title.noSort.description",
+            },
+          },
           field: {
             label: "common.table.toolbar.sort.field.label",
           },
@@ -264,6 +300,34 @@ export const TRANSLATION_KEYS = {
       },
     },
     table: {
+      filter: {
+        items: {
+          username: {
+            label: "user.table.filter.items.username.label",
+            placeholder: "user.table.filter.items.username.placeholder",
+          },
+          fullName: {
+            label: "user.table.filter.items.fullName.label",
+            placeholder: "user.table.filter.items.fullName.placeholder",
+          },
+          email: {
+            label: "user.table.filter.items.email.label",
+            placeholder: "user.table.filter.items.email.placeholder",
+          },
+          phoneNumber: {
+            label: "user.table.filter.items.phoneNumber.label",
+            placeholder: "user.table.filter.items.phoneNumber.placeholder",
+          },
+          dateOfBirth: {
+            label: "user.table.filter.items.dateOfBirth.label",
+            placeholder: "user.table.filter.items.dateOfBirth.placeholder",
+          },
+          status: {
+            label: "user.table.filter.items.status.label",
+            placeholder: "user.table.filter.items.status.placeholder",
+          },
+        },
+      },
       fields: {
         username: "user.table.fields.username",
         fullName: "user.table.fields.fullName",

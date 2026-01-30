@@ -33,10 +33,45 @@
           },
           "value": {
             "placeholder": "Nhập giá trị để lọc..."
+          },
+          "suggestion": {
+            "byValue": "Lọc bởi \"{{value}}\""
+          },
+          "fields": {
+            "searchPlaceholder": "Tìm kiếm trường dữ liệu..."
+          },
+          "operators": {
+            "iLike": "Chứa",
+            "notILike": "Không chứa",
+            "eq": "Bằng",
+            "ne": "Không bằng",
+            "lt": "Nhỏ hơn",
+            "lte": "Nhỏ hơn hoặc bằng",
+            "gt": "Lớn hơn",
+            "gte": "Lớn hơn hoặc bằng",
+            "isBetween": "Trong khoảng",
+            "isRelativeToToday": "So với hôm nay",
+            "isEmpty": "Trống",
+            "isNotEmpty": "Không trống",
+            "inArray": "Chứa một trong các giá trị",
+            "notInArray": "Không chứa giá trị nào"
+          },
+          "join": {
+            "and": "Và",
+            "or": "Hoặc"
           }
         },
         "sort": {
-          "title": "Sắp xếp theo",
+          "title": {
+            "hasSort": {
+              "text": "Sắp xếp theo",
+              "description": "Điều chỉnh các sắp xếp để sắp xếp các hàng."
+            },
+            "noSort": {
+              "text": "Chưa có sắp xếp",
+              "description": "Thêm sắp xếp để sắp xếp các hàng."
+            }
+          },
           "field": {
             "label": "Trường"
           },
@@ -162,6 +197,34 @@
     "entity": "người dùng",
     "title": "Người dùng",
     "table": {
+      "filter": {
+        "items": {
+          "username": {
+            "label": "Tên đăng nhập",
+            "placeholder": "Tìm kiếm theo tên đăng nhập"
+          },
+          "fullName": {
+            "label": "Họ và tên",
+            "placeholder": "Tìm kiếm theo họ và tên"
+          },
+          "email": {
+            "label": "Email",
+            "placeholder": "Tìm kiếm theo email"
+          },
+          "phoneNumber": {
+            "label": "Số điện thoại",
+            "placeholder": "Tìm kiếm theo số điện thoại"
+          },
+          "dateOfBirth": {
+            "label": "Ngày sinh",
+            "placeholder": "Lọc theo ngày sinh"
+          },
+          "status": {
+            "label": "Trạng thái",
+            "placeholder": "Lọc theo trạng thái"
+          }
+        }
+      },
       "fields": {
         "username": "Tên đăng nhập",
         "fullName": "Họ và tên",
