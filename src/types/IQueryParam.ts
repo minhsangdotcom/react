@@ -1,16 +1,21 @@
-type NestedFilterValue = string | number | boolean | INestedFilterMap | INestedFilterMap[];
+type NestedFilterValue =
+  | string
+  | number
+  | boolean
+  | INestedFilterMap
+  | INestedFilterMap[];
 
 export interface INestedFilterMap {
   [key: string]: NestedFilterValue;
 }
 
 export default interface IQueryParam {
-  page?: number;
-  pageSize?: number;
-  before?: string;
-  after?: string;
-  keyword?: string;
+  page?: number | null;
+  pageSize?: number | null;
+  before?: string | null;
+  after?: string | null;
+  keyword?: string | null;
   targets?: Array<string>;
-  sort?:string,
+  sort?: string | null;
   filter?: INestedFilterMap;
 }

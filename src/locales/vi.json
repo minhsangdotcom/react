@@ -89,14 +89,21 @@
         },
         "view": {
           "label": "Xem",
-           "placeholder":"Tìm kiếm cột..."
+          "placeholder": "Tìm kiếm cột..."
         }
       },
       "fields": {
         "createdAt": "Ngày tạo"
       },
-       "actions": {
-        "hide":"Ẩn"
+      "actions": {
+        "hide": "Ẩn"
+      },
+      "selection": {
+        "count": "Đã chọn {{selected}} / {{total}} hàng."
+      },
+      "pagination": {
+        "rowsPerPage": "Số hàng mỗi trang",
+        "pageOf": "Trang {{current}} / {{total}}"
       }
     }
   },

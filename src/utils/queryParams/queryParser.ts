@@ -3,7 +3,7 @@ import IQueryParam from "@/types/IQueryParam";
 import parseFilter from "@utils/queryParams/filter";
 import parseSort from "@utils/queryParams/sort";
 
-const filterParser = {
+export const queryParser = {
   parse: function (query: Params): IQueryParam {
     if (query === undefined) {
       return {};
@@ -13,8 +13,8 @@ const filterParser = {
     }
     const params = {
       page: query.page,
-      before: query.pre,
-      after: query.next,
+      before: query.before,
+      after: query.after,
       pageSize: query?.perPage,
       sort: parseSort(
         query?.sort?.length > 0 ? query?.sort : defaultParams.sort
@@ -27,5 +27,3 @@ const filterParser = {
     return params;
   },
 };
-
-export default filterParser;

@@ -33,12 +33,12 @@ function getGroups(): GroupType[] {
       items: [
         {
           title: t(TRANSLATION_KEYS.navigation.user),
-          url: "/identity/users",
+          url: "/users",
           icon: User2,
         },
         {
           title: t(TRANSLATION_KEYS.navigation.role),
-          url: "/identity/roles",
+          url: "/roles",
           icon: Shield,
         },
       ],

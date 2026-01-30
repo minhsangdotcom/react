@@ -28,7 +28,7 @@ export const TRANSLATION_KEYS = {
           placeholder: "common.table.toolbar.search.placeholder",
         },
         filter: {
-          label:"common.table.toolbar.filter.label",
+          label: "common.table.toolbar.filter.label",
           column: {
             placeholder: "common.table.toolbar.filter.column.placeholder",
           },
@@ -65,7 +65,7 @@ export const TRANSLATION_KEYS = {
           },
         },
         sort: {
-          label:"common.table.toolbar.sort.label",
+          label: "common.table.toolbar.sort.label",
           title: {
             hasSort: {
               text: "common.table.toolbar.sort.title.hasSort.text",
@@ -96,9 +96,16 @@ export const TRANSLATION_KEYS = {
       fields: {
         createdAt: "common.table.fields.createdAt",
       },
-      actions:{
-        hide:"common.table.actions.hide"
-      }
+      actions: {
+        hide: "common.table.actions.hide",
+      },
+      selection: {
+        count: "common.table.selection.count",
+      },
+      pagination: {
+        rowsPerPage: "common.table.pagination.rowsPerPage",
+        pageOf: "common.table.pagination.pageOf",
+      },
     },
   },
 

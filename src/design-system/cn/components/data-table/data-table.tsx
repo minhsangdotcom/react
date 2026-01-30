@@ -1,7 +1,10 @@
 import { type Table as TanstackTable, flexRender } from "@tanstack/react-table";
 import type * as React from "react";
 
-import { DataTablePagination } from "@dscn/components/data-table/data-table-pagination";
+import {
+  CursorPageInfo,
+  DataTablePagination,
+} from "@dscn/components/data-table/data-table-pagination";
 import {
   Table,
   TableBody,
@@ -19,6 +22,11 @@ interface DataTableProps<TData> extends React.ComponentProps<"div"> {
   hasPagination?: boolean;
   isCursorPaged?: boolean;
   loading: boolean;
+  cursorPageInfo?: CursorPageInfo;
+  onCursorPageChange?: (
+    cursor: string | null,
+    direction: "next" | "previous"
+  ) => void;
 }
 
 export function DataTable<TData>({
@@ -29,6 +37,8 @@ export function DataTable<TData>({
   hasPagination = true,
   isCursorPaged = false,
   loading = false,
+  cursorPageInfo,
+  onCursorPageChange,
   ...props
 }: DataTableProps<TData>) {
   return (
@@ -114,7 +124,12 @@ export function DataTable<TData>({
       </div>
       <div className="flex flex-col gap-2.5">
         {hasPagination && (
-          <DataTablePagination isCursorPaged={isCursorPaged} table={table} />
+          <DataTablePagination
+            isCursorPaged={isCursorPaged}
+            table={table}
+            cursorPageInfo={cursorPageInfo}
+            onCursorPageChange={onCursorPageChange}
+          />
         )}
         {actionBar &&
           table.getFilteredSelectedRowModel().rows.length > 0 &&

@@ -16,27 +16,59 @@ import {
 } from "@dscn/components/ui/select";
 import { cn } from "@dscn/lib/utils";
 import { localStorageUtil } from "@/utils/storages/localStorageUtil";
-import queryString from "query-string";
-import { Params } from "@/types/Params";
+import { ROW_PER_PAGE } from "@/types/Params";
+import { useTranslation } from "react-i18next";
+import { TRANSLATION_KEYS } from "@/config/translationKey";
 interface DataTablePaginationProps<TData> extends React.ComponentProps<"div"> {
   table: Table<TData>;
   pageSizeOptions?: number[];
   isCursorPaged?: boolean;
+  cursorPageInfo?: CursorPageInfo;
+  onCursorPageChange?: (
+    cursor: string | null,
+    direction: "next" | "previous",
+  ) => void;
 }
+
+export interface CursorPageInfo {
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  startCursor?: string | null;
+  endCursor?: string | null;
+}
+
+const defaultCursorPage = {
+  hasNextPage: false,
+  hasPreviousPage: false,
+  startCursor: null,
+  endCursor: null,
+} as CursorPageInfo;
 
 export function DataTablePagination<TData>({
   table,
-  pageSizeOptions = [10, 20, 30, 40, 50],
+  pageSizeOptions = ROW_PER_PAGE,
   className,
   isCursorPaged = false,
+  cursorPageInfo = defaultCursorPage,
+  onCursorPageChange,
   ...props
 }: DataTablePaginationProps<TData>) {
-  let pageInfo = null;
-  let query = {} as Params | any;
-  if (isCursorPaged) {
-    query = queryString.parse(window.location.search) as Params | any;
-    pageInfo = getCursorPagedInfo();
-  }
+  const { t } = useTranslation();
+  const handlePreviousPage = () => {
+    if (isCursorPaged && onCursorPageChange && cursorPageInfo) {
+      onCursorPageChange(cursorPageInfo.startCursor ?? null, "previous");
+    } else {
+      table.previousPage();
+    }
+  };
+
+  const handleNextPage = () => {
+    if (isCursorPaged && onCursorPageChange && cursorPageInfo) {
+      onCursorPageChange(cursorPageInfo.endCursor ?? null, "next");
+    } else {
+      table.nextPage();
+    }
+  };
 
   return (
     <div
@@ -47,12 +79,16 @@ export function DataTablePagination<TData>({
       {...props}
     >
       <div className="flex-1 whitespace-nowrap text-muted-foreground text-sm">
-        {table.getFilteredSelectedRowModel().rows.length} of{" "}
-        {table.getFilteredRowModel().rows.length} row(s) selected.
+        {t(TRANSLATION_KEYS.common.table.selection.count, {
+          selected: table.getFilteredSelectedRowModel().rows.length,
+          total: table.getFilteredRowModel().rows.length,
+        })}
       </div>
       <div className="flex flex-col-reverse items-center gap-4 sm:flex-row sm:gap-6 lg:gap-8">
         <div className="flex items-center space-x-2">
-          <p className="whitespace-nowrap font-medium text-sm">Rows per page</p>
+          <p className="whitespace-nowrap font-medium text-sm">
+            {t(TRANSLATION_KEYS.common.table.pagination.rowsPerPage)}
+          </p>
           <Select
             value={`${table.getState().pagination.pageSize}`}
             onValueChange={(value) => {
@@ -71,13 +107,14 @@ export function DataTablePagination<TData>({
             </SelectContent>
           </Select>
         </div>
-        <div className="flex items-center justify-center font-medium text-sm">
-          Page{" "}
-          {isCursorPaged
-            ? (query.page ?? 1)
-            : table.getState().pagination.pageIndex + 1}{" "}
-          of {table.getPageCount()}
-        </div>
+        {!isCursorPaged && (
+          <div className="flex items-center justify-center font-medium text-sm">
+            {t(TRANSLATION_KEYS.common.table.pagination.pageOf, {
+              current: table.getState().pagination.pageIndex + 1,
+              total: table.getPageCount(),
+            })}
+          </div>
+        )}
         <div className="flex items-center space-x-2">
           {!isCursorPaged && (
             <Button
@@ -96,23 +133,11 @@ export function DataTablePagination<TData>({
             variant="outline"
             size="icon"
             className="size-8"
-            onClick={() => {
-              if (!isCursorPaged) {
-                table.previousPage();
-                return;
-              }
-              const params = new URLSearchParams(window.location.search);
-              params.set("previous", pageInfo?.previous ?? "");
-              params.delete("next");
-              let currentPage = query.page ?? 1;
-              params.set("page", (currentPage - 1).toString());
-              const newUrl = `${window.location.pathname}?${params.toString()}`;
-              window.history.replaceState({}, "", newUrl);
-            }}
+            onClick={handlePreviousPage}
             disabled={
-              isCursorPaged
-                ? !pageInfo?.hasPreviousPage
-                : !table.getCanPreviousPage()
+              !(isCursorPaged
+                ? cursorPageInfo?.hasPreviousPage
+                : table.getCanNextPage())
             }
           >
             <ChevronLeft />
@@ -122,25 +147,11 @@ export function DataTablePagination<TData>({
             variant="outline"
             size="icon"
             className="size-8"
-            onClick={() => {
-              if (!isCursorPaged) {
-                table.nextPage();
-                return;
-              }
-              const params = new URLSearchParams(window.location.search);
-              const pageInfo = localStorageUtil.get<{
-                previous: string;
-                next: string;
-              }>("paginationInfo");
-              params.set("next", pageInfo?.next ?? "");
-              params.delete("previous");
-              let currentPage = query.page ?? 1;
-              params.set("page", (++currentPage).toString());
-              const newUrl = `${window.location.pathname}?${params.toString()}`;
-              window.history.replaceState({}, "", newUrl);
-            }}
+            onClick={handleNextPage}
             disabled={
-              isCursorPaged ? !pageInfo?.hasNextPage : !table.getCanNextPage()
+              !(isCursorPaged
+                ? cursorPageInfo?.hasNextPage
+                : table.getCanNextPage())
             }
           >
             <ChevronRight />

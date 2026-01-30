@@ -17,8 +17,8 @@ const PrivateRoute: RouteObject = {
       children: [
         { path: "/", element: <Home /> },
         { path: "/profile", element: <Profile /> },
-        { path: "/identity/roles", element: <RolePage /> },
-        { path: "/identity/users", element: <UserPage /> },
+        { path: "/roles", element: <RolePage /> },
+        { path: "/users", element: <UserPage /> },
         { path: "/settings/change-password", element: <ChangePassword/> },
       ],
     },

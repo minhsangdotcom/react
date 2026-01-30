@@ -27,7 +27,7 @@ import { CheckCircle, MoreHorizontal, XCircle } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useQueryParam } from "@/hooks/useQueyParam";
 import { userService } from "@/features/user/userService";
-import filterParser from "@utils/queryParams/filterParser";
+import { queryParser } from "@/utils/queryParams/queryParser";
 import { IPageInfo, IPagination } from "@/types/IResponse";
 import { Checkbox } from "@dscn/components/ui/checkbox";
 import { localStorageUtil } from "@/utils/storages/localStorageUtil";
@@ -49,6 +49,7 @@ import { useTranslation } from "react-i18next";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
 import { Avatar, AvatarImage } from "@/design-system/cn/components/ui/avatar";
 import { DELIMITER } from "@/utils/queryParams/sort";
+import { CursorPageInfo } from "@/design-system/cn/components/data-table/data-table-pagination";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -434,9 +435,18 @@ export default function User() {
     ) {
       return;
     }
-    const params = filterParser.parse(query as Params);
-    sanitizeInputFilter(params);
-    sanitizeInputSort(params);
+    const params = sanitizeInput([
+      (params) => sanitizeInputFilter(params),
+      (params) => sanitizeInputSort(params),
+    ]);
+    getUsers(params);
+  }, [query, search, openCreatePopup, openConfirmDialog, openUpdatePopup]);
+
+  function sanitizeInput(
+    handlers: ((params: IQueryParam) => void)[]
+  ): IQueryParam {
+    const params = queryParser.parse(query as Params);
+    handlers.forEach((fn) => fn(params));
     if (search !== "") {
       params.keyword = search;
       params.targets = [
@@ -447,8 +457,8 @@ export default function User() {
         "phoneNumber",
       ];
     }
-    getUsers(params);
-  }, [query, search, openCreatePopup, openConfirmDialog, openUpdatePopup]);
+    return params;
+  }
 
   async function getUsers(params: IQueryParam) {
     setLoading(true);
@@ -461,12 +471,6 @@ export default function User() {
 
       setUser([...new Set([...users])]);
       setPageInfo({ ...paging });
-      localStorageUtil.set("paginationInfo", {
-        previous: paging?.before ?? "",
-        next: paging?.after ?? "",
-        hasNextPage: paging?.hasNextPage,
-        hasPreviousPage: paging?.hasPreviousPage,
-      });
     }
 
     setLoading(false);
@@ -519,52 +523,74 @@ export default function User() {
 
   const onSubmit = (message: string) => showSuccessToast(message);
 
+  const handleCursorPageChange = async (
+    cursor: string | null,
+    direction: "next" | "previous"
+  ) => {
+    const params = sanitizeInput([
+      (params) => sanitizeInputFilter(params),
+      (params) => sanitizeInputSort(params),
+    ]);
+    if (direction == "next") {
+      params.after = cursor;
+    }
+    if (direction == "previous") {
+      params.before = cursor;
+    }
+    getUsers(params);
+  };
+
   return (
     <>
-      <div className="p-4 md:p-6 w-full">
+      {/* {table} */}
+      <div className="flex flex-col gap-1 p-4 md:p-6 w-full">
         {/*Title */}
-        <h1 className="text-xl font-semibold text-gray-800 mt-3 ml-2">
+        <h1 className="text-xl font-semibold text-gray-800 py-3">
           {t(TRANSLATION_KEYS.user.title)}
         </h1>
-
         {/* Actions */}
-        <button
-          className="float-right my-3 cursor-pointer
-          rounded-lg shadow-sm
-          bg-brand-primary text-white font-medium
-          px-6 py-2
-          transition-colors duration-200
-          hover:bg-brand-primary-hover
-          focus-visible:outline-none
-          focus-visible:ring-2
-          focus-visible:ring-brand-primary/50
-          active:scale-[0.98]
-          max-sm:w-full
-          max-sm:py-3
-          max-sm:text-base
-          "
-          onClick={() => setOpenCreatePopup(true)}
-        >
-          {t(TRANSLATION_KEYS.common.actions.create)}
-        </button>
-
-        {/* {table} */}
-        <DataTable table={table} isCursorPaged={true} loading={loading}>
-          <DataTableAdvancedToolbar table={table}>
-            <SearchBar
-              value={search}
-              onChange={setSearch}
-              placeholder={t(
-                TRANSLATION_KEYS.common.table.toolbar.search.placeholder
-              )}
-              className="w-full sm:max-w-xs"
-              inputClassName="max-sm:h-11 h-9 py-2 text-sm border border-gray-200 bg-white hover:bg-gray-100 focus:bg-gray-100"
-            />
-
-            <DataTableFilterMenu table={table} />
-            <DataTableSortList table={table} />
-          </DataTableAdvancedToolbar>
-        </DataTable>
+        <div className="flex justify-end">
+          <button
+            className="cursor-pointer rounded-lg shadow-sm bg-brand-primary text-white font-medium px-6 transition-colors duration-200
+            hover:bg-brand-primary-hover
+              focus-visible:outline-none
+              focus-visible:ring-2
+            focus-visible:ring-brand-primary/50
+              active:scale-[0.98]
+              w-full py-2 text-base my-2
+              md:w-auto
+              md:my-0
+              "
+            onClick={() => setOpenCreatePopup(true)}
+          >
+            {t(TRANSLATION_KEYS.common.actions.create)}
+          </button>
+        </div>
+        <DataTableAdvancedToolbar table={table}>
+          <SearchBar
+            value={search}
+            onChange={setSearch}
+            placeholder={t(
+              TRANSLATION_KEYS.common.table.toolbar.search.placeholder
+            )}
+            className="w-full md:w-xs"
+            inputClassName="max-sm:h-11 h-9 py-2 text-sm border border-gray-200 bg-white"
+          />
+          <DataTableFilterMenu table={table} />
+          <DataTableSortList table={table} />
+        </DataTableAdvancedToolbar>
+        <DataTable
+          table={table}
+          isCursorPaged={true}
+          loading={loading}
+          cursorPageInfo={{
+            hasNextPage: pageInfo?.hasNextPage!,
+            hasPreviousPage: pageInfo?.hasPreviousPage!,
+            endCursor: pageInfo?.after,
+            startCursor: pageInfo?.before,
+          }}
+          onCursorPageChange={handleCursorPageChange}
+        />
       </div>
       <CreateUserModal
         open={openCreatePopup}

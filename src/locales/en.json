@@ -63,7 +63,7 @@
           }
         },
         "sort": {
-          "label":"Sort",
+          "label": "Sort",
           "title": {
             "hasSort": {
               "text": "Sort by",
@@ -89,14 +89,21 @@
         },
         "view": {
           "label": "View",
-          "placeholder":"Search columns..."
+          "placeholder": "Search columns..."
         }
       },
       "fields": {
         "createdAt": "Created At"
       },
       "actions": {
-        "hide":"Hide"
+        "hide": "Hide"
+      },
+      "selection": {
+        "count": "{{selected}} of {{total}} row(s) selected."
+      },
+      "pagination": {
+        "rowsPerPage": "Rows per page",
+        "pageOf": "Page {{current}} / {{total}}"
       }
     }
   },

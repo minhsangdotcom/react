@@ -1,7 +1,7 @@
 import toast from "react-hot-toast";
 
 export const showServerErrorToast = () => {
-  toast.error("Something went wrong on our server. Please try again later.", {
+  toast.error("Something went wrong. Please try again.", {
     id: "server-error",
     duration: 6000,
     style: {

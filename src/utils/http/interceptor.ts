@@ -160,8 +160,4 @@ export function toastError(error: AxiosError, isCancel: boolean) {
     );
     return;
   }
-  showNetworkErrorToast(
-    "Something went wrong. Please try again.",
-    "unknown-error"
-  );
 }

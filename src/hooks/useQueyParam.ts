@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { IFilterParam, Params, defaultParams } from "@/types/Params";
 import queryString from "query-string";
 import IFilter from "@/types/IFilter";
@@ -39,14 +39,14 @@ export function useQueryParam() {
       sort: sort
         ? JSON.parse(sort as string)
         : [{ id: "createdAt", desc: true }],
-      page: page ? parseInt(page as string) : undefined,
+      page: page ? parseInt(page as string) : null,
       perPage: perPage ? parseInt(perPage as string) : defaultParams.perPage,
-      pre: previous as string | undefined,
-      next: next as string | undefined,
+      before: previous as string | null,
+      after: next as string | null,
     });
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     updateQuery();
 
     const onPopState = () => {
