@@ -28,6 +28,7 @@
           "placeholder": "Search anything..."
         },
         "filter": {
+          "label": "Filter",
           "column": {
             "placeholder": "Search fields..."
           },
@@ -62,6 +63,7 @@
           }
         },
         "sort": {
+          "label":"Sort",
           "title": {
             "hasSort": {
               "text": "Sort by",
@@ -84,6 +86,10 @@
             "reset": "Reset sorting",
             "remove": "Remove sort"
           }
+        },
+        "view": {
+          "label": "View",
+          "placeholder":"Search columns..."
         }
       },
       "fields": {

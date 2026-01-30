@@ -65,7 +65,6 @@ interface DataTableFilterMenuProps<TData> extends React.ComponentProps<
   debounceMs?: number;
   throttleMs?: number;
   shallow?: boolean;
-  language: string;
 }
 
 export function DataTableFilterMenu<TData>({
@@ -74,7 +73,6 @@ export function DataTableFilterMenu<TData>({
   throttleMs = THROTTLE_MS,
   shallow = true,
   align = "start",
-  language,
   ...props
 }: DataTableFilterMenuProps<TData>) {
   const id = React.useId();
@@ -279,7 +277,9 @@ export function DataTableFilterMenu<TData>({
             onKeyDown={onTriggerKeyDown}
           >
             <ListFilter />
-            {filters.length > 0 ? null : "Filter"}
+            {filters.length > 0
+              ? null
+              : t(TRANSLATION_KEYS.common.table.toolbar.filter.label)}
           </Button>
         </PopoverTrigger>
         <PopoverContent

@@ -19,9 +19,12 @@ import {
   PopoverTrigger,
 } from "@dscn/components/ui/popover";
 import { cn } from "@dscn/lib/utils";
+import { useTranslation } from "react-i18next";
+import { TRANSLATION_KEYS } from "@/config/translationKey";
 
-interface DataTableViewOptionsProps<TData>
-  extends React.ComponentProps<typeof PopoverContent> {
+interface DataTableViewOptionsProps<TData> extends React.ComponentProps<
+  typeof PopoverContent
+> {
   table: Table<TData>;
   disabled?: boolean;
 }
@@ -37,11 +40,11 @@ export function DataTableViewOptions<TData>({
         .getAllColumns()
         .filter(
           (column) =>
-            typeof column.accessorFn !== "undefined" &&
-            column.getCanHide()
+            typeof column.accessorFn !== "undefined" && column.getCanHide()
         ),
     [table]
   );
+  const { t } = useTranslation();
 
   return (
     <Popover>
@@ -55,13 +58,17 @@ export function DataTableViewOptions<TData>({
           disabled={disabled}
         >
           <Settings2 className="text-muted-foreground" />
-          View
+          {t(TRANSLATION_KEYS.common.table.toolbar.view.label)}
         </Button>
       </PopoverTrigger>
 
       <PopoverContent className="w-44 p-0" {...props}>
         <Command>
-          <CommandInput placeholder="Search columns..." />
+          <CommandInput
+            placeholder={t(
+              TRANSLATION_KEYS.common.table.toolbar.view.placeholder
+            )}
+          />
           <CommandList>
             <CommandEmpty>No columns found.</CommandEmpty>
             <CommandGroup>
@@ -73,14 +80,15 @@ export function DataTableViewOptions<TData>({
                   }
                 >
                   <span className="truncate">
-                    {column.columnDef.meta?.label ?? column.id}
+                    {t(
+                      (column.columnDef.meta?.label as any) ??
+                        (column.id as any)
+                    )}
                   </span>
                   <Check
                     className={cn(
                       "ml-auto size-4 shrink-0",
-                      column.getIsVisible()
-                        ? "opacity-100"
-                        : "opacity-0"
+                      column.getIsVisible() ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>
@@ -92,4 +100,3 @@ export function DataTableViewOptions<TData>({
     </Popover>
   );
 }
-

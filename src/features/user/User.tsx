@@ -325,7 +325,7 @@ export default function User() {
           </div>
         ),
         meta: {
-          label: t(TRANSLATION_KEYS.common.table.fields.createdAt),
+          label: TRANSLATION_KEYS.common.table.fields.createdAt,
           variant: "dateRange",
         },
         enableColumnFilter: false,
@@ -561,7 +561,7 @@ export default function User() {
               inputClassName="max-sm:h-11 h-9 py-2 text-sm border border-gray-200 bg-white hover:bg-gray-100 focus:bg-gray-100"
             />
 
-            <DataTableFilterMenu table={table} language={code} />
+            <DataTableFilterMenu table={table} />
             <DataTableSortList table={table} />
           </DataTableAdvancedToolbar>
         </DataTable>

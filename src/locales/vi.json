@@ -28,6 +28,7 @@
           "placeholder": "Tìm kiếm..."
         },
         "filter": {
+          "label": "Bộ lọc",
           "column": {
             "placeholder": "Tìm kiếm cột..."
           },
@@ -62,6 +63,7 @@
           }
         },
         "sort": {
+          "label": "Sắp xếp",
           "title": {
             "hasSort": {
               "text": "Sắp xếp theo",
@@ -84,6 +86,10 @@
             "reset": "Đặt lại sắp xếp",
             "remove": "Xóa sắp xếp"
           }
+        },
+        "view": {
+          "label": "Xem",
+           "placeholder":"Tìm kiếm cột..."
         }
       },
       "fields": {
