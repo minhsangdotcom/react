@@ -357,6 +357,9 @@ function DataTableSortItem({
         onKeyDown={onItemKeyDown}
       >
         <Popover open={showFieldSelector} onOpenChange={setShowFieldSelector}>
+          {/**
+           //*
+           */}
           <PopoverTrigger asChild>
             <Button
               id={fieldTriggerId}
@@ -366,7 +369,9 @@ function DataTableSortItem({
               size="sm"
               className="w-44 justify-between rounded font-normal"
             >
-              <span className="truncate">{columnLabels.get(sort.id)}</span>
+              <span className="truncate">
+                {t(columnLabels.get(sort.id) as any)}
+              </span>
               <ChevronsUpDown className="opacity-50" />
             </Button>
           </PopoverTrigger>
@@ -375,7 +380,14 @@ function DataTableSortItem({
             className="w-[var(--radix-popover-trigger-width)] origin-[var(--radix-popover-content-transform-origin)] p-0"
           >
             <Command>
-              <CommandInput placeholder={t(TRANSLATION_KEYS.common.table.toolbar.search.placeholder)} />
+              {/**
+               //*
+               */}
+              <CommandInput
+                placeholder={t(
+                  TRANSLATION_KEYS.common.table.toolbar.search.placeholder
+                )}
+              />
               <CommandList>
                 <CommandEmpty>No fields found.</CommandEmpty>
                 <CommandGroup>

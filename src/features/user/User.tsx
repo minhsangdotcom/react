@@ -48,6 +48,7 @@ import { useAppSelector } from "@/store/hook";
 import { useTranslation } from "react-i18next";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
 import { Avatar, AvatarImage } from "@/design-system/cn/components/ui/avatar";
+import { DELIMITER } from "@/utils/queryParams/sort";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -191,6 +192,7 @@ export default function User() {
           variant: "text",
         },
         enableColumnFilter: true,
+        enableSorting: true,
       },
       {
         id: "email",
@@ -433,7 +435,8 @@ export default function User() {
       return;
     }
     const params = filterParser.parse(query as Params);
-    convertFullNameToFirstLastNameFilter(params);
+    sanitizeInputFilter(params);
+    sanitizeInputSort(params);
     if (search !== "") {
       params.keyword = search;
       params.targets = [
@@ -601,7 +604,7 @@ export default function User() {
   );
 }
 
-const convertFullNameToFirstLastNameFilter = (params: IQueryParam): void => {
+const sanitizeInputFilter = (params: IQueryParam): void => {
   if (
     typeof params.filter === "object" &&
     params.filter !== null &&
@@ -642,6 +645,23 @@ const convertFullNameToFirstLastNameFilter = (params: IQueryParam): void => {
       ];
     }
   }
+};
+const sanitizeInputSort = (params: IQueryParam): void => {
+  const index = params.sort?.indexOf("fullName") ?? -1;
+  if (index == -1) {
+    return;
+  }
+  const fullNameSort = params.sort?.substring(index);
+  const sorts = fullNameSort?.split(DELIMITER) ?? [];
+  if (sorts.length == 0) {
+    throw new Error("Invalid sort format");
+  }
+
+  const orderBy = sorts[1] ?? "";
+  params.sort = params.sort?.replace(
+    fullNameSort!,
+    `firstName${orderBy === "" ? `${orderBy}` : `${DELIMITER}${orderBy}`},lastName${orderBy === "" ? `${orderBy}` : `${DELIMITER}${orderBy}`}`
+  );
 };
 const statusStyles: Record<string, string> = {
   Active: "bg-emerald-100 text-emerald-700 border border-emerald-200",
