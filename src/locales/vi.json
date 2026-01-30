@@ -94,6 +94,9 @@
       },
       "fields": {
         "createdAt": "Ngày tạo"
+      },
+       "actions": {
+        "hide":"Ẩn"
       }
     }
   },

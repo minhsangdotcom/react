@@ -64,7 +64,7 @@ export default function Role() {
           <DataTableColumnHeader
             column={column}
             id="name"
-            title={t(TRANSLATION_KEYS.role.table.fields.name)}
+            title={TRANSLATION_KEYS.role.table.fields.name}
           />
         ),
         cell: ({ row }) => <div>{row.getValue("name")}</div>,
@@ -76,7 +76,7 @@ export default function Role() {
           <DataTableColumnHeader
             column={column}
             id="description"
-            title={t(TRANSLATION_KEYS.role.table.fields.description)}
+            title={TRANSLATION_KEYS.role.table.fields.description}
           />
         ),
         cell: ({ row }) => {
@@ -91,7 +91,7 @@ export default function Role() {
           <DataTableColumnHeader
             column={column}
             id="createdAt"
-            title={t(TRANSLATION_KEYS.common.table.fields.createdAt)}
+            title={TRANSLATION_KEYS.common.table.fields.createdAt}
           />
         ),
         cell: ({ row }) => (

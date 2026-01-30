@@ -140,7 +140,7 @@ export default function User() {
           <DataTableColumnHeader
             column={column}
             id="username"
-            title={t(TRANSLATION_KEYS.user.table.fields.username)}
+            title={TRANSLATION_KEYS.user.table.fields.username}
           />
         ),
         cell: ({ row }) => {
@@ -163,7 +163,7 @@ export default function User() {
           <DataTableColumnHeader
             column={column}
             id="fullName"
-            title={t(TRANSLATION_KEYS.user.table.fields.fullName)}
+            title={TRANSLATION_KEYS.user.table.fields.fullName}
           />
         ),
         cell: ({ row }) => {
@@ -201,7 +201,7 @@ export default function User() {
           <DataTableColumnHeader
             column={column}
             id="email"
-            title={t(TRANSLATION_KEYS.user.table.fields.email)}
+            title={TRANSLATION_KEYS.user.table.fields.email}
           />
         ),
         cell: ({ row }) => <div>{row.getValue("email")}</div>,
@@ -220,7 +220,7 @@ export default function User() {
           <DataTableColumnHeader
             column={column}
             id="phoneNumber"
-            title={t(TRANSLATION_KEYS.user.table.fields.phoneNumber)}
+            title={TRANSLATION_KEYS.user.table.fields.phoneNumber}
           />
         ),
         cell: ({ row }) => {
@@ -242,7 +242,7 @@ export default function User() {
           <DataTableColumnHeader
             column={column}
             id="dateOfBirth"
-            title={t(TRANSLATION_KEYS.user.table.fields.dateOfBirth)}
+            title={TRANSLATION_KEYS.user.table.fields.dateOfBirth}
           />
         ),
         cell: ({ row }) => {
@@ -273,7 +273,7 @@ export default function User() {
           <DataTableColumnHeader
             column={column}
             id="status"
-            title={t(TRANSLATION_KEYS.user.table.fields.status)}
+            title={TRANSLATION_KEYS.user.table.fields.status}
           />
         ),
         cell: ({ cell }) => {
@@ -313,7 +313,7 @@ export default function User() {
           <DataTableColumnHeader
             column={column}
             id="createdAt"
-            title={t(TRANSLATION_KEYS.common.table.fields.createdAt)}
+            title={TRANSLATION_KEYS.common.table.fields.createdAt}
           />
         ),
         cell: ({ row }) => (

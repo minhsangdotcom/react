@@ -96,6 +96,9 @@ export const TRANSLATION_KEYS = {
       fields: {
         createdAt: "common.table.fields.createdAt",
       },
+      actions:{
+        hide:"common.table.actions.hide"
+      }
     },
   },
 

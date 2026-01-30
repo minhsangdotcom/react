@@ -17,9 +17,13 @@ import {
   DropdownMenuTrigger,
 } from "@dscn/components/ui/dropdown-menu";
 import { cn } from "@dscn/lib/utils";
+import { useTranslation } from "react-i18next";
+import { TRANSLATION_KEYS } from "@/config/translationKey";
 
-interface DataTableColumnHeaderProps<TData, TValue>
-  extends React.ComponentProps<typeof DropdownMenuTrigger> {
+interface DataTableColumnHeaderProps<
+  TData,
+  TValue,
+> extends React.ComponentProps<typeof DropdownMenuTrigger> {
   column: Column<TData, TValue>;
   title: string;
 }
@@ -30,8 +34,9 @@ export function DataTableColumnHeader<TData, TValue>({
   className,
   ...props
 }: DataTableColumnHeaderProps<TData, TValue>) {
+  const { t } = useTranslation();
   if (!column.getCanSort() && !column.getCanHide()) {
-    return <div className={cn(className)}>{title}</div>;
+    return <div className={cn(className)}>{t(title as any)}</div>;
   }
 
   return (
@@ -39,11 +44,11 @@ export function DataTableColumnHeader<TData, TValue>({
       <DropdownMenuTrigger
         className={cn(
           "-ml-1.5 flex h-8 items-center gap-1.5 rounded-md px-2 py-1.5 hover:bg-accent focus:outline-none focus:ring-1 focus:ring-ring data-[state=open]:bg-accent [&_svg]:size-4 [&_svg]:shrink-0 [&_svg]:text-muted-foreground",
-          className,
+          className
         )}
         {...props}
       >
-        {title}
+        {t(title as any)}
         {column.getCanSort() &&
           (column.getIsSorted() === "desc" ? (
             <ChevronDown />
@@ -62,7 +67,9 @@ export function DataTableColumnHeader<TData, TValue>({
               onClick={() => column.toggleSorting(false)}
             >
               <ChevronUp />
-              Asc
+              <span className="whitespace-nowrap">
+                {t(TRANSLATION_KEYS.common.table.toolbar.sort.direction.asc)}
+              </span>
             </DropdownMenuCheckboxItem>
             <DropdownMenuCheckboxItem
               className="relative pr-8 pl-2 [&>span:first-child]:right-2 [&>span:first-child]:left-auto [&_svg]:text-muted-foreground"
@@ -70,7 +77,9 @@ export function DataTableColumnHeader<TData, TValue>({
               onClick={() => column.toggleSorting(true)}
             >
               <ChevronDown />
-              Desc
+              <span className="whitespace-nowrap">
+                {t(TRANSLATION_KEYS.common.table.toolbar.sort.direction.desc)}
+              </span>
             </DropdownMenuCheckboxItem>
             {column.getIsSorted() && (
               <DropdownMenuItem
@@ -90,7 +99,9 @@ export function DataTableColumnHeader<TData, TValue>({
             onClick={() => column.toggleVisibility(false)}
           >
             <EyeOff />
-            Hide
+            <span className="whitespace-nowrap">
+              {t(TRANSLATION_KEYS.common.table.actions.hide)}
+            </span>
           </DropdownMenuCheckboxItem>
         )}
       </DropdownMenuContent>
