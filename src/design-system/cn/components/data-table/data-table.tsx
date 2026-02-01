@@ -15,6 +15,8 @@ import {
 } from "@dscn/components/ui/table";
 import { getColumnPinningStyle } from "@dscn/lib/data-table";
 import { cn } from "@dscn/lib/utils";
+import { useTranslation } from "react-i18next";
+import { TRANSLATION_KEYS } from "@/config/translationKey";
 
 interface DataTableProps<TData> extends React.ComponentProps<"div"> {
   table: TanstackTable<TData>;
@@ -41,14 +43,15 @@ export function DataTable<TData>({
   onCursorPageChange,
   ...props
 }: DataTableProps<TData>) {
+  const { t } = useTranslation();
   return (
     <div
       className={cn("flex w-full flex-col gap-2.5 overflow-auto", className)}
       {...props}
     >
       {children}
-      <div className="overflow-hidden rounded-md border">
-        <Table>
+      <div className="rounded-md border">
+        <Table className="flex-1 overflow-y-auto">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -72,23 +75,8 @@ export function DataTable<TData>({
             ))}
           </TableHeader>
           <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell
-                  colSpan={table.getAllColumns().length}
-                  className="h-24 text-center"
-                >
-                  <div
-                    className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] text-brand-primary"
-                    role="status"
-                  >
-                    <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-                      Loading...
-                    </span>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ) : table.getRowModel().rows?.length ? (
+            {table.getRowModel().rows?.length ? (
+              // Show data (even while loading)
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -109,13 +97,25 @@ export function DataTable<TData>({
                   ))}
                 </TableRow>
               ))
+            ) : loading ? (
+              // Skeleton only for initial load
+              Array.from({ length: 10 }).map((_, i) => (
+                <TableRow key={`skeleton-${i}`}>
+                  {table.getAllColumns().map((col) => (
+                    <TableCell key={col.id} className="py-3">
+                      <div className="h-5 bg-muted animate-pulse rounded" />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
             ) : (
+              // Empty state
               <TableRow>
                 <TableCell
                   colSpan={table.getAllColumns().length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  {t(TRANSLATION_KEYS.common.table.noContent)}
                 </TableCell>
               </TableRow>
             )}

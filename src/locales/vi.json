@@ -104,7 +104,8 @@
       "pagination": {
         "rowsPerPage": "Số hàng mỗi trang",
         "pageOf": "Trang {{current}} / {{total}}"
-      }
+      },
+      "noContent": "Không có dữ liệu."
     }
   },
   "navigation": {

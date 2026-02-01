@@ -5,7 +5,7 @@ import Header from "./components/Header";
 
 export default function Layout() {
   return (
-    <SidebarProvider defaultOpen={false}>
+    <SidebarProvider defaultOpen={false} className="overflow-hidden">
       <AppSidebar />
       <SidebarInset className="flex flex-col h-screen w-full overflow-hidden">
         <div className="shrink-0">

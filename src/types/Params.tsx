@@ -15,7 +15,7 @@ export const defaultParams: Params = {
   page: null,
   before: null,
   after: null,
-  perPage: 1,
+  perPage: 5,
 } as const;
 
 export interface IFilterParam {
@@ -23,4 +23,4 @@ export interface IFilterParam {
   info: Array<IFilter> | [];
 }
 
-export const ROW_PER_PAGE = [1, 10, 20, 30, 40, 50];
+export const ROW_PER_PAGE = [5, 10, 20, 30, 40, 50];

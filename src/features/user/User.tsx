@@ -550,46 +550,41 @@ export default function User() {
         {/* Actions */}
         <div className="flex justify-end">
           <button
-            className="cursor-pointer rounded-lg shadow-sm bg-brand-primary text-white font-medium px-6 transition-colors duration-200
-            hover:bg-brand-primary-hover
-              focus-visible:outline-none
-              focus-visible:ring-2
-            focus-visible:ring-brand-primary/50
-              active:scale-[0.98]
-              w-full py-2 text-base my-2
-              md:w-auto
-              md:my-0
-              "
+            className="cursor-pointer rounded-lg shadow-sm bg-brand-primary text-white font-medium px-6 py-2 text-base w-full my-2 transition-colors duration-200 hover:bg-brand-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50 active:scale-[0.98] md:w-auto md:my-0"
             onClick={() => setOpenCreatePopup(true)}
           >
             {t(TRANSLATION_KEYS.common.actions.create)}
           </button>
         </div>
-        <DataTableAdvancedToolbar table={table}>
-          <SearchBar
-            value={search}
-            onChange={setSearch}
-            placeholder={t(
-              TRANSLATION_KEYS.common.table.toolbar.search.placeholder
-            )}
-            className="w-full md:w-xs"
-            inputClassName="max-sm:h-11 h-9 py-2 text-sm border border-gray-200 bg-white"
-          />
-          <DataTableFilterMenu table={table} />
-          <DataTableSortList table={table} />
-        </DataTableAdvancedToolbar>
-        <DataTable
-          table={table}
-          isCursorPaged={true}
-          loading={loading}
-          cursorPageInfo={{
-            hasNextPage: pageInfo?.hasNextPage!,
-            hasPreviousPage: pageInfo?.hasPreviousPage!,
-            endCursor: pageInfo?.after,
-            startCursor: pageInfo?.before,
-          }}
-          onCursorPageChange={handleCursorPageChange}
-        />
+        <div>
+          <DataTableAdvancedToolbar table={table} className="py-2">
+            <SearchBar
+              value={search}
+              onChange={setSearch}
+              placeholder={t(
+                TRANSLATION_KEYS.common.table.toolbar.search.placeholder
+              )}
+              className="w-full md:w-xs"
+              inputClassName="max-sm:h-11 h-9 py-2 text-sm border border-gray-200 bg-white"
+            />
+            <DataTableFilterMenu table={table} />
+            <DataTableSortList table={table} />
+          </DataTableAdvancedToolbar>
+          <div className="flex flex-col h-[calc(100vh-200px)]">
+            <DataTable
+              table={table}
+              isCursorPaged={true}
+              loading={loading}
+              cursorPageInfo={{
+                hasNextPage: pageInfo?.hasNextPage!,
+                hasPreviousPage: pageInfo?.hasPreviousPage!,
+                endCursor: pageInfo?.after,
+                startCursor: pageInfo?.before,
+              }}
+              onCursorPageChange={handleCursorPageChange}
+            />
+          </div>
+        </div>
       </div>
       <CreateUserModal
         open={openCreatePopup}

@@ -236,41 +236,32 @@ export default function Role() {
 
   return (
     <>
-      <div className="p-4 md:p-6 w-full">
+      <div className="flex flex-col gap-1 p-4 md:p-6 w-full">
         {/* Header with Title */}
-        <h1 className="text-xl font-semibold text-gray-800 mt-5 ml-2">
+        <h1 className="text-xl font-semibold text-gray-800 py-3">
           {t(TRANSLATION_KEYS.role.title)}
         </h1>
 
         {/* Add Button aligned to the right */}
-        <button
-          className="float-right my-3 cursor-pointer
-          rounded-lg shadow-sm
-          bg-brand-primary text-white font-medium
-          px-6 py-2
-          transition-colors duration-200
-          hover:bg-brand-primary-hover
-          focus-visible:outline-none
-          focus-visible:ring-2
-          focus-visible:ring-brand-primary/50
-          active:scale-[0.98]
-          max-sm:w-full
-          max-sm:py-3
-          max-sm:text-base
-          "
-          onClick={() => {
-            setOpen(true);
-          }}
-        >
-          {t(TRANSLATION_KEYS.common.actions.create)}
-        </button>
+        <div className="flex justify-end">
+          <button
+            className="cursor-pointer rounded-lg shadow-sm bg-brand-primary text-white font-medium px-6 py-2 text-base w-full my-2 transition-colors duration-200 hover:bg-brand-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50 active:scale-[0.98] md:w-auto md:my-0"
+            onClick={() => {
+              setOpen(true);
+            }}
+          >
+            {t(TRANSLATION_KEYS.common.actions.create)}
+          </button>
+        </div>
 
-        <DataTable
-          table={table}
-          hasPagination={false}
-          aria-sort="none"
-          loading={loading}
-        />
+        <div className="py-3">
+          <DataTable
+            table={table}
+            hasPagination={false}
+            aria-sort="none"
+            loading={loading}
+          />
+        </div>
       </div>
 
       <RoleModal

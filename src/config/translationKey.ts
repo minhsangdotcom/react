@@ -106,6 +106,7 @@ export const TRANSLATION_KEYS = {
         rowsPerPage: "common.table.pagination.rowsPerPage",
         pageOf: "common.table.pagination.pageOf",
       },
+      noContent: "common.table.noContent",
     },
   },
 

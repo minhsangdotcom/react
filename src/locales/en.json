@@ -104,7 +104,8 @@
       "pagination": {
         "rowsPerPage": "Rows per page",
         "pageOf": "Page {{current}} / {{total}}"
-      }
+      },
+      "noContent": "No results."
     }
   },
   "navigation": {
