@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@dscn/components/ui/dropdown-menu";
 import { useDataTable } from "@dscn/hooks/use-data-table";
-import { defaultParams, Params } from "@/types/Params";
+import { defaultParams } from "@/types/Params";
 import {
   IPermissionModel,
   IRoleModel,
@@ -27,10 +27,8 @@ import { CheckCircle, MoreHorizontal, XCircle } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useQueryParam } from "@/hooks/useQueyParam";
 import { userService } from "@/features/user/userService";
-import { queryParser } from "@/utils/queryParams/queryParser";
 import { IPageInfo, IPagination } from "@/types/IResponse";
 import { Checkbox } from "@dscn/components/ui/checkbox";
-import { localStorageUtil } from "@/utils/storages/localStorageUtil";
 import { DataTableFilterMenu } from "@/design-system/cn/components/data-table/data-table-filter-menu";
 import SearchBar from "@components/SearchBar";
 import CreateUserModal from "./CreateUserModal";
@@ -50,6 +48,8 @@ import { TRANSLATION_KEYS } from "@/config/translationKey";
 import { Avatar, AvatarImage } from "@/design-system/cn/components/ui/avatar";
 import { DELIMITER } from "@/utils/queryParams/sort";
 import { CursorPageInfo } from "@/design-system/cn/components/data-table/data-table-pagination";
+import { sanitizeQuery } from "@/utils/queryParams/sanitizeQuery";
+import { sanitizeSearchQuery } from "@/utils/queryParams/sanitizeSearchQuery";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -435,30 +435,22 @@ export default function User() {
     ) {
       return;
     }
-    const params = sanitizeInput([
-      (params) => sanitizeInputFilter(params),
-      (params) => sanitizeInputSort(params),
+    const queryParam = sanitizeQuery(
+      [
+        (params) => sanitizeInputFilter(params),
+        (params) => sanitizeInputSort(params),
+      ],
+      query
+    );
+    sanitizeSearchQuery(queryParam, search, [
+      "username",
+      "firsName",
+      "lastName",
+      "email",
+      "phoneNumber",
     ]);
-    getUsers(params);
+    getUsers(queryParam);
   }, [query, search, openCreatePopup, openConfirmDialog, openUpdatePopup]);
-
-  function sanitizeInput(
-    handlers: ((params: IQueryParam) => void)[]
-  ): IQueryParam {
-    const params = queryParser.parse(query as Params);
-    handlers.forEach((fn) => fn(params));
-    if (search !== "") {
-      params.keyword = search;
-      params.targets = [
-        "username",
-        "firsName",
-        "lastName",
-        "email",
-        "phoneNumber",
-      ];
-    }
-    return params;
-  }
 
   async function getUsers(params: IQueryParam) {
     setLoading(true);
@@ -527,17 +519,24 @@ export default function User() {
     cursor: string | null,
     direction: "next" | "previous"
   ) => {
-    const params = sanitizeInput([
-      (params) => sanitizeInputFilter(params),
-      (params) => sanitizeInputSort(params),
-    ]);
+    if (query == undefined) {
+      return;
+    }
+    const queryParam = sanitizeQuery(
+      [
+        (params) => sanitizeInputFilter(params),
+        (params) => sanitizeInputSort(params),
+      ],
+      query
+    );
+
     if (direction == "next") {
-      params.after = cursor;
+      queryParam.after = cursor;
     }
     if (direction == "previous") {
-      params.before = cursor;
+      queryParam.before = cursor;
     }
-    getUsers(params);
+    getUsers(queryParam);
   };
 
   return (
