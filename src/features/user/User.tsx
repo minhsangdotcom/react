@@ -24,7 +24,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { CheckCircle, MoreHorizontal, XCircle } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQueryParam } from "@/hooks/useQueyParam";
 import { userService } from "@/features/user/userService";
 import { IPageInfo, IPagination } from "@/types/IResponse";
@@ -47,7 +47,12 @@ import { useTranslation } from "react-i18next";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
 import { Avatar, AvatarImage } from "@/design-system/cn/components/ui/avatar";
 import { DELIMITER } from "@/utils/queryParams/sort";
-import { CursorPageInfo } from "@/design-system/cn/components/data-table/data-table-pagination";
+import {
+  CursorPageInfo,
+  DataCursorPagination,
+  DataTablePagination,
+  EllipsisPagination,
+} from "@/design-system/cn/components/data-table/data-table-pagination";
 import { sanitizeQuery } from "@/utils/queryParams/sanitizeQuery";
 import { sanitizeSearchQuery } from "@/utils/queryParams/sanitizeSearchQuery";
 dayjs.extend(utc);
@@ -573,15 +578,28 @@ export default function User() {
           <div className="flex flex-col h-[calc(100vh-200px)]">
             <DataTable
               table={table}
-              isCursorPaged={true}
               loading={loading}
-              cursorPageInfo={{
-                hasNextPage: pageInfo?.hasNextPage!,
-                hasPreviousPage: pageInfo?.hasPreviousPage!,
-                endCursor: pageInfo?.after,
-                startCursor: pageInfo?.before,
-              }}
-              onCursorPageChange={handleCursorPageChange}
+              pagination={
+                <EllipsisPagination
+                  table={table}
+                  config={{
+                    boundaryCount: 1,
+                    maxVisiblePages: 7,
+                    siblingCount: 1,
+                  }}
+                />
+                // <DataTablePagination table={table} />
+                // <DataCursorPagination
+                //   table={table}
+                //   cursorPageInfo={{
+                //     hasNextPage: pageInfo?.hasNextPage!,
+                //     hasPreviousPage: pageInfo?.hasPreviousPage!,
+                //     endCursor: pageInfo?.after,
+                //     startCursor: pageInfo?.before,
+                //   }}
+                //   onCursorPageChange={handleCursorPageChange}
+                // />
+              }
             />
           </div>
         </div>

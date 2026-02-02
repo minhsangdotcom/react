@@ -1,10 +1,5 @@
 import { type Table as TanstackTable, flexRender } from "@tanstack/react-table";
 import type * as React from "react";
-
-import {
-  CursorPageInfo,
-  DataTablePagination,
-} from "@dscn/components/data-table/data-table-pagination";
 import {
   Table,
   TableBody,
@@ -18,17 +13,12 @@ import { cn } from "@dscn/lib/utils";
 import { useTranslation } from "react-i18next";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
 
-interface DataTableProps<TData> extends React.ComponentProps<"div"> {
+export interface DataTableProps<TData> extends React.ComponentProps<"div"> {
   table: TanstackTable<TData>;
   actionBar?: React.ReactNode;
   hasPagination?: boolean;
-  isCursorPaged?: boolean;
+  pagination?: React.ReactNode;
   loading: boolean;
-  cursorPageInfo?: CursorPageInfo;
-  onCursorPageChange?: (
-    cursor: string | null,
-    direction: "next" | "previous"
-  ) => void;
 }
 
 export function DataTable<TData>({
@@ -36,11 +26,8 @@ export function DataTable<TData>({
   actionBar,
   children,
   className,
-  hasPagination = true,
-  isCursorPaged = false,
+  pagination,
   loading = false,
-  cursorPageInfo,
-  onCursorPageChange,
   ...props
 }: DataTableProps<TData>) {
   const { t } = useTranslation();
@@ -123,14 +110,7 @@ export function DataTable<TData>({
         </Table>
       </div>
       <div className="flex flex-col gap-2.5">
-        {hasPagination && (
-          <DataTablePagination
-            isCursorPaged={isCursorPaged}
-            table={table}
-            cursorPageInfo={cursorPageInfo}
-            onCursorPageChange={onCursorPageChange}
-          />
-        )}
+        {pagination && pagination}
         {actionBar &&
           table.getFilteredSelectedRowModel().rows.length > 0 &&
           actionBar}
