@@ -38,7 +38,7 @@ export function DataTable<TData>({
     >
       {children}
       <div className="rounded-md border">
-        <Table className="flex-1 overflow-y-auto">
+        <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>

@@ -553,7 +553,7 @@ export default function User() {
           {t(TRANSLATION_KEYS.user.title)}
         </h1>
         {/* Actions */}
-        <div className="flex justify-end">
+        <div className="flex justify-end px-2">
           <button
             className="cursor-pointer rounded-lg shadow-sm bg-brand-primary text-white font-medium px-6 py-2 text-base w-full my-2 transition-colors duration-200 hover:bg-brand-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50 active:scale-[0.98] md:w-auto md:my-0"
             onClick={() => setOpenCreatePopup(true)}
@@ -561,7 +561,7 @@ export default function User() {
             {t(TRANSLATION_KEYS.common.actions.create)}
           </button>
         </div>
-        <div>
+        <div className="px-1">
           <DataTableAdvancedToolbar table={table} className="py-2">
             <SearchBar
               value={search}
