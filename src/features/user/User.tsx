@@ -18,7 +18,7 @@ import {
   IUser,
   IUserResponse,
 } from "@/features/user/IUser";
-import { UserStatus } from "@/features/user/UserStatus";
+import getStatusTranslation, { UserStatus } from "@/features/user/UserStatus";
 import { Column, ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -55,6 +55,7 @@ import {
 } from "@/design-system/cn/components/data-table/data-table-pagination";
 import { sanitizeQuery } from "@/utils/queryParams/sanitizeQuery";
 import { sanitizeSearchQuery } from "@/utils/queryParams/sanitizeSearchQuery";
+import { UserCard } from "./UserCard";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -95,6 +96,8 @@ export default function User() {
 
   const [permissions, setPermissions] = useState<IPermissionModel[]>([]);
   const [roles, setRoles] = useState<IRoleModel[]>([]);
+  const [expand, setExpand] = useState<string[]>([]);
+
   const { code } = useAppSelector((store) => store.language);
   const { t } = useTranslation();
 
@@ -290,7 +293,7 @@ export default function User() {
                 statusStyles[UserStatus[status]]
               }`}
             >
-              {UserStatus[status]}
+              {t(getStatusTranslation(status as UserStatus) as any)}
             </Badge>
           );
         },
@@ -544,9 +547,21 @@ export default function User() {
     getUsers(queryParam);
   };
 
+  const pagination = () => {
+    return (
+      <EllipsisPagination
+        table={table}
+        config={{
+          boundaryCount: 1,
+          maxVisiblePages: 7,
+          siblingCount: 1,
+        }}
+      />
+    );
+  };
+
   return (
     <>
-      {/* {table} */}
       <div className="flex flex-col gap-1 p-4 md:p-6 w-full">
         {/*Title */}
         <h1 className="text-xl font-semibold text-gray-800 py-3">
@@ -562,6 +577,9 @@ export default function User() {
           </button>
         </div>
         <div className="px-1">
+          {/*
+          Toolbar
+          */}
           <DataTableAdvancedToolbar table={table} className="py-2">
             <SearchBar
               value={search}
@@ -575,32 +593,56 @@ export default function User() {
             <DataTableFilterMenu table={table} />
             <DataTableSortList table={table} />
           </DataTableAdvancedToolbar>
+          {/* {table} */}
           <div className="flex flex-col h-[calc(100vh-200px)]">
-            <DataTable
-              table={table}
-              loading={loading}
-              pagination={
-                <EllipsisPagination
-                  table={table}
-                  config={{
-                    boundaryCount: 1,
-                    maxVisiblePages: 7,
-                    siblingCount: 1,
-                  }}
-                />
-                // <DataTablePagination table={table} />
-                // <DataCursorPagination
-                //   table={table}
-                //   cursorPageInfo={{
-                //     hasNextPage: pageInfo?.hasNextPage!,
-                //     hasPreviousPage: pageInfo?.hasPreviousPage!,
-                //     endCursor: pageInfo?.after,
-                //     startCursor: pageInfo?.before,
-                //   }}
-                //   onCursorPageChange={handleCursorPageChange}
-                // />
-              }
-            />
+            <div className="md:hidden">
+              {user.map((user, index) => (
+                <div
+                  className="flex flex-col"
+                  key={`${index}-${user.username}`}
+                >
+                  <UserCard
+                    key={`${index}-${user.username}`}
+                    user={user}
+                    isExpanded={expand.includes(user.id)}
+                    onToggle={(id) => {
+                      setId(id);
+                      setExpand((pre) =>
+                        pre.includes(id)
+                          ? pre.filter((x) => x != id)
+                          : [...pre, id]
+                      );
+                    }}
+                    onDelete={(id) => {
+                      setId(id);
+                      setConfirmDialogOpen(true);
+                    }}
+                    onEdit={() => setOpenUpdatePopup(true)}
+                  />
+                </div>
+              ))}
+              {pagination()}
+            </div>
+            <div className="hidden md:block">
+              <DataTable
+                table={table}
+                loading={loading}
+                pagination={
+                  pagination()
+                  // <DataTablePagination table={table} />
+                  // <DataCursorPagination
+                  //   table={table}
+                  //   cursorPageInfo={{
+                  //     hasNextPage: pageInfo?.hasNextPage!,
+                  //     hasPreviousPage: pageInfo?.hasPreviousPage!,
+                  //     endCursor: pageInfo?.after,
+                  //     startCursor: pageInfo?.before,
+                  //   }}
+                  //   onCursorPageChange={handleCursorPageChange}
+                  // />
+                }
+              />
+            </div>
           </div>
         </div>
       </div>

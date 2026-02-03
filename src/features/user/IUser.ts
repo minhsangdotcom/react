@@ -4,7 +4,6 @@ import { Gender } from "./Gender";
 import { UserStatus } from "./UserStatus";
 import IEntity from "@/types/IEntity";
 import { IAuditable } from "@/types/IAuditable";
-import dayjs from "dayjs";
 
 interface IUserBase {
   firstName: string;

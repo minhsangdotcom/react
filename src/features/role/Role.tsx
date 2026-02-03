@@ -32,6 +32,12 @@ import { ulid } from "ulidx";
 import { Loading } from "@/components/Loading";
 import { useTranslation } from "react-i18next";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/design-system/cn/components/ui/tooltip";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -81,7 +87,33 @@ export default function Role() {
         ),
         cell: ({ row }) => {
           const description: string = row.getValue("description");
-          return <div>{description ? description : "_"}</div>;
+
+          return !description ? (
+            <>__</>
+          ) : (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="w-50 md:w-100 cursor-pointer">
+                  <p className="md:hidden line-clamp-1 text-sm wrap-break-word">
+                    {`${description.slice(0, 20)} ...`}
+                  </p>
+                  <p className="hidden md:block line-clamp-1 text-sm wrap-break-word">
+                    {`${description.slice(0, 50)} ...`}
+                  </p>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent
+                side="top"
+                className="max-w-100 max-h-50 overflow-x-hidden text-white border-2 border-gray-300 bg-gray-300
+                [--tooltip-bg:var(--color-gray-300)]
+                "
+              >
+                <p className="text-sm whitespace-pre-wrap wrap-break-word">
+                  {description}
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          );
         },
       },
       {

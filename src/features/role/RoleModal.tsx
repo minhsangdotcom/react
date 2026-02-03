@@ -195,7 +195,7 @@ export default function RoleModal({
                 )}
 
                 <textarea
-                  className={`w-full border p-2 rounded focus:outline-none ${
+                  className={`w-full border p-2 rounded focus:outline-none min-h-30 ${
                     errors.description
                       ? "border-red-300 focus:ring-red-300"
                       : "focus:border-blue-200 focus:ring-blue-300"
