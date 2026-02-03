@@ -56,6 +56,7 @@ import {
 import { sanitizeQuery } from "@/utils/queryParams/sanitizeQuery";
 import { sanitizeSearchQuery } from "@/utils/queryParams/sanitizeSearchQuery";
 import { UserCard } from "./UserCard";
+import { vi, enUS } from "date-fns/locale";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -590,7 +591,10 @@ export default function User() {
               className="w-full md:w-xs"
               inputClassName="max-sm:h-11 h-9 py-2 text-sm border border-gray-200 bg-white"
             />
-            <DataTableFilterMenu table={table} />
+            <DataTableFilterMenu
+              table={table}
+              calendarLocale={[enUS, vi].find((x) => x.code == code)!}
+            />
             <DataTableSortList table={table} />
           </DataTableAdvancedToolbar>
           {/* {table} */}
@@ -647,6 +651,7 @@ export default function User() {
         </div>
       </div>
       <CreateUserModal
+        language={code}
         open={openCreatePopup}
         onRequestClose={() => setOpenCreatePopup(false)}
         roles={roles}
@@ -660,6 +665,7 @@ export default function User() {
         }
       />
       <UpdateUserModal
+        language={code}
         open={openUpdatePopup}
         onRequestClose={() => setOpenUpdatePopup(false)}
         onSubmit={() =>

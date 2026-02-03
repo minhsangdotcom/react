@@ -15,13 +15,12 @@ import DefaultUser, { IPermissionModel, IRoleModel, IUser } from "./IUser";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { UserStatus } from "./UserStatus";
-
 import { DateInput } from "@/components/DateInput";
 import { userService } from "./userService";
 import LoadingButton from "@/components/LoadingButton";
 import Input from "./UserInput";
 import genderSelectStyles from "./gender-select-style";
-import {permissionSelectStyles, roleSelectStyles} from "./select-style";
+import { permissionSelectStyles, roleSelectStyles } from "./select-style";
 import { createUserSchema, createUserSchemaType } from "./userSchema";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -34,12 +33,14 @@ interface CreateUserProps {
   open: boolean;
   roles: IRoleModel[];
   permissions: IPermissionModel[];
+  language: string;
   onRequestClose: () => void;
   onSubmit: () => void;
 }
 
 export default function CreateUserModal({
   open,
+  language,
   roles,
   permissions,
   onRequestClose,
@@ -251,6 +252,7 @@ export default function CreateUserModal({
                             TRANSLATION_KEYS.user.form.fields.dateOfBirth
                               .placeholder
                           )}
+                          locale={language}
                         />
                       )}
                     />

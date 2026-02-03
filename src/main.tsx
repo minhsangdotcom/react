@@ -18,9 +18,9 @@ root.render(
   <Provider store={store}>
     <React.StrictMode>
       <MantineProvider>
-        <NuqsAdapter>
-          <App />
-        </NuqsAdapter>
+          <NuqsAdapter>
+            <App />
+          </NuqsAdapter>
       </MantineProvider>
     </React.StrictMode>
   </Provider>

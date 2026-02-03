@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
-import { DatePicker } from "@mantine/dates";
+import { DatePicker, DatesProvider } from "@mantine/dates";
 import dayjs from "dayjs";
+import "dayjs/locale/vi";
+import "dayjs/locale/en";
 
 type ManualDateInputProps = {
   value?: string | null;
@@ -10,6 +12,8 @@ type ManualDateInputProps = {
   format?: string;
   minDate?: Date;
   maxDate?: Date;
+  locale: string;
+  side?: "top" | "bottom";
 };
 
 export function DateInput({
@@ -20,6 +24,8 @@ export function DateInput({
   format = "DD/MM/YYYY",
   maxDate = dayjs().add(100, "year").endOf("year").toDate(),
   minDate = dayjs().subtract(100, "year").startOf("year").toDate(),
+  locale,
+  side = "bottom",
 }: ManualDateInputProps) {
   const [opened, setOpened] = useState(false);
   const [dateInput, setDateInput] = useState<string>();
@@ -33,6 +39,42 @@ export function DateInput({
       setDateInput("");
     }
   }, [value, format]);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setOpened(false);
+        setDateValue();
+      }
+    }
+
+    if (opened) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [opened, dateInput]);
+
+  function setDateValue() {
+    const parsed = dayjs(dateInput);
+    if (!parsed.isValid()) {
+      return;
+    }
+
+    const date = parsed.toDate();
+
+    if (date < minDate || date > maxDate) {
+      return;
+    }
+
+    onChange(parsed.format(format));
+    setOpened(false);
+  }
 
   return (
     <div ref={containerRef} className="relative w-full">
@@ -57,19 +99,7 @@ export function DateInput({
         }
         onKeyDown={(e) => {
           if (e.key === "Enter") {
-            const parsed = dayjs(dateInput);
-            if (!parsed.isValid()) {
-              return;
-            }
-
-            const date = parsed.toDate();
-
-            if (date < minDate || date > maxDate) {
-              return;
-            }
-
-            onChange(parsed.format(format));
-            setOpened(false);
+            setDateValue();
           }
         }}
         onChange={(e) => {
@@ -94,9 +124,15 @@ export function DateInput({
       )}
 
       {/* DATE PICKER */}
-      {opened ? (
-        <div className="absolute z-50 mt-2 rounded-lg border bg-white dark:bg-input-dark shadow-lg p-2">
+      {opened && (
+        <div
+          className={`
+          absolute z-999 rounded-lg border shadow-lg bg-white dark:bg-input-dark px-4 py-3
+          ${side === "bottom" ? "top-full mt-2" : "bottom-full mb-2"}
+        `}
+        >
           <DatePicker
+            locale={locale}
             value={value}
             defaultDate={value ?? dayjs().toDate().toString()}
             onChange={(date) => {
@@ -108,8 +144,6 @@ export function DateInput({
             allowDeselect
           />
         </div>
-      ) : (
-        <></>
       )}
     </div>
   );

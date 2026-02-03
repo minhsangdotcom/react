@@ -51,6 +51,7 @@ import type {
 } from "@dscn/types/data-table";
 import { useTranslation } from "react-i18next";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
+import { Locale } from "react-day-picker";
 
 const FILTERS_KEY = "filters";
 const DEBOUNCE_MS = 300;
@@ -65,6 +66,7 @@ interface DataTableFilterMenuProps<TData> extends React.ComponentProps<
   debounceMs?: number;
   throttleMs?: number;
   shallow?: boolean;
+  calendarLocale: Locale; //*
 }
 
 export function DataTableFilterMenu<TData>({
@@ -73,6 +75,7 @@ export function DataTableFilterMenu<TData>({
   throttleMs = THROTTLE_MS,
   shallow = true,
   align = "start",
+  calendarLocale,
   ...props
 }: DataTableFilterMenuProps<TData>) {
   const id = React.useId();
@@ -316,6 +319,7 @@ export function DataTableFilterMenu<TData>({
                     column={selectedColumn}
                     value={inputValue}
                     onSelect={(value) => onFilterAdd(selectedColumn, value)}
+                    locale={calendarLocale}
                   />
                 </>
               ) : (
@@ -559,12 +563,14 @@ interface FilterValueSelectorProps<TData> {
   column: Column<TData>;
   value: string;
   onSelect: (value: string) => void;
+  locale: Locale;
 }
 
 function FilterValueSelector<TData>({
   column,
   value,
   onSelect,
+  locale,
 }: FilterValueSelectorProps<TData>) {
   const variant = column.columnDef.meta?.variant ?? "text";
   const { t } = useTranslation();
@@ -615,6 +621,7 @@ function FilterValueSelector<TData>({
           selected={value ? new Date(value) : undefined}
           onSelect={(date) => onSelect(date?.getTime().toString() ?? "")}
           captionLayout="dropdown"
+          locale={locale}
         />
       );
 

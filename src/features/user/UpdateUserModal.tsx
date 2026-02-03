@@ -59,6 +59,7 @@ const toUserSchema = (
 
 interface UpdateUserProps {
   open: boolean;
+  language: string;
   roles: IRoleModel[];
   permissions: IPermissionModel[];
   userId: string;
@@ -68,6 +69,7 @@ interface UpdateUserProps {
 
 export default function UpdateUserModal({
   open,
+  language,
   roles,
   permissions,
   userId,
@@ -335,6 +337,7 @@ export default function UpdateUserModal({
                       control={control}
                       render={({ field }) => (
                         <DateInput
+                          locale={language}
                           value={field.value}
                           onChange={field.onChange}
                           placeholder={t(

@@ -19,11 +19,13 @@ import { defaultAvatarPicker } from "@/utils/defaultAvatarPicker";
 import { showSuccessToast } from "@/notifications/toastSuccess";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
 import { useTranslation } from "react-i18next";
-
+import "dayjs/locale/vi";
+import "dayjs/locale/en";
 dayjs.extend(utc);
 
 export default function Profile() {
   const { user, isLoading } = useAppSelector((store) => store.profile);
+  const { code } = useAppSelector((store) => store.language);
 
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
   const [userAvatar, setUserAvatar] = useState<string | null>(null);
@@ -200,6 +202,7 @@ export default function Profile() {
                 control={control}
                 render={({ field }) => (
                   <DateInput
+                    locale={code}
                     value={field.value}
                     onChange={field.onChange}
                     allowDeselect
