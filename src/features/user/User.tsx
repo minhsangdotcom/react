@@ -386,7 +386,7 @@ export default function User() {
         size: 32,
       },
     ],
-    []
+    [code]
   );
 
   const { table } = useDataTable({
