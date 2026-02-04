@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-import { env } from "@config/env";
+import { ENV } from "@config/env";
 import { ApiResult } from "./IApiResult";
 import { ApiRequest } from "./IApiRequest";
 import * as qs from "qs";
@@ -13,7 +13,7 @@ import {
 } from "./interceptor";
 
 const api = axios.create({
-  baseURL: env.apiBaseUrl,
+  baseURL: ENV.apiBaseUrl,
   headers: {
     "Content-Type": "application/json",
   },

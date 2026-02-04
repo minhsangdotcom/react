@@ -10,7 +10,7 @@ function getEnv(key: EnvKey, fallback?: string): string {
   return value ?? fallback!;
 }
 
-export const env = {
+export const ENV = {
   apiBaseUrl: getEnv("VITE_API_BASE_URL", "http://localhost:8080/api/v1"),
   hostPort: getEnv("VITE_HOST_PORT", "3000"),
   storagePrefix: getEnv("VITE_STORAGE_PREFIX", "theTemplate_"),

@@ -1,10 +1,10 @@
 import { Storage } from "./IStorage";
 
-import { env } from "@config/env";
+import { ENV } from "@config/env";
 
 export const localStorageUtil: Storage = {
   set: function <T>(key: string, value: T): void {
-    const prefixKey = `${env.storagePrefix}_${key}`;
+    const prefixKey = `${ENV.storagePrefix}_${key}`;
     try {
       localStorage.setItem(prefixKey, JSON.stringify(value));
     } catch (err) {
@@ -12,7 +12,7 @@ export const localStorageUtil: Storage = {
     }
   },
   get: function <T>(key: string): T | null {
-    const prefixKey = `${env.storagePrefix}_${key}`;
+    const prefixKey = `${ENV.storagePrefix}_${key}`;
     const result = localStorage.getItem(prefixKey);
     if (!result) {
       return null;
@@ -24,7 +24,7 @@ export const localStorageUtil: Storage = {
     return this.get(key) !== null;
   },
   remove: function (key: string): void {
-    const prefixKey = `${env.storagePrefix}_${key}`;
+    const prefixKey = `${ENV.storagePrefix}_${key}`;
     localStorage.removeItem(prefixKey);
   },
   clear: function (prefix?: string): void {
