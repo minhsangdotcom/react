@@ -126,7 +126,6 @@ export default function User() {
           />
         ),
         size: 32,
-        enableSorting: false,
         enableHiding: false,
       },
       {
@@ -142,6 +141,7 @@ export default function User() {
           variant: "text",
         },
         enableColumnFilter: false,
+        enableSorting: false,
       },
       {
         id: "username",
@@ -150,7 +150,7 @@ export default function User() {
           <DataTableColumnHeader
             column={column}
             id="username"
-            title={TRANSLATION_KEYS.user.table.fields.username}
+            title={t(TRANSLATION_KEYS.user.table.fields.username)}
           />
         ),
         cell: ({ row }) => {
@@ -159,9 +159,9 @@ export default function User() {
           );
         },
         meta: {
-          label: TRANSLATION_KEYS.user.table.filter.items.username.label,
+          label: t(TRANSLATION_KEYS.user.table.filter.items.username.label),
           placeholder:
-            TRANSLATION_KEYS.user.table.filter.items.username.placeholder,
+            t(TRANSLATION_KEYS.user.table.filter.items.username.placeholder),
           variant: "text",
         },
         enableColumnFilter: true,
@@ -173,7 +173,7 @@ export default function User() {
           <DataTableColumnHeader
             column={column}
             id="fullName"
-            title={TRANSLATION_KEYS.user.table.fields.fullName}
+            title={t(TRANSLATION_KEYS.user.table.fields.fullName)}
           />
         ),
         cell: ({ row }) => {
@@ -196,9 +196,9 @@ export default function User() {
           );
         },
         meta: {
-          label: TRANSLATION_KEYS.user.table.filter.items.fullName.label,
+          label: t(TRANSLATION_KEYS.user.table.filter.items.fullName.label),
           placeholder:
-            TRANSLATION_KEYS.user.table.filter.items.fullName.placeholder,
+            t(TRANSLATION_KEYS.user.table.filter.items.fullName.placeholder),
           variant: "text",
         },
         enableColumnFilter: true,
@@ -211,14 +211,14 @@ export default function User() {
           <DataTableColumnHeader
             column={column}
             id="email"
-            title={TRANSLATION_KEYS.user.table.fields.email}
+            title={t(TRANSLATION_KEYS.user.table.fields.email)}
           />
         ),
         cell: ({ row }) => <div>{row.getValue("email")}</div>,
         meta: {
-          label: TRANSLATION_KEYS.user.table.filter.items.email.label,
+          label: t(TRANSLATION_KEYS.user.table.filter.items.email.label),
           placeholder:
-            TRANSLATION_KEYS.user.table.filter.items.email.placeholder,
+            t(TRANSLATION_KEYS.user.table.filter.items.email.placeholder),
           variant: "text",
         },
         enableColumnFilter: true,
@@ -230,7 +230,7 @@ export default function User() {
           <DataTableColumnHeader
             column={column}
             id="phoneNumber"
-            title={TRANSLATION_KEYS.user.table.fields.phoneNumber}
+            title={t(TRANSLATION_KEYS.user.table.fields.phoneNumber)}
           />
         ),
         cell: ({ row }) => {
@@ -238,9 +238,9 @@ export default function User() {
           return <div>{phoneNumber ? phoneNumber : "_"}</div>;
         },
         meta: {
-          label: TRANSLATION_KEYS.user.table.filter.items.phoneNumber.label,
+          label: t(TRANSLATION_KEYS.user.table.filter.items.phoneNumber.label),
           placeholder:
-            TRANSLATION_KEYS.user.table.filter.items.phoneNumber.placeholder,
+            t(TRANSLATION_KEYS.user.table.filter.items.phoneNumber.placeholder),
           variant: "text",
         },
         enableColumnFilter: true,
@@ -252,7 +252,7 @@ export default function User() {
           <DataTableColumnHeader
             column={column}
             id="dateOfBirth"
-            title={TRANSLATION_KEYS.user.table.fields.dateOfBirth}
+            title={t(TRANSLATION_KEYS.user.table.fields.dateOfBirth)}
           />
         ),
         cell: ({ row }) => {
@@ -269,9 +269,9 @@ export default function User() {
           );
         },
         meta: {
-          label: TRANSLATION_KEYS.user.table.filter.items.dateOfBirth.label,
+          label: t(TRANSLATION_KEYS.user.table.filter.items.dateOfBirth.label),
           placeholder:
-            TRANSLATION_KEYS.user.table.filter.items.dateOfBirth.placeholder,
+            t(TRANSLATION_KEYS.user.table.filter.items.dateOfBirth.placeholder),
           variant: "date",
         },
         enableColumnFilter: true,
@@ -283,7 +283,7 @@ export default function User() {
           <DataTableColumnHeader
             column={column}
             id="status"
-            title={TRANSLATION_KEYS.user.table.fields.status}
+            title={t(TRANSLATION_KEYS.user.table.fields.status)}
           />
         ),
         cell: ({ cell }) => {
@@ -299,16 +299,16 @@ export default function User() {
           );
         },
         meta: {
-          label: TRANSLATION_KEYS.user.table.filter.items.status.label,
+          label: t(TRANSLATION_KEYS.user.table.filter.items.status.label),
           variant: "multiSelect",
           options: [
             {
-              label: TRANSLATION_KEYS.user.status.active,
+              label: t(TRANSLATION_KEYS.user.status.active),
               value: UserStatus.Active.toString(),
               icon: CheckCircle,
             },
             {
-              label: TRANSLATION_KEYS.user.status.inactive,
+              label: t(TRANSLATION_KEYS.user.status.inactive),
               value: UserStatus.Inactive.toString(),
               icon: XCircle,
             },
@@ -323,7 +323,7 @@ export default function User() {
           <DataTableColumnHeader
             column={column}
             id="createdAt"
-            title={TRANSLATION_KEYS.common.table.fields.createdAt}
+            title={t(TRANSLATION_KEYS.common.table.fields.createdAt)}
           />
         ),
         cell: ({ row }) => (
@@ -335,7 +335,7 @@ export default function User() {
           </div>
         ),
         meta: {
-          label: TRANSLATION_KEYS.common.table.fields.createdAt,
+          label: t(TRANSLATION_KEYS.common.table.fields.createdAt),
           variant: "dateRange",
         },
         enableColumnFilter: false,

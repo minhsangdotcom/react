@@ -370,7 +370,7 @@ function DataTableSortItem({
               className="w-44 justify-between rounded font-normal"
             >
               <span className="truncate">
-                {t(columnLabels.get(sort.id) as any)}
+                {columnLabels.get(sort.id)}
               </span>
               <ChevronsUpDown className="opacity-50" />
             </Button>
@@ -399,7 +399,7 @@ function DataTableSortItem({
                         onSortUpdate(sort.id, { id: value })
                       }
                     >
-                      <span className="truncate">{t(column.label as any)}</span>
+                      <span className="truncate">{column.label}</span>
                     </CommandItem>
                   ))}
                 </CommandGroup>

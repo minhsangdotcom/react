@@ -52,6 +52,7 @@ import type {
 import { useTranslation } from "react-i18next";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
 import { Locale } from "react-day-picker";
+import { parseDateTime } from "@/utils/dateFormat";
 
 const FILTERS_KEY = "filters";
 const DEBOUNCE_MS = 300;
@@ -255,6 +256,7 @@ export function DataTableFilterMenu<TData>({
             columns={columns}
             onFilterUpdate={onFilterUpdate}
             onFilterRemove={onFilterRemove}
+            locale={calendarLocale}
           />
         );
       })}
@@ -298,8 +300,7 @@ export function DataTableFilterMenu<TData>({
               ref={inputRef}
               placeholder={
                 selectedColumn
-                  ? (t(selectedColumn.columnDef.meta?.label as any) ??
-                    t(selectedColumn.id as any))
+                  ? (selectedColumn.columnDef.meta?.label ?? selectedColumn.id)
                   : t(
                       TRANSLATION_KEYS.common.table.toolbar.filter.fields
                         .searchPlaceholder
@@ -345,8 +346,7 @@ export function DataTableFilterMenu<TData>({
                           {/*
                             //* list field filter
                           */}
-                          {t(column.columnDef.meta?.label as any) ??
-                            (column.id as any)}
+                          {column.columnDef.meta?.label ?? column.id}
                         </span>
                       </CommandItem>
                     ))}
@@ -370,6 +370,7 @@ interface DataTableFilterItemProps<TData> {
     updates: Partial<Omit<ExtendedColumnFilter<TData>, "filterId">>
   ) => void;
   onFilterRemove: (filterId: string) => void;
+  locale: Locale;
 }
 
 function DataTableFilterItem<TData>({
@@ -378,6 +379,7 @@ function DataTableFilterItem<TData>({
   columns,
   onFilterUpdate,
   onFilterRemove,
+  locale,
 }: DataTableFilterItemProps<TData>) {
   {
     const [showFieldSelector, setShowFieldSelector] = React.useState(false);
@@ -432,7 +434,7 @@ function DataTableFilterItem<TData>({
       >
         <Popover open={showFieldSelector} onOpenChange={setShowFieldSelector}>
           {/**
-           //* 
+           //* field to filter
            */}
           <PopoverTrigger asChild>
             <Button
@@ -443,7 +445,7 @@ function DataTableFilterItem<TData>({
               {columnMeta?.icon && (
                 <columnMeta.icon className="text-muted-foreground" />
               )}
-              {t(columnMeta?.label as any) ?? t(column.id as any)}
+              {columnMeta?.label ?? column.id}
             </Button>
           </PopoverTrigger>
           <PopoverContent
@@ -459,7 +461,7 @@ function DataTableFilterItem<TData>({
               />
               <CommandList>
                 {/**
-                 //*
+                 //* dropdown select filtering field
                  */}
                 <CommandEmpty>No fields found.</CommandEmpty>
                 <CommandGroup>
@@ -484,10 +486,7 @@ function DataTableFilterItem<TData>({
                         <column.columnDef.meta.icon />
                       )}
                       <span className="truncate">
-                        {t(
-                          (column.columnDef.meta?.label as any) ??
-                            (column.id as any)
-                        )}
+                        {column.columnDef.meta?.label ?? column.id}
                       </span>
                       <Check
                         className={cn(
@@ -544,6 +543,7 @@ function DataTableFilterItem<TData>({
           onFilterUpdate,
           showValueSelector,
           setShowValueSelector,
+          locale,
         })}
         <Button
           aria-controls={filterItemId}
@@ -592,7 +592,7 @@ function FilterValueSelector<TData>({
       return (
         <CommandGroup>
           {/**
-           //* 
+           //* dropdown options multi-select (enum,....)
            */}
           {column.columnDef.meta?.options?.map((option) => (
             <CommandItem
@@ -601,7 +601,7 @@ function FilterValueSelector<TData>({
               onSelect={() => onSelect(option.value)}
             >
               {option.icon && <option.icon />}
-              <span className="truncate">{t(option.label as any)}</span>
+              <span className="truncate">{option.label}</span>
               {option.count && (
                 <span className="ml-auto font-mono text-xs">
                   {option.count}
@@ -673,6 +673,7 @@ function onFilterInputRender<TData>({
   onFilterUpdate,
   showValueSelector,
   setShowValueSelector,
+  locale,//* add locale for react-day-picker
 }: {
   filter: ExtendedColumnFilter<TData>;
   column: Column<TData>;
@@ -683,6 +684,7 @@ function onFilterInputRender<TData>({
   ) => void;
   showValueSelector: boolean;
   setShowValueSelector: (value: boolean) => void;
+  locale: Locale;
 }) {
   const { t } = useTranslation();
   if (filter.operator === "isEmpty" || filter.operator === "isNotEmpty") {
@@ -812,7 +814,7 @@ function onFilterInputRender<TData>({
                   <span className="truncate">
                     {selectedOptions.length > 1
                       ? `${selectedOptions.length} selected`
-                      : t(selectedOptions[0]?.label as any)}
+                      : selectedOptions[0]?.label}
                   </span>
                 </>
               )}
@@ -824,12 +826,17 @@ function onFilterInputRender<TData>({
             className="w-48 origin-[var(--radix-popover-content-transform-origin)] p-0"
           >
             <Command>
-              <CommandInput placeholder="Search options..." />
+              <CommandInput
+                placeholder={t(
+                  TRANSLATION_KEYS.common.table.toolbar.filter.options
+                    .placeholder
+                )}
+              />
               <CommandList>
                 <CommandEmpty>No options found.</CommandEmpty>
                 <CommandGroup>
                   {/**
-                   //*
+                   //* dropdown options multi-select to reselect
                    */}
                   {options.map((option) => (
                     <CommandItem
@@ -846,7 +853,7 @@ function onFilterInputRender<TData>({
                       }}
                     >
                       {option.icon && <option.icon />}
-                      <span className="truncate">{t(option.label as any)}</span>
+                      <span className="truncate">{option.label}</span>
                       {filter.variant === "multiSelect" && (
                         <Check
                           className={cn(
@@ -870,18 +877,19 @@ function onFilterInputRender<TData>({
     case "date":
     case "dateRange": {
       const inputListboxId = `${inputId}-listbox`;
-
       const dateValue = Array.isArray(filter.value)
         ? filter.value.filter(Boolean)
         : [filter.value, filter.value].filter(Boolean);
-
+      //* custom date format
+      const format = "DD/MM/YYYY";
       const displayValue =
         filter.operator === "isBetween" && dateValue.length === 2
-          ? `${formatDate(new Date(Number(dateValue[0])))} - ${formatDate(
-              new Date(Number(dateValue[1]))
+          ? `${parseDateTime(Number(dateValue[0]), format)} - ${parseDateTime(
+              Number(dateValue[1]),
+              format
             )}`
           : dateValue[0]
-            ? formatDate(new Date(Number(dateValue[0])))
+            ? parseDateTime(Number(dateValue[0]), format)
             : "Pick date...";
 
       return (
@@ -908,6 +916,7 @@ function onFilterInputRender<TData>({
           >
             {filter.operator === "isBetween" ? (
               <Calendar
+                locale={locale}
                 captionLayout="dropdown"
                 mode="range"
                 initialFocus
@@ -935,6 +944,7 @@ function onFilterInputRender<TData>({
               />
             ) : (
               <Calendar
+                locale={locale}
                 captionLayout="dropdown"
                 mode="single"
                 initialFocus

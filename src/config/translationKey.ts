@@ -59,6 +59,9 @@ export const TRANSLATION_KEYS = {
             isArray: "common.table.toolbar.filter.operators.isArray",
             notInArray: "common.table.toolbar.filter.operators.notInArray",
           },
+          options: {
+            placeholder: "common.table.toolbar.filter.options.placeholder",
+          },
           join: {
             and: "common.table.toolbar.filter.join.and",
             or: "common.table.toolbar.filter.join.or",

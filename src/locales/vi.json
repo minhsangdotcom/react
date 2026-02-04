@@ -57,6 +57,9 @@
             "inArray": "Chứa một trong các giá trị",
             "notInArray": "Không chứa giá trị nào"
           },
+          "options": {
+            "placeholder": "Tìm kiếm lựa chọn..."
+          },
           "join": {
             "and": "Và",
             "or": "Hoặc"

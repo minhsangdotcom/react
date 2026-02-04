@@ -48,7 +48,8 @@ export function DataTableColumnHeader<TData, TValue>({
         )}
         {...props}
       >
-        {t(title as any)}
+        {/* //! {t(title as any)} */}
+        {title}
         {column.getCanSort() &&
           (column.getIsSorted() === "desc" ? (
             <ChevronDown />

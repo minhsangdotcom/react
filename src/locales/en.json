@@ -57,6 +57,9 @@
             "inArray": "Has any of",
             "notInArray": "Has none of"
           },
+          "options":{
+            "placeholder":"Search options..."
+          },
           "join": {
             "and": "And",
             "or": "Or"
