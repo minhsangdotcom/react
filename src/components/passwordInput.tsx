@@ -1,7 +1,7 @@
 import { forwardRef, InputHTMLAttributes, useState } from "react";
 import EyeClosed from "@assets/icons/eye-closed.png";
 import Eye from "@assets/icons/eye.png";
-import "./password-input.css";
+import "./passwordInput.css";
 
 interface PasswordInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;

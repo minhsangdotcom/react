@@ -1,12 +1,6 @@
-import {
-  IBadRequestError,
-  IForbiddenError,
-  IUnauthorizedError,
-} from "@/types/IError";
-import IResponse from "@/types/IResponse";
-import { IApiResult } from "@/utils/http/IApiResult";
+import { IApiResult } from "@/lib/http/IApiResult";
 import { IUserProfileResponse } from "./IUserProfile";
-import { send } from "@/utils/http/api";
+import { send } from "@/lib/http/api";
 
 const profileService = {
   getProfile: async function (): Promise<IApiResult<IUserProfileResponse>> {

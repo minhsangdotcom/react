@@ -18,7 +18,7 @@ import LoadingButton from "@/components/LoadingButton";
 import { roleSchema, roleSchemaType } from "./roleSchema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IApiResult } from "@/utils/http/IApiResult";
+import { IApiResult } from "@/lib/http/IApiResult";
 import { useTranslation } from "react-i18next";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
 

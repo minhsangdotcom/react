@@ -1,6 +1,6 @@
 import { IPermissionGroupResponse } from "@/types/permission/IPermission";
-import { send } from "@utils/http/api";
-import { IApiResult } from "@utils/http/IApiResult";
+import { send } from "@/lib/http/api";
+import { IApiResult } from "@/lib/http/IApiResult";
 
 const permissionService = {
   list: async function (

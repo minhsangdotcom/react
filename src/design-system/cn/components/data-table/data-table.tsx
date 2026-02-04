@@ -16,7 +16,6 @@ import { TRANSLATION_KEYS } from "@/config/translationKey";
 export interface DataTableProps<TData> extends React.ComponentProps<"div"> {
   table: TanstackTable<TData>;
   actionBar?: React.ReactNode;
-  hasPagination?: boolean;
   pagination?: React.ReactNode;
   loading: boolean;
 }

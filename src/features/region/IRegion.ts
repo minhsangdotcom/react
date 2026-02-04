@@ -1,5 +1,5 @@
-import { IAuditable } from "../IAuditable";
-import IEntity from "../IEntity";
+import { IAuditable } from "../../types/IAuditable";
+import IEntity from "../../types/IEntity";
 
 interface IRegion extends IAuditable, IEntity {
   code: string;

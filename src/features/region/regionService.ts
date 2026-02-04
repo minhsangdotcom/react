@@ -1,12 +1,6 @@
-import {
-  IBadRequestError,
-  IForbiddenError,
-  IUnauthorizedError,
-} from "@/types/IError";
-import IResponse from "@/types/IResponse";
-import { ICommune, IDistrict, IProvince } from "@/types/region/IRegion";
-import { send } from "@utils/http/api";
-import { IApiResult } from "@utils/http/IApiResult";
+import { ICommune, IDistrict, IProvince } from "@/features/region/IRegion";
+import { send } from "@/lib/http/api";
+import { IApiResult } from "@/lib/http/IApiResult";
 import IQueryParam from "@/types/IQueryParam";
 
 export const regionService = {

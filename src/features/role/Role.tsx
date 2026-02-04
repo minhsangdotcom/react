@@ -287,7 +287,6 @@ export default function Role() {
         <div className="py-3">
           <DataTable
             table={table}
-            hasPagination={false}
             aria-sort="none"
             loading={loading}
           />

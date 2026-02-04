@@ -8,7 +8,7 @@ import { MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import { NuqsAdapter } from "nuqs/adapters/react";
-import { injectStore } from "@utils/http/interceptor";
+import { injectStore } from "@/lib/http/interceptor";
 
 injectStore(store);
 const root = ReactDOM.createRoot(

@@ -1,5 +1,5 @@
-import { send } from "@utils/http/api";
-import { IApiResult } from "@utils/http/IApiResult";
+import { send } from "@/lib/http/api";
+import { IApiResult } from "@/lib/http/IApiResult";
 import IResetpasswordRequest from "@/features/auth/IResetPasswordRequest";
 import { ILoginResponse } from "@features/auth/ILoginResponse";
 import { ITokenResponse } from "@features/auth/ITokenResponse";

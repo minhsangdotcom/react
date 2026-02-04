@@ -1,8 +1,8 @@
 import IQueryParam from "@/types/IQueryParam";
 import { IPagination } from "@/types/IResponse";
 import { IUserResponse } from "@/features/user/IUser";
-import { send } from "@utils/http/api";
-import { IApiResult } from "@utils/http/IApiResult";
+import { send } from "@/lib/http/api";
+import { IApiResult } from "@/lib/http/IApiResult";
 
 export const userService = {
   list: async function (

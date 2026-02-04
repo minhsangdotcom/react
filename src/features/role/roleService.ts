@@ -2,8 +2,8 @@ import IQueryParam from "@/types/IQueryParam";
 import ICreateRoleRequest from "@/features/role/ICreateRoleRequest";
 import { IRole, IRoleResponse } from "@/features/role/IRole";
 import IUpdateRoleRequest from "@/features/role/IUpdateRoleRequest";
-import { send } from "@utils/http/api";
-import { IApiResult } from "@utils/http/IApiResult";
+import { send } from "@/lib/http/api";
+import { IApiResult } from "@/lib/http/IApiResult";
 
 export const roleService = {
   list: async function (
