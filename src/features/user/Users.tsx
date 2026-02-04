@@ -568,7 +568,7 @@ export function Users() {
             {t(TRANSLATION_KEYS.common.actions.create)}
           </button>
         </div>
-        <div className="px-1">
+        <>
           {/*
           Toolbar
           */}
@@ -618,7 +618,7 @@ export function Users() {
               ))}
               {pagination()}
             </div>
-            <div className="hidden md:block">
+            <div className="hidden md:block pb-5">
               <DataTable
                 table={table}
                 loading={loading}
@@ -639,7 +639,7 @@ export function Users() {
               />
             </div>
           </div>
-        </div>
+        </>
       </div>
       <CreateUserModal
         language={code}
