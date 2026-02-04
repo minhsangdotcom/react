@@ -1,4 +1,4 @@
-export interface IAuditable {
+export interface Auditable {
     createdBy: string
     updatedBy: string,
     updatedAt: string

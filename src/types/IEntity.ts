@@ -1,4 +1,4 @@
-export default interface IEntity {
+export interface Entity {
     id: string,
     createdAt : string
 }

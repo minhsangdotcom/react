@@ -1,4 +1,4 @@
-import { FilterGroup } from "@/types/FilterParam";
+import { FilterGroup } from "@/types/QueryParam";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import Filter from "@/types/IFilter";

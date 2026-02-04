@@ -1,15 +1,15 @@
-export default interface IResponse<T = any | IPagination> {
+export interface Response<T = any | Pagination> {
   status: number;
   message: string;
   results?: T | null;
 }
 
-export interface IPagination<T = any> {
+export interface Pagination<T = any> {
   data: T;
-  paging: IPageInfo;
+  paging: PageInfo;
 }
 
-export interface IPageInfo {
+export interface PageInfo {
   currentPage?: number;
   pageSize: number;
   totalPage: number;

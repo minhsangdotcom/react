@@ -1,4 +1,4 @@
-export interface IError {
+export interface Error {
   type: string;
   title: string;
   status: number;
@@ -9,41 +9,41 @@ export interface IError {
   detail: string;
 }
 
-export interface IInternalServerError extends IError {}
+export interface InternalServerError extends Error {}
 
-export interface IValidationError extends IError {
-  invalidParams: IInvalidParam;
-  message: IMessage;
+export interface ValidationError extends Error {
+  invalidParams: InvalidParam;
+  message: Message;
 }
-export interface IBadRequestError extends IError {
-  message: IMessage;
+export interface BadRequestError extends Error {
+  message: Message;
 }
-export interface INotFoundError extends IBadRequestError {
-  message: IMessage;
+export interface NotFoundError extends BadRequestError {
+  message: Message;
 }
-export interface IUnauthorizedError extends IError {
-  message: IMessage;
+export interface UnauthorizedError extends Error {
+  message: Message;
 }
-export interface IForbiddenError extends IError {
-  message: IMessage;
+export interface ForbiddenError extends Error {
+  message: Message;
 }
 
-interface IMessage {
+interface Message {
   message: string;
   translation: string;
 }
 
-interface IInvalidParam {
+interface InvalidParam {
   code: string;
   description: string;
 }
 
 type ErrorType =
-  | IBadRequestError
-  | INotFoundError
-  | IUnauthorizedError
-  | IForbiddenError
-  | IValidationError
-  | IInternalServerError;
+  | BadRequestError
+  | NotFoundError
+  | UnauthorizedError
+  | ForbiddenError
+  | ValidationError
+  | InternalServerError;
 
 export default ErrorType;

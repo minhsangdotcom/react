@@ -9,21 +9,21 @@ import {
 } from "@dscn/components/ui/dialog";
 import { roleService } from "@/features/role/roleService";
 import {
-  IPermission,
-  IPermissionGroup,
-  IPermissionResponse,
+  Permission,
+  PermissionGroup,
+  PermissionResponse,
 } from "@/types/permission/IPermission";
-import { IRoleResponse } from "@/features/role/IRole";
+import { RoleResponse } from "@/features/role/IRole";
 import LoadingButton from "@/components/LoadingButton";
 import { roleSchema, roleSchemaType } from "./roleSchema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IApiResult } from "@/lib/http/IApiResult";
+import { ApiResult } from "@/lib/http/IApiResult";
 import { useTranslation } from "react-i18next";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
 
 interface PermissionNodeProps {
-  node: IPermission;
+  node: Permission;
   level?: number;
   onToggleCheck: (id: string, checked: boolean) => void;
   onToggleExpand: (id: string) => void;
@@ -41,8 +41,8 @@ export default function RoleModal({
   onRequestClose: () => void;
   onSubmit: () => void;
   roleId: string | null;
-  group: IPermissionGroup[];
-  setGroup: Dispatch<SetStateAction<IPermissionGroup[]>>;
+  group: PermissionGroup[];
+  setGroup: Dispatch<SetStateAction<PermissionGroup[]>>;
 }) {
   const {
     register,
@@ -72,7 +72,7 @@ export default function RoleModal({
     const result = await roleService.getById(roleId!);
 
     if (result.success) {
-      const role = result.data?.results as IRoleResponse;
+      const role = result.data?.results as RoleResponse;
       reset({ name: role.name, description: role.description });
 
       const checkedPermissions = getCheckedPermissions(
@@ -104,7 +104,7 @@ export default function RoleModal({
     );
   };
 
-  function toggleExpand(list: IPermission[], id: string): IPermission[] {
+  function toggleExpand(list: Permission[], id: string): Permission[] {
     return list.map((node) => {
       if (node.id === id) {
         return { ...node, expanded: !node.expanded };
@@ -141,7 +141,7 @@ export default function RoleModal({
       permissionIds,
     };
     setSubmitLoading(true);
-    const result: IApiResult = roleId
+    const result: ApiResult = roleId
       ? await roleService.update(roleId!, payload)
       : await roleService.create(payload);
 
@@ -321,7 +321,7 @@ function PermissionNode({
   );
 }
 
-function toggleRecursive(node: IPermission, checked: boolean): IPermission {
+function toggleRecursive(node: Permission, checked: boolean): Permission {
   return {
     ...node,
     checked,
@@ -335,10 +335,10 @@ function toggleRecursive(node: IPermission, checked: boolean): IPermission {
 }
 
 function updatePermissions(
-  list: IPermission[],
+  list: Permission[],
   uiId: string,
   checked: boolean
-): IPermission[] {
+): Permission[] {
   return list.map((node) => {
     if (node.id === uiId) {
       return toggleRecursive(node, checked);
@@ -355,15 +355,15 @@ function updatePermissions(
   });
 }
 
-function collectCheckedParents(list: IPermission[]): string[] {
+function collectCheckedParents(list: Permission[]): string[] {
   return list.flatMap((p) => [
     ...(p.checked && !p.inherited ? [p.permissionId] : []),
   ]);
 }
 
 function getCheckedPermissions(
-  list: IPermissionResponse[],
-  permissions: IPermission[]
+  list: PermissionResponse[],
+  permissions: Permission[]
 ): Array<{ id: string; permissionId: string }> {
   return permissions
     .flatMap((p) => ({
@@ -374,10 +374,10 @@ function getCheckedPermissions(
 }
 
 function markAsChecked(
-  list: IPermission[],
+  list: Permission[],
   checkedCodes: Array<{ id: string; permissionId: string }>,
   isInherited = false
-): IPermission[] {
+): Permission[] {
   return list.map((node) => {
     let isChecked =
       checkedCodes.some(

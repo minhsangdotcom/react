@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import IResponse from "@/types/IResponse";
+import { Response } from "@/types/IResponse";
 import { APP_KEY } from "@/config/key";
 import { localStorageUtil } from "@/utils/storages/localStorageUtil";
-import { ILoginResponse } from "@features/auth/ILoginResponse";
-import { ITokenResponse } from "@features/auth/ITokenResponse";
+import { LoginResponse } from "@features/auth/ILoginResponse";
+import { TokenResponse } from "@features/auth/ITokenResponse";
 import { loginAsync, refreshAsync } from "./authAction";
 
 interface Auth {
@@ -54,8 +54,8 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(loginAsync.fulfilled, (state: AuthState, action) => {
-        const result = action.payload?.data as IResponse<ILoginResponse>;
-        const { token, refreshToken } = result.results as ILoginResponse;
+        const result = action.payload?.data as Response<LoginResponse>;
+        const { token, refreshToken } = result.results as LoginResponse;
 
         localStorageUtil.set<Auth>(APP_KEY.authState, {
           token,
@@ -85,7 +85,7 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(refreshAsync.fulfilled, (state: AuthState, action) => {
-        const result = action.payload.data as IResponse<ITokenResponse>;
+        const result = action.payload.data as Response<TokenResponse>;
 
         const token = result.results?.token as string;
         const refreshToken = result.results?.refreshToken as string;

@@ -4,7 +4,7 @@ import {
   LogicalOperator,
   defaultParams,
   QueryParam
-} from "@/types/FilterParam";
+} from "@/types/QueryParam";
 import queryString from "query-string";
 import IFilter from "@/types/IFilter";
 

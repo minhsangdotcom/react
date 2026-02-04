@@ -1,9 +1,9 @@
 import ErrorType from "@/types/IError";
-import IResponse, { IPagination } from "@/types/IResponse";
+import { Pagination, Response } from "@/types/IResponse";
 
-export interface IApiResult<T = any | IPagination> {
+export interface ApiResult<T = any | Pagination> {
   success: boolean;
   status?: number;
-  data?: IResponse<T> | null;
+  data?: Response<T> | null;
   error?: ErrorType | null;
 }

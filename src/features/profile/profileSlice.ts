@@ -2,11 +2,11 @@ import { localStorageUtil } from "@/utils/storages/localStorageUtil";
 import { createSlice } from "@reduxjs/toolkit";
 import { APP_KEY } from "@/config/key";
 import { profileAsync } from "./profileAction";
-import { IUserProfileResponse } from "./IUserProfile";
-import IResponse from "@/types/IResponse";
+import { UserProfileResponse } from "./IUserProfile";
+import { Response } from "@/types/IResponse";
 
 interface ProfileInfo {
-  user?: IUserProfileResponse | null;
+  user?: UserProfileResponse | null;
 }
 
 interface ProfileState extends ProfileInfo {
@@ -32,9 +32,9 @@ const profileSlice = createSlice({
       })
       .addCase(profileAsync.fulfilled, (state: ProfileState, action) => {
         const result = action.payload.data as
-          | IResponse<IUserProfileResponse>
+          | Response<UserProfileResponse>
           | undefined;
-        const user = result?.results as IUserProfileResponse | undefined;
+        const user = result?.results as UserProfileResponse | undefined;
 
         localStorageUtil.set<ProfileInfo>(APP_KEY.profileState, {
           user,

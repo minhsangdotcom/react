@@ -11,12 +11,12 @@ import {
   DropdownMenuTrigger,
 } from "@dscn/components/ui/dropdown-menu";
 import { useDataTable } from "@dscn/hooks/use-data-table";
-import { defaultParams } from "@/types/FilterParam";
+import { defaultParams } from "@/types/QueryParam";
 import {
-  IPermissionModel,
-  IRoleModel,
-  IUser,
-  IUserResponse,
+  PermissionModel,
+  RoleModel,
+  User,
+  UserResponse,
 } from "@/features/user/IUser";
 import getStatusTranslation, { UserStatus } from "@/features/user/UserStatus";
 import { Column, ColumnDef } from "@tanstack/react-table";
@@ -27,7 +27,7 @@ import { CheckCircle, MoreHorizontal, XCircle } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useQueryParam } from "@/hooks/useQueyParam";
 import { userService } from "@/features/user/userService";
-import { IPageInfo, IPagination } from "@/types/IResponse";
+import { PageInfo, Pagination } from "@/types/IResponse";
 import { Checkbox } from "@dscn/components/ui/checkbox";
 import { DataTableFilterMenu } from "@/design-system/cn/components/data-table/data-table-filter-menu";
 import SearchBar from "@components/SearchBar";
@@ -37,8 +37,8 @@ import UpdateUserModal from "./UpdateUserModal";
 import { QueryString } from "@/types/IQueryString";
 import { roleService } from "@features/role/roleService";
 import permissionService from "@/services/permission/permissionService";
-import { IPermissionGroupResponse } from "@/types/permission/IPermission";
-import { IRole } from "../role/IRole";
+import { PermissionGroupResponse } from "@/types/permission/IPermission";
+import { Role } from "../role/IRole";
 import { Loading } from "@/components/Loading";
 import { defaultAvatarPicker } from "@/utils/defaultAvatarPicker";
 import { showSuccessToast } from "@/notifications/toastSuccess";
@@ -61,7 +61,7 @@ import { parseDateTime } from "@/utils/dateFormat";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-function toIUser(dto: IUserResponse): IUser {
+function toIUser(dto: UserResponse): User {
   return {
     id: dto.id,
     username: dto.username,
@@ -83,11 +83,11 @@ function toIUser(dto: IUserResponse): IUser {
   };
 }
 
-export default function User() {
+export function Users() {
   const { query } = useQueryParam();
 
-  const [user, setUser] = useState<Array<IUser>>([]);
-  const [pageInfo, setPageInfo] = useState<IPageInfo>();
+  const [user, setUser] = useState<User[]>([]);
+  const [pageInfo, setPageInfo] = useState<PageInfo>();
   const [loading, setLoading] = useState<boolean>(false);
   const [refDataLoading, setRefDataLoading] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
@@ -96,14 +96,14 @@ export default function User() {
   const [openConfirmDialog, setConfirmDialogOpen] = useState<boolean>(false);
   const [id, setId] = useState<string | null>(null);
 
-  const [permissions, setPermissions] = useState<IPermissionModel[]>([]);
-  const [roles, setRoles] = useState<IRoleModel[]>([]);
+  const [permissions, setPermissions] = useState<PermissionModel[]>([]);
+  const [roles, setRoles] = useState<RoleModel[]>([]);
   const [expand, setExpand] = useState<string[]>([]);
 
   const { code } = useAppSelector((store) => store.language);
   const { t } = useTranslation();
 
-  const columns = useMemo<ColumnDef<IUser>[]>(
+  const columns = useMemo<ColumnDef<User>[]>(
     () => [
       {
         id: "select",
@@ -278,7 +278,7 @@ export default function User() {
       {
         id: "status",
         accessorKey: "status",
-        header: ({ column }: { column: Column<IUser, unknown> }) => (
+        header: ({ column }: { column: Column<User, unknown> }) => (
           <DataTableColumnHeader
             column={column}
             id="status"
@@ -286,7 +286,7 @@ export default function User() {
           />
         ),
         cell: ({ cell }) => {
-          const status = cell.getValue<IUser["status"]>();
+          const status = cell.getValue<User["status"]>();
           return (
             <Badge
               className={`rounded-sm px-4 py-1 text-xs font-medium ${
@@ -458,8 +458,8 @@ export default function User() {
     setLoading(true);
     const result = await userService.list(params);
     if (result.success) {
-      const { data, paging } = result.data?.results as IPagination<
-        IUserResponse[]
+      const { data, paging } = result.data?.results as Pagination<
+        UserResponse[]
       >;
       const users = data.map((user) => toIUser(user));
 
@@ -487,11 +487,11 @@ export default function User() {
     ]);
 
     if (roleResult.success && permissionResult.success) {
-      const roles = roleResult.data?.results as IRole[];
+      const roles = roleResult.data?.results as Role[];
       setRoles(roles.map((role) => ({ id: role.id, name: role.name })));
 
       const groups = permissionResult.data
-        ?.results as IPermissionGroupResponse[];
+        ?.results as PermissionGroupResponse[];
       const rootedPermissionGroup = groups
         .flatMap((group) => group.permissions)
         .map((per) => ({ id: per.id, code: per.codeTranslation }));

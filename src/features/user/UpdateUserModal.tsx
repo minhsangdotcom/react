@@ -13,17 +13,17 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import Select, { MultiValue } from "react-select";
 import Input from "./UserInput";
 import DefaultUser, {
-  IPermissionModel,
-  IRoleModel,
-  IUser,
-  IUserResponse,
+  PermissionModel,
+  RoleModel,
+  User,
+  UserResponse,
 } from "./IUser";
 import getGenderTranslation, { Gender } from "./Gender";
 import getStatusTranslation, { UserStatus } from "./UserStatus";
 import { userService } from "./userService";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { permissionSelectStyles, roleSelectStyles } from "./select-style";
+import { permissionSelectStyles, roleSelectStyles } from "./selectStyle";
 import {
   SkeletonBlock,
   SkeletonInput,
@@ -40,7 +40,7 @@ import { Switch } from "@/design-system/cn/components/ui/switch";
 dayjs.extend(utc);
 
 const toUserSchema = (
-  dto: IUserResponse
+  dto: UserResponse
 ): {
   firstName: string;
   lastName: string;
@@ -60,8 +60,8 @@ const toUserSchema = (
 interface UpdateUserProps {
   open: boolean;
   language: string;
-  roles: IRoleModel[];
-  permissions: IPermissionModel[];
+  roles: RoleModel[];
+  permissions: PermissionModel[];
   userId: string;
   onRequestClose: () => void;
   onSubmit: () => void;
@@ -76,7 +76,7 @@ export default function UpdateUserModal({
   onRequestClose,
   onSubmit,
 }: UpdateUserProps) {
-  const [user, setUser] = useState<IUser>(DefaultUser);
+  const [user, setUser] = useState<User>(DefaultUser);
   const [loading, setLoading] = useState<boolean>(false);
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<File | null>(null);
@@ -179,7 +179,7 @@ export default function UpdateUserModal({
     setLoading(true);
     try {
       const userResult = await userService.get(userId);
-      const user = userResult.data?.results as IUserResponse;
+      const user = userResult.data?.results as UserResponse;
 
       const userPermissions = user.permissions;
       const currentPermission = permissions

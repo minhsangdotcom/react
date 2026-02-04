@@ -1,7 +1,7 @@
-import { IAuditable } from "../../types/IAuditable";
-import IEntity from "../../types/IEntity";
+import { Auditable } from "../../types/IAuditable";
+import {Entity} from "../../types/IEntity";
 
-interface IRegion extends IAuditable, IEntity {
+interface Region extends Auditable, Entity {
   code: string;
   name: string;
   englishName: string;
@@ -10,6 +10,6 @@ interface IRegion extends IAuditable, IEntity {
   customName: string;
 }
 
-export interface IProvince extends IRegion {}
-export interface IDistrict extends IRegion {}
-export interface ICommune extends IRegion {}
+export interface Province extends Region {}
+export interface District extends Region {}
+export interface Commune extends Region {}

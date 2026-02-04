@@ -1,2 +1,2 @@
-import { IRoleRequest } from "@features/role/IRole";
-export default interface ICreateRoleRequest extends IRoleRequest {}
+import { RoleRequest } from "@features/role/IRole";
+export default interface CreateRoleRequest extends RoleRequest {}

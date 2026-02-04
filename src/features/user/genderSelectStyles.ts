@@ -1,5 +1,5 @@
 import { StylesConfig } from "react-select";
-const genderSelectStyles: StylesConfig = {
+export const genderSelectStyles: StylesConfig = {
   control: (base, state) => ({
     ...base,
     width: "100%",
@@ -64,9 +64,8 @@ const genderSelectStyles: StylesConfig = {
     backgroundColor: state.isSelected
       ? "rgba(91,192,222,0.2)"
       : state.isFocused
-      ? "rgba(91,192,222,0.2)"
-      : "white",
+        ? "#F3F4F6"
+        : "white",
     color: state.isSelected ? "black" : "#111827",
   }),
 };
-export default genderSelectStyles;

@@ -1,14 +1,14 @@
-import { IApiResult } from "@/lib/http/IApiResult";
-import { IUserProfileResponse } from "./IUserProfile";
+import { ApiResult } from "@/lib/http/IApiResult";
+import { UserProfileResponse } from "./IUserProfile";
 import { send } from "@/lib/http/api";
 
 const profileService = {
-  getProfile: async function (): Promise<IApiResult<IUserProfileResponse>> {
+  getProfile: async function (): Promise<ApiResult<UserProfileResponse>> {
     return await send({ url: "users/profile", method: "GET" });
   },
   updateProfile: async function (
     request: FormData
-  ): Promise<IApiResult<IUserProfileResponse>> {
+  ): Promise<ApiResult<UserProfileResponse>> {
     return await send({
       url: "users/profile",
       method: "PUT",

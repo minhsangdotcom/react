@@ -1,10 +1,10 @@
-import { IAuditable } from "@/types/IAuditable";
-import IEntity from "@/types/IEntity";
-import { IPermissionResponse } from "@/types/permission/IPermission";
-import { IRoleResponse } from "@/features/role/IRole";
+import { Auditable } from "@/types/IAuditable";
+import { Entity } from "@/types/IEntity";
+import { PermissionResponse } from "@/types/permission/IPermission";
+import { RoleResponse } from "@/features/role/IRole";
 import { Gender } from "../user/Gender";
 
-export interface IUserProfile {
+export interface UserProfile {
   firstName: string;
   lastName: string;
   email: string;
@@ -14,12 +14,9 @@ export interface IUserProfile {
   gender?: Gender;
 }
 
-export interface IUserProfileResponse
-  extends IUserProfile,
-    IEntity,
-    IAuditable {
+export interface UserProfileResponse extends UserProfile, Entity, Auditable {
   username: string;
   status: number;
-  roles: IRoleResponse[];
-  permissions : IPermissionResponse[];
+  roles: RoleResponse[];
+  permissions: PermissionResponse[];
 }

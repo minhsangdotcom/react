@@ -1,6 +1,6 @@
 import { QueryString } from "@/types/IQueryString";
 import { queryParser } from "./queryParser";
-import { QueryParam } from "@/types/FilterParam";
+import { QueryParam } from "@/types/QueryParam";
 
 export function sanitizeQuery(
   queryParams: QueryParam,

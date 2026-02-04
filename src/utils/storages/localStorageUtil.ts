@@ -1,8 +1,8 @@
-import { IStorage } from "./IStorage";
+import { Storage } from "./IStorage";
 
 import { env } from "@config/env";
 
-export const localStorageUtil: IStorage = {
+export const localStorageUtil: Storage = {
   set: function <T>(key: string, value: T): void {
     const prefixKey = `${env.storagePrefix}_${key}`;
     try {

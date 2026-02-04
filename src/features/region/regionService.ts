@@ -1,22 +1,22 @@
-import { ICommune, IDistrict, IProvince } from "@/features/region/IRegion";
+import { Commune, District, Province } from "@/features/region/IRegion";
 import { send } from "@/lib/http/api";
-import { IApiResult } from "@/lib/http/IApiResult";
-import IQueryParam from "@/types/IQueryString";
+import { ApiResult } from "@/lib/http/IApiResult";
+import { QueryString } from "@/types/IQueryString";
 
 export const regionService = {
   listProvince: async function (
-    params: IQueryParam
-  ): Promise<IApiResult<IProvince[]>> {
+    params: QueryString
+  ): Promise<ApiResult<Province[]>> {
     return await send({ url: "provinces", method: "GET", data: params });
   },
   listDistrict: async function (
-    params: IQueryParam
-  ): Promise<IApiResult<IDistrict[]>> {
+    params: QueryString
+  ): Promise<ApiResult<District[]>> {
     return await send({ url: "districts", method: "GET", data: params });
   },
   listCommune: async function (
-    params: IQueryParam
-  ): Promise<IApiResult<ICommune[]>> {
+    params: QueryString
+  ): Promise<ApiResult<Commune[]>> {
     return await send({ url: "communes", method: "GET", data: params });
   },
 };

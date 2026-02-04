@@ -1,9 +1,9 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import { env } from "@config/env";
-import { IApiResult } from "./IApiResult";
-import IApiRequest from "./IApiRequest";
+import { ApiResult } from "./IApiResult";
+import { ApiRequest } from "./IApiRequest";
 import * as qs from "qs";
-import IResponse from "@/types/IResponse";
+import { Response } from "@/types/IResponse";
 import ErrorType from "@/types/IError";
 import {
   languageHandler,
@@ -42,8 +42,8 @@ api.interceptors.response.use(
 );
 
 async function send<TRequest, TResult>(
-  request: IApiRequest<TRequest>
-): Promise<IApiResult<TResult>> {
+  request: ApiRequest<TRequest>
+): Promise<ApiResult<TResult>> {
   let config = {
     url: request.url,
     method: request.method,
@@ -61,7 +61,7 @@ async function send<TRequest, TResult>(
   }
 
   try {
-    const result = await api.request<IResponse<TResult>>(config);
+    const result = await api.request<Response<TResult>>(config);
     return {
       success: true,
       status: result.status,

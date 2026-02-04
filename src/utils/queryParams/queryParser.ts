@@ -1,4 +1,4 @@
-import { defaultParams, QueryParam } from "@/types/FilterParam";
+import { defaultParams, QueryParam } from "@/types/QueryParam";
 import { QueryString } from "@/types/IQueryString";
 import { parseFilter } from "@utils/queryParams/filter";
 import parseSort from "@utils/queryParams/sort";

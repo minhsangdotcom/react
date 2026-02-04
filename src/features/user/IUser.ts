@@ -1,11 +1,11 @@
-import { IPermissionResponse } from "@/types/permission/IPermission";
-import { IRole } from "../role/IRole";
+import { PermissionResponse } from "@/types/permission/IPermission";
+import { Role } from "../role/IRole";
 import { Gender } from "./Gender";
 import { UserStatus } from "./UserStatus";
-import IEntity from "@/types/IEntity";
-import { IAuditable } from "@/types/IAuditable";
+import { Entity } from "@/types/IEntity";
+import { Auditable } from "@/types/IAuditable";
 
-interface IUserBase {
+interface UserBase {
   firstName: string;
   lastName: string;
   username: string;
@@ -18,22 +18,22 @@ interface IUserBase {
   status: UserStatus;
 }
 
-export interface IUser extends IUserBase, IEntity {
-  roles: Array<IRoleModel>;
-  permissions?: Array<IPermissionModel>;
+export interface User extends UserBase, Entity {
+  roles: RoleModel[];
+  permissions?: PermissionModel[];
 }
 
-export interface IUserResponse extends IUserBase, IEntity, IAuditable {
-  roles: Array<IRole>;
-  permissions: Array<IPermissionResponse>;
+export interface UserResponse extends UserBase, Entity, Auditable {
+  roles: Role[];
+  permissions: PermissionResponse[];
 }
 
-export interface IRoleModel {
+export interface RoleModel {
   id: string;
   name: string;
 }
 
-export interface IPermissionModel {
+export interface PermissionModel {
   id: string;
   code: string;
 }

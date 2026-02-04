@@ -1,40 +1,40 @@
-import { IAuditable } from "../IAuditable";
-import IEntity from "../IEntity";
+import { Auditable } from "../IAuditable";
+import { Entity } from "../IEntity";
 
 // Model for form
-export interface IPermission extends IEntity {
+export interface Permission extends Entity {
   code: string;
   label: string;
   checked: boolean;
   expanded: boolean;
   permissionId: string;
   inherited?: boolean;
-  children: IPermission[];
+  children: Permission[];
 }
 
-export interface IPermissionGroup {
+export interface PermissionGroup {
   name: string;
   label: string;
-  permissions: IPermission[];
+  permissions: Permission[];
 }
 //
 
 // response for get all permissions api
-interface INestedPermissionResponse extends IEntity {
+interface NestedPermissionResponse extends Entity {
   code: string;
   codeTranslation: string;
-  children?: Array<INestedPermissionResponse>;
+  children?: NestedPermissionResponse[];
 }
 
-export interface IPermissionGroupResponse {
+export interface PermissionGroupResponse {
   name: string;
   nameTranslation: string;
-  permissions: Array<INestedPermissionResponse>;
+  permissions: NestedPermissionResponse[];
 }
 //
 
 // response for permission inside role, user
-export interface IPermissionResponse extends IEntity, IAuditable {
+export interface PermissionResponse extends Entity, Auditable {
   code: string;
   name: string;
   group: string;

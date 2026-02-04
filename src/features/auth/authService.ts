@@ -1,20 +1,20 @@
 import { send } from "@/lib/http/api";
-import { IApiResult } from "@/lib/http/IApiResult";
-import IResetpasswordRequest from "@/features/auth/IResetPasswordRequest";
-import { ILoginResponse } from "@features/auth/ILoginResponse";
-import { ITokenResponse } from "@features/auth/ITokenResponse";
-import { ILoginRequest } from "@features/auth/ILoginRequest";
-import IChangePasswordRequest from "./IChangePasswordRequest";
+import { ApiResult } from "@/lib/http/IApiResult";
+import { ResetpasswordRequest } from "@/features/auth/IResetPasswordRequest";
+import { LoginResponse } from "@features/auth/ILoginResponse";
+import { TokenResponse } from "@features/auth/ITokenResponse";
+import { LoginRequest } from "@features/auth/ILoginRequest";
+import { ChangePasswordRequest } from "./IChangePasswordRequest";
 
 const authService = {
   login: async function (
-    request: ILoginRequest
-  ): Promise<IApiResult<ILoginResponse>> {
+    request: LoginRequest
+  ): Promise<ApiResult<LoginResponse>> {
     return await send({ url: "users/login", method: "POST", data: request });
   },
   refresh: async function (
     refreshToken: string
-  ): Promise<IApiResult<ITokenResponse>> {
+  ): Promise<ApiResult<TokenResponse>> {
     return await send({
       url: "users/refresh-token",
       method: "POST",
@@ -23,7 +23,7 @@ const authService = {
   },
   requestResetPassword: async function (
     email: string
-  ): Promise<IApiResult<void>> {
+  ): Promise<ApiResult<void>> {
     return await send({
       url: "users/request-reset-password",
       method: "POST",
@@ -31,8 +31,8 @@ const authService = {
     });
   },
   resetPassword: async function (
-    request: IResetpasswordRequest
-  ): Promise<IApiResult<void>> {
+    request: ResetpasswordRequest
+  ): Promise<ApiResult<void>> {
     return await send({
       url: "users/reset-password",
       method: "PUT",
@@ -40,8 +40,8 @@ const authService = {
     });
   },
   changePassword: async function (
-    request: IChangePasswordRequest
-  ): Promise<IApiResult<void>> {
+    request: ChangePasswordRequest
+  ): Promise<ApiResult<void>> {
     return await send({
       url: "users/change-password",
       method: "PUT",

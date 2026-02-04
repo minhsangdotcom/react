@@ -1,7 +1,6 @@
 import z from "zod";
 import {
   resetPasswordValidator,
-  validatePassword,
 } from "./resetPasswordSchema";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
 

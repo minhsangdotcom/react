@@ -1,10 +1,10 @@
-import { IStorage, ICookieOptions } from "./IStorage";
+import { Storage, CookieOptions } from "./IStorage";
 
 import { env } from "@config/env";
 import Cookies from "js-cookie";
 
-export const cookieUtil: IStorage = {
-  set: function <T>(key: string, value: T, options?: ICookieOptions): void {
+export const cookieUtil: Storage = {
+  set: function <T>(key: string, value: T, options?: CookieOptions): void {
     const prefixKey = `${env.storagePrefix}_${key}`;
     const cookieOptions: Cookies.CookieAttributes = {
       path: options?.path ?? "/",

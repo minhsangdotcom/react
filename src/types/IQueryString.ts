@@ -2,10 +2,10 @@ type NestedFilterValue =
   | string
   | number
   | boolean
-  | INestedFilterMap
-  | INestedFilterMap[];
+  | NestedFilterMap
+  | NestedFilterMap[];
 
-export interface INestedFilterMap {
+export interface NestedFilterMap {
   [key: string]: NestedFilterValue;
 }
 
@@ -17,5 +17,5 @@ export interface QueryString {
   keyword?: string | null;
   targets?: Array<string>;
   sort?: string | null;
-  filter?: INestedFilterMap;
+  filter?: NestedFilterMap;
 }

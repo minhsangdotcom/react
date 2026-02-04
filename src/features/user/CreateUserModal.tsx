@@ -11,7 +11,7 @@ import Select from "react-select";
 import PasswordInput from "@/components/PasswordInput";
 import { Mail, Phone } from "lucide-react";
 import { ChangeEvent, useRef, useState } from "react";
-import DefaultUser, { IPermissionModel, IRoleModel, IUser } from "./IUser";
+import DefaultUser, { PermissionModel, RoleModel, User } from "./IUser";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { UserStatus } from "./UserStatus";
@@ -19,8 +19,8 @@ import { DateInput } from "@/components/DateInput";
 import { userService } from "./userService";
 import LoadingButton from "@/components/LoadingButton";
 import Input from "./UserInput";
-import genderSelectStyles from "./gender-select-style";
-import { permissionSelectStyles, roleSelectStyles } from "./select-style";
+import { genderSelectStyles } from "./genderSelectStyles";
+import { permissionSelectStyles, roleSelectStyles } from "./selectStyle";
 import { createUserSchema, createUserSchemaType } from "./userSchema";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,8 +31,8 @@ dayjs.extend(utc);
 
 interface CreateUserProps {
   open: boolean;
-  roles: IRoleModel[];
-  permissions: IPermissionModel[];
+  roles: RoleModel[];
+  permissions: PermissionModel[];
   language: string;
   onRequestClose: () => void;
   onSubmit: () => void;
@@ -46,7 +46,7 @@ export default function CreateUserModal({
   onRequestClose,
   onSubmit,
 }: CreateUserProps) {
-  const [user, setUser] = useState<IUser>(DefaultUser);
+  const [user, setUser] = useState<User>(DefaultUser);
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<File | null>(null);
   const { t } = useTranslation();

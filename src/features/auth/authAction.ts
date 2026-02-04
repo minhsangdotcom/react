@@ -1,10 +1,10 @@
 import authService from "@/features/auth/authService";
-import { ILoginRequest } from "@features/auth/ILoginRequest";
+import { LoginRequest } from "@features/auth/ILoginRequest";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const loginAsync = createAsyncThunk(
   "user/login",
-  async (credentials: ILoginRequest, thunkAPI) => {
+  async (credentials: LoginRequest, thunkAPI) => {
     const response = await authService.login(credentials);
 
     if (!response.success) {

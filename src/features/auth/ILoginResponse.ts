@@ -1,12 +1,12 @@
-import { ITokenResponse } from "./ITokenResponse";
+import { TokenResponse } from "./ITokenResponse";
 
-export interface ILoginResponse extends ITokenResponse {
+export interface LoginResponse extends TokenResponse {
   tokenType: string;
   accessTokenExpiredIn: number;
-  user: IAuthUserResponse;
+  user: AuthUserResponse;
 }
 
-export interface IAuthUserResponse {
+export interface AuthUserResponse {
   firstName: string;
   lastName: string;
   username: string;

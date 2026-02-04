@@ -3,10 +3,10 @@ import { useDataTable } from "@dscn/hooks/use-data-table";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { roleService } from "@/features/role/roleService";
-import { IRole } from "@/features/role/IRole";
+import { Role } from "@/features/role/IRole";
 import { DataTable } from "@dscn/components/data-table/data-table";
 
-import { defaultParams } from "@/types/FilterParam";
+import { defaultParams } from "@/types/QueryParam";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,9 +23,9 @@ import utc from "dayjs/plugin/utc";
 import { showSuccessToast } from "@/notifications/toastSuccess";
 import { useAppSelector } from "@/store/hook";
 import {
-  IPermission,
-  IPermissionGroup,
-  IPermissionGroupResponse,
+  Permission,
+  PermissionGroup,
+  PermissionGroupResponse,
 } from "@/types/permission/IPermission";
 import permissionService from "@/services/permission/permissionService";
 import { ulid } from "ulidx";
@@ -42,19 +42,19 @@ import { parseDateTime } from "@/utils/dateFormat";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-export default function Role() {
-  const [role, setRole] = useState<Array<IRole>>([]);
+export function Roles() {
+  const [role, setRole] = useState<Role[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [referenceLoading, setReferenceLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [id, setId] = useState<string | null>(null);
-  const [group, setGroup] = useState<IPermissionGroup[]>([]);
+  const [group, setGroup] = useState<PermissionGroup[]>([]);
   const { code } = useAppSelector((store) => store.language);
   const { t } = useTranslation();
 
-  const columns = useMemo<ColumnDef<IRole>[]>(
+  const columns = useMemo<ColumnDef<Role>[]>(
     () => [
       {
         id: "id",
@@ -128,9 +128,7 @@ export default function Role() {
           />
         ),
         cell: ({ row }) => (
-          <div>
-            {parseDateTime(row.getValue("createdAt"),"DD/MM/YYYY")}
-          </div>
+          <div>{parseDateTime(row.getValue("createdAt"), "DD/MM/YYYY")}</div>
         ),
       },
       {
@@ -235,9 +233,9 @@ export default function Role() {
     setLoading(true);
     const result = await roleService.list({}, signal);
     if (result.success) {
-      const roles = result.data?.results as IRole[];
+      const roles = result.data?.results as Role[];
       const sortedRoles = roles.sort(
-        (a: IRole, b: IRole) =>
+        (a: Role, b: Role) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
       setRole([...sortedRoles]);
@@ -249,7 +247,7 @@ export default function Role() {
     setReferenceLoading(true);
     const result = await permissionService.list(signal);
     if (result.success) {
-      const permissions = result.data?.results as IPermissionGroupResponse[];
+      const permissions = result.data?.results as PermissionGroupResponse[];
       let groups = toListPermissionGroup(permissions);
       setGroup(groups);
     }
@@ -285,11 +283,7 @@ export default function Role() {
         </div>
 
         <div className="py-3">
-          <DataTable
-            table={table}
-            aria-sort="none"
-            loading={loading}
-          />
+          <DataTable table={table} aria-sort="none" loading={loading} />
         </div>
       </div>
 
@@ -339,7 +333,7 @@ export default function Role() {
   );
 }
 
-function mapPermission(permission: any): IPermission {
+function mapPermission(permission: any): Permission {
   return {
     id: ulid(),
     permissionId: permission.id,
@@ -353,8 +347,8 @@ function mapPermission(permission: any): IPermission {
 }
 
 function toListPermissionGroup(
-  response: IPermissionGroupResponse[]
-): IPermissionGroup[] {
+  response: PermissionGroupResponse[]
+): PermissionGroup[] {
   return response.map((group) => ({
     name: group.name,
     label: group.nameTranslation,
@@ -362,14 +356,14 @@ function toListPermissionGroup(
   }));
 }
 
-function resetPermissionGroups(groups: IPermissionGroup[]): IPermissionGroup[] {
+function resetPermissionGroups(groups: PermissionGroup[]): PermissionGroup[] {
   return groups.map((group) => ({
     ...group,
     permissions: resetPermissions(group.permissions),
   }));
 }
 
-function resetPermissions(permissions: IPermission[]): IPermission[] {
+function resetPermissions(permissions: Permission[]): Permission[] {
   return permissions.map((permission) => ({
     ...permission,
     checked: false,
