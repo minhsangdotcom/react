@@ -6,7 +6,7 @@ import { roleService } from "@/features/role/roleService";
 import { IRole } from "@/features/role/IRole";
 import { DataTable } from "@dscn/components/data-table/data-table";
 
-import { defaultParams } from "@/types/Params";
+import { defaultParams } from "@/types/FilterParam";
 import {
   DropdownMenu,
   DropdownMenuContent,

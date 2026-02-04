@@ -1,29 +1,32 @@
-import { defaultParams, Params } from "@/types/Params";
-import IQueryParam from "@/types/IQueryParam";
-import parseFilter from "@utils/queryParams/filter";
+import { defaultParams, QueryParam } from "@/types/FilterParam";
+import { QueryString } from "@/types/IQueryString";
+import { parseFilter } from "@utils/queryParams/filter";
 import parseSort from "@utils/queryParams/sort";
 
 export const queryParser = {
-  parse: function (query: Params): IQueryParam {
-    if (query === undefined) {
+  parse: function (queryParam: QueryParam): QueryString {
+    if (queryParam === undefined) {
       return {};
     }
-    if (query.filter?.info) {
-      query.filter.info = query.filter?.info?.filter((x) => x.value !== "");
-    }
-    const params = {
-      page: query.page,
-      before: query.before,
-      after: query.after,
-      pageSize: query?.perPage,
-      sort: parseSort(
-        query?.sort?.length > 0 ? query?.sort : defaultParams.sort
-      ),
-    } as IQueryParam;
 
-    if (query?.filter) {
-      params.filter = parseFilter(query?.filter);
+    if (queryParam.filter?.filters) {
+      queryParam.filter.filters = queryParam.filter?.filters?.filter(
+        (x) => x.value !== ""
+      );
     }
-    return params;
+
+    const queryString = {
+      page: queryParam.page,
+      before: queryParam.before,
+      after: queryParam.after,
+      pageSize: queryParam?.perPage,
+      sort: parseSort(queryParam.sort ?? defaultParams.sort),
+    } as QueryString;
+
+    if (queryParam?.filter) {
+      const filter = parseFilter(queryParam?.filter);
+      queryString.filter = filter;
+    }
+    return queryString;
   },
 };

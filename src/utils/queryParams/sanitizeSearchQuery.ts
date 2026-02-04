@@ -1,10 +1,10 @@
-import IQueryParam from "@/types/IQueryParam";
+import { QueryString } from "@/types/IQueryString";
 
 export function sanitizeSearchQuery(
-  query: IQueryParam,
+  query: QueryString,
   searchTerm: string,
   target: string[]
-) : void{
+): void {
   if (searchTerm !== "") {
     query.keyword = searchTerm;
     query.targets = target;

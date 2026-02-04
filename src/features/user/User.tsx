@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@dscn/components/ui/dropdown-menu";
 import { useDataTable } from "@dscn/hooks/use-data-table";
-import { defaultParams } from "@/types/Params";
+import { defaultParams } from "@/types/FilterParam";
 import {
   IPermissionModel,
   IRoleModel,
@@ -34,7 +34,7 @@ import SearchBar from "@components/SearchBar";
 import CreateUserModal from "./CreateUserModal";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import UpdateUserModal from "./UpdateUserModal";
-import IQueryParam from "@/types/IQueryParam";
+import { QueryString } from "@/types/IQueryString";
 import { roleService } from "@features/role/roleService";
 import permissionService from "@/services/permission/permissionService";
 import { IPermissionGroupResponse } from "@/types/permission/IPermission";
@@ -262,7 +262,6 @@ export default function User() {
         ),
         cell: ({ row }) => {
           const dateOfBirth: string = row.getValue("dateOfBirth");
-          console.log("🚀 ~ User ~ dateOfBirth:", dateOfBirth)
           return (
             <>{dateOfBirth ? parseDateTime(dateOfBirth, "DD/MM/YYYY") : "_"}</>
           );
@@ -328,7 +327,6 @@ export default function User() {
         ),
         cell: ({ row }) => {
           const createdAt: string = row.getValue("createdAt");
-          console.log("🚀 ~ User ~ createdAt:", createdAt)
           return <>{parseDateTime(createdAt, "DD/MM/YYYY")}</>;
         },
         meta: {
@@ -391,7 +389,7 @@ export default function User() {
     columns,
     pageCount: pageInfo?.totalPage ?? 0,
     initialState: {
-      sorting: defaultParams.sort,
+      sorting: [...defaultParams.sort],
       pagination: {
         pageSize: defaultParams.perPage,
         pageIndex: 0,
@@ -442,11 +440,9 @@ export default function User() {
       return;
     }
     const queryParam = sanitizeQuery(
-      [
-        (params) => sanitizeInputFilter(params),
-        (params) => sanitizeInputSort(params),
-      ],
-      query
+      query,
+      (queryString) => sanitizeInputFilter(queryString),
+      (queryString) => sanitizeInputSort(queryString)
     );
     sanitizeSearchQuery(queryParam, search, [
       "username",
@@ -458,7 +454,7 @@ export default function User() {
     getUsers(queryParam);
   }, [query, search, openCreatePopup, openConfirmDialog, openUpdatePopup]);
 
-  async function getUsers(params: IQueryParam) {
+  async function getUsers(params: QueryString) {
     setLoading(true);
     const result = await userService.list(params);
     if (result.success) {
@@ -529,11 +525,9 @@ export default function User() {
       return;
     }
     const queryParam = sanitizeQuery(
-      [
-        (params) => sanitizeInputFilter(params),
-        (params) => sanitizeInputSort(params),
-      ],
-      query
+      query,
+      (queryString) => sanitizeInputFilter(queryString),
+      (queryString) => sanitizeInputSort(queryString)
     );
 
     if (direction == "next") {
@@ -687,18 +681,45 @@ export default function User() {
   );
 }
 
-const sanitizeInputFilter = (params: IQueryParam): void => {
+function getFilterOperator(obj: unknown): {
+  operator: string | null;
+  value: any;
+} {
+  if (typeof obj !== "object" || obj === null) {
+    return { operator: null, value: null };
+  }
+
+  const entries = Object.entries(obj);
+
+  if (entries.length === 0) {
+    return { operator: null, value: null };
+  }
+
+  const [operator, value] = entries[0];
+
+  if (!operator.startsWith("$")) {
+    return { operator: null, value: null };
+  }
+
+  return { operator, value };
+}
+
+const sanitizeInputFilter = (params: QueryString): void => {
+  if (!params.filter) {
+    return;
+  }
+
   if (
     typeof params.filter === "object" &&
     params.filter !== null &&
     "fullName" in params.filter
   ) {
-    const value = (params.filter?.fullName as any)["$containsi"];
+    const { operator, value } = getFilterOperator(params.filter.fullName);
     params.filter = {
       ...params.filter,
       $or: [
-        { firstName: { $containsi: value } },
-        { lastName: { $containsi: value } },
+        { firstName: { [operator as string]: value } },
+        { lastName: { [operator as string]: value } },
       ],
     };
 
@@ -717,19 +738,20 @@ const sanitizeInputFilter = (params: IQueryParam): void => {
           typeof item === "object" && item !== null && !("fullName" in item)
       );
       const fullName = andFilters[index].fullName as any;
+      const { operator, value } = getFilterOperator(fullName);
       params.filter["$and"] = [
         ...filters,
         {
           $or: [
-            { firstName: { $containsi: fullName["$containsi"] } },
-            { lastName: { $containsi: fullName["$containsi"] } },
+            { firstName: { [operator as string]: value } },
+            { lastName: { [operator as string]: value } },
           ],
         },
       ];
     }
   }
 };
-const sanitizeInputSort = (params: IQueryParam): void => {
+const sanitizeInputSort = (params: QueryString): void => {
   const index = params.sort?.indexOf("fullName") ?? -1;
   if (index == -1) {
     return;

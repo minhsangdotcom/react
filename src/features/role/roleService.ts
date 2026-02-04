@@ -1,4 +1,4 @@
-import IQueryParam from "@/types/IQueryParam";
+import IQueryParam from "@/types/IQueryString";
 import ICreateRoleRequest from "@/features/role/ICreateRoleRequest";
 import { IRole, IRoleResponse } from "@/features/role/IRole";
 import IUpdateRoleRequest from "@/features/role/IUpdateRoleRequest";

@@ -1,7 +1,7 @@
 import { ICommune, IDistrict, IProvince } from "@/features/region/IRegion";
 import { send } from "@/lib/http/api";
 import { IApiResult } from "@/lib/http/IApiResult";
-import IQueryParam from "@/types/IQueryParam";
+import IQueryParam from "@/types/IQueryString";
 
 export const regionService = {
   listProvince: async function (

@@ -1,4 +1,4 @@
-import IQueryParam from "@/types/IQueryParam";
+import IQueryParam from "@/types/IQueryString";
 import { IPagination } from "@/types/IResponse";
 import { IUserResponse } from "@/features/user/IUser";
 import { send } from "@/lib/http/api";

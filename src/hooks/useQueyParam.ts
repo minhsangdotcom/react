@@ -1,30 +1,35 @@
 import { useEffect, useState } from "react";
-import { IFilterParam, Params, defaultParams } from "@/types/Params";
+import {
+  FilterGroup,
+  LogicalOperator,
+  defaultParams,
+  QueryParam
+} from "@/types/FilterParam";
 import queryString from "query-string";
 import IFilter from "@/types/IFilter";
 
 function getFilterItems(
   filters: string,
-  joinOperator: string | undefined = "and"
-): IFilterParam {
+  joinOperator: LogicalOperator = "and"
+): FilterGroup {
   if (!filters) {
-    return {} as IFilterParam;
+    return {} as FilterGroup;
   }
   const filterObj = JSON.parse(filters) as Array<IFilter>;
   return {
-    info: filterObj.map((filter) => ({
+    filters: filterObj.map((filter) => ({
       id: filter.id,
       value: filter.value,
       operator: filter.operator,
       variant: filter.variant,
       filterId: filter.filterId,
     })),
-    logicalOperator: joinOperator,
+    combinator: joinOperator,
   };
 }
 
 export function useQueryParam() {
-  const [query, setQuery] = useState<Params>();
+  const [query, setQuery] = useState<QueryParam>();
 
   const updateQuery = () => {
     const queryParams = queryString.parse(window.location.search);
@@ -34,7 +39,7 @@ export function useQueryParam() {
     setQuery({
       filter: getFilterItems(
         filters as string,
-        joinOperator as string | undefined
+        joinOperator as LogicalOperator
       ),
       sort: sort
         ? JSON.parse(sort as string)

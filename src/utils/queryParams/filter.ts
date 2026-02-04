@@ -1,7 +1,7 @@
-import IFilter from "@/types/IFilter";
-import { IFilterParam } from "@/types/Params";
+import { FilterGroup } from "@/types/FilterParam";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import Filter from "@/types/IFilter";
 dayjs.extend(utc);
 
 const filterOperator = [
@@ -33,6 +33,7 @@ const filterOperators = new Map<string, string>([
   ["gt", "$gt"],
   ["gte", "$gte"],
   ["iLike", "$containsi"],
+  ["notILike", "$notcontainsi"],
   ["inArray", "$in"],
 ]);
 
@@ -78,11 +79,10 @@ function parseValue(
   return value;
 }
 
-function createFilterItem(filter: IFilter) {
+function createFilterItem(filter: Filter) {
   const value = parseValue(filter.value, filter.variant);
-  const operator = filterOperators.get(filter.operator) ?? "$eq";
+  const operator = filterOperators.get(filter.operator)!;
   const parts = filter.id.trim().split(".");
-
   let nested: any = { [operator]: value };
   for (let i = parts.length - 1; i >= 0; i--) {
     nested = { [parts[i]]: nested };
@@ -91,26 +91,46 @@ function createFilterItem(filter: IFilter) {
   return nested;
 }
 
-export default function parseFilter(filters: IFilterParam) {
-  let result = {} as any;
-  const infoFilter = filters.info;
-  if (infoFilter == undefined) {
-    return result;
-  }
+export function parseFilter(filterGroup: FilterGroup) {
+  try {
+    let result = {} as any;
+    const filters = filterGroup.filters;
+    if (!filters) {
+      return result;
+    }
 
-  if (infoFilter.length == 1) {
-    const obj = createFilterItem(infoFilter[0]);
-    result = obj;
+    if (filters.length == 1) {
+      const filter = filters[0];
+      if (!filterOperators.has(filter.operator)) {
+        console.warn(
+          `⚠️ Skipping filter with unsupported operator: ${filter.operator}`
+        );
+        return result;
+      }
+      const obj = createFilterItem(filter);
+      result = obj;
+      return result;
+    }
+    const logicalOperator = [] as Array<any>;
+    for (let index = 0; index < filters.length; index++) {
+      const filter = filters[index] as Filter;
+      if (!filterOperators.has(filter.operator)) {
+        console.warn(
+          `⚠️ Skipping filter with unsupported operator: ${filter.operator}`
+        );
+        continue;
+      }
+      const item = createFilterItem(filter);
+      if (item) {
+        logicalOperator.push(item);
+      }
+    }
+    const join = logicalOperators.get(filterGroup.combinator!) as string;
+    result = {
+      [join]: logicalOperator,
+    } as any;
     return result;
+  } catch (error) {
+    throw error;
   }
-  const logicalOperator = [] as Array<any>;
-  for (let index = 0; index < infoFilter.length; index++) {
-    const filter = infoFilter[index] as IFilter;
-    logicalOperator.push(createFilterItem(filter));
-  }
-  const join = logicalOperators.get(filters.logicalOperator!) as string;
-  result = {
-    [join]: logicalOperator,
-  } as any;
-  return result;
 }

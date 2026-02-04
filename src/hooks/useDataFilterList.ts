@@ -1,6 +1,6 @@
 import IFilter from "@/types/IFilter";
 import { useEffect, useRef } from "react";
-import { Params } from "@/types/Params";
+import { Params } from "@/types/FilterParam";
 
 function hasNotInfoValueChanged(prev: IFilter[], next: IFilter[]): boolean {
   const filterItems = next.filter((x) =>

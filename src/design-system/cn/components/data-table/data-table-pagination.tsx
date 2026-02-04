@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from "@dscn/components/ui/select";
 import { cn } from "@dscn/lib/utils";
-import { ROW_PER_PAGE } from "@/types/Params";
+import { ROW_PER_PAGE } from "@/types/FilterParam";
 import { useTranslation } from "react-i18next";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
 import { useMemo } from "react";

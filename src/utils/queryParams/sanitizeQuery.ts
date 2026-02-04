@@ -1,12 +1,19 @@
-import IQueryParam from "@/types/IQueryParam";
+import { QueryString } from "@/types/IQueryString";
 import { queryParser } from "./queryParser";
-import { Params } from "@/types/Params";
+import { QueryParam } from "@/types/FilterParam";
 
 export function sanitizeQuery(
-  handlers: ((params: IQueryParam) => void)[],
-  query: Params
-): IQueryParam {
-  const params = queryParser.parse(query);
-  handlers.forEach((fn) => fn(params));
-  return params;
+  queryParams: QueryParam,
+  ...fns: Array<(query: QueryString) => void>
+): QueryString {
+  const query = queryParser.parse(queryParams);
+  if (!query) {
+    throw new Error("Invalid query params");
+  }
+  
+  fns.forEach((fn) => {
+    fn(query);
+  });
+
+  return query;
 }
