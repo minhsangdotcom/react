@@ -1,8 +1,8 @@
-import IFilter from "@/types/IFilter";
 import { useEffect, useRef } from "react";
 import { QueryParam } from "@/types/QueryParam";
+import Filter from "@/types/IFilter";
 
-function hasNotInfoValueChanged(prev: IFilter[], next: IFilter[]): boolean {
+function hasNotInfoValueChanged(prev: Filter[], next: Filter[]): boolean {
   const filterItems = next.filter((x) =>
     prev.some((p) => p.filterId === x.filterId)
   );
@@ -30,7 +30,7 @@ export default function useDataFilterList(
   fn: () => void | Promise<void>,
   deps: React.DependencyList = []
 ) {
-  const prevInfoRef = useRef<IFilter[]>([]);
+  const prevInfoRef = useRef<Filter[]>([]);
   const prevJoinOperatorRef = useRef<string>("");
 
   useEffect(() => {
@@ -41,14 +41,14 @@ export default function useDataFilterList(
     const filters = query.filter.filters ?? [];
     const currentJoinOperator = query.filter.combinator ?? "and";
 
-    const isSameInfo =
+    const isSameFilter =
       filters.length > 0 &&
       hasNotInfoValueChanged(prevInfoRef.current, filters);
 
     const isSameJoinOperator =
       prevJoinOperatorRef.current === currentJoinOperator;
 
-    if (isSameInfo && isSameJoinOperator) {
+    if (isSameFilter && isSameJoinOperator) {
       return;
     }
 

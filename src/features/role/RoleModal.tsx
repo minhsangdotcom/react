@@ -29,7 +29,7 @@ interface PermissionNodeProps {
   onToggleExpand: (id: string) => void;
 }
 
-export default function RoleModal({
+export function RoleModal({
   open,
   onRequestClose,
   roleId,

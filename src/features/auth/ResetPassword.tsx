@@ -13,7 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
 
-export default function ResetPassword() {
+export function ResetPassword() {
   const [search] = useSearchParams();
   const token = search.get("token") ?? "";
   const email = search.get("email") ?? "";

@@ -1,19 +1,19 @@
 import { QueryString } from "@/types/IQueryString";
 import { Pagination } from "@/types/IResponse";
-import { IUserResponse } from "@/features/user/IUser";
 import { send } from "@/lib/http/api";
 import { ApiResult } from "@/lib/http/IApiResult";
+import { UserResponse } from "./IUser";
 
 export const userService = {
   list: async function (
     params: QueryString
-  ): Promise<ApiResult<Pagination<IUserResponse[]>>> {
+  ): Promise<ApiResult<Pagination<UserResponse[]>>> {
     return await send({ url: "users", method: "GET", data: params });
   },
   update: async function (
     id: string,
     request: FormData
-  ): Promise<ApiResult<IUserResponse>> {
+  ): Promise<ApiResult<UserResponse>> {
     return await send({
       url: `users/${id}`,
       method: "PUT",
@@ -21,7 +21,7 @@ export const userService = {
       headers: { "Content-Type": "multipart/form-data" },
     });
   },
-  get: async function (id: string): Promise<ApiResult<IUserResponse>> {
+  get: async function (id: string): Promise<ApiResult<UserResponse>> {
     return await send({
       url: `users/${id}`,
       method: "GET",
@@ -29,7 +29,7 @@ export const userService = {
   },
   create: async function (
     request: FormData
-  ): Promise<ApiResult<IUserResponse>> {
+  ): Promise<ApiResult<UserResponse>> {
     return await send({
       url: "users",
       method: "POST",

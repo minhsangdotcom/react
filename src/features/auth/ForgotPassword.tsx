@@ -5,7 +5,7 @@ import LoadingButton from "@components/LoadingButton";
 import { useTranslation } from "react-i18next";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
 
-export default function ForgotPassword() {
+export function ForgotPassword() {
   const [email, setEmail] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();

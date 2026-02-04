@@ -14,7 +14,7 @@ import { logout } from "./authSlice";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
 import { useTranslation } from "react-i18next";
 
-export default function ChangePassword() {
+export function ChangePassword() {
   const {
     register,
     handleSubmit,
@@ -26,7 +26,7 @@ export default function ChangePassword() {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
-  async function onsubmit(data: ChangePasswordSchemaType) {
+  async function submit(data: ChangePasswordSchemaType) {
     setLoading(true);
     const result = await authService.changePassword({
       oldPassword: data.oldPassword,
@@ -43,7 +43,7 @@ export default function ChangePassword() {
     <div className="flex justify-center items-center px-3 py-10 h-auto">
       <form
         className="w-full md:w-md rounded-xl bg-background p-6 shadow-lg border border-border"
-        onSubmit={handleSubmit(onsubmit)}
+        onSubmit={handleSubmit(submit)}
       >
         <h2 className="text-xl font-semibold mb-2">
           {t(TRANSLATION_KEYS.changePassword.title)}

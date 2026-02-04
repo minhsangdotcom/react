@@ -3,7 +3,7 @@ import { Loading } from "@components/Loading";
 import { ChangeEvent, useEffect, useState } from "react";
 import profileService from "@features/profile/profileService";
 import LoadingButton from "@components/LoadingButton";
-import { IUserProfileResponse } from "@/features/profile/IUserProfile";
+import { UserProfileResponse } from "@/features/profile/IUserProfile";
 import Select from "react-select";
 import { Gender, createGenderOptions } from "@/features/user/Gender";
 import { DateInput } from "@mantine/dates";
@@ -23,7 +23,7 @@ import "dayjs/locale/vi";
 import "dayjs/locale/en";
 dayjs.extend(utc);
 
-export default function Profile() {
+export function Profile() {
   const { user, isLoading } = useAppSelector((store) => store.profile);
   const { code } = useAppSelector((store) => store.language);
 
@@ -79,7 +79,7 @@ export default function Profile() {
     setSubmitLoading(true);
     var result = await profileService.updateProfile(formData);
     if (result.success) {
-      const userResult = result.data?.results as IUserProfileResponse;
+      const userResult = result.data?.results as UserProfileResponse;
       updateProfile(userResult);
       showSuccessToast("Update profile success!");
     }
@@ -93,7 +93,7 @@ export default function Profile() {
     updateProfile(user);
   }, [isLoading]);
 
-  function updateProfile(user: IUserProfileResponse) {
+  function updateProfile(user: UserProfileResponse) {
     reset({
       firstName: user.firstName,
       lastName: user.lastName,

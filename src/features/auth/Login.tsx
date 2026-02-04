@@ -28,7 +28,7 @@ export default function Login() {
   const data = useAppSelector((store) => store.auth);
   const { t } = useTranslation();
 
-  async function onSubmit(formData: loginSchemaType) {
+  async function submit(formData: loginSchemaType) {
     try {
       await dispatch(
         loginAsync({
@@ -46,7 +46,7 @@ export default function Login() {
   return (
     <div className="login-form-container w-full md:w-md py-5">
       <h2 className="login-form-title">{t(TRANSLATION_KEYS.login.title)}</h2>
-      <form className="px-3 py-2" onSubmit={handleSubmit(onSubmit)}>
+      <form className="px-3 py-2" onSubmit={handleSubmit(submit)}>
         <Input
           label={t(TRANSLATION_KEYS.login.form.identifier)}
           type="text"
