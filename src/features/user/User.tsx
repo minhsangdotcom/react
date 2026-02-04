@@ -57,6 +57,7 @@ import { sanitizeQuery } from "@/utils/queryParams/sanitizeQuery";
 import { sanitizeSearchQuery } from "@/utils/queryParams/sanitizeSearchQuery";
 import { UserCard } from "./UserCard";
 import { vi, enUS } from "date-fns/locale";
+import { parseDateTime } from "@/utils/dateFormat";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -76,7 +77,7 @@ function toIUser(dto: IUserResponse): IUser {
     gender: dto.gender ?? null,
     avatar: dto.avatar ?? null,
     status: dto.status,
-    createdAt: new Date(dto.createdAt),
+    createdAt: dto.createdAt,
     roles: [],
     permissions: [],
   };
@@ -160,8 +161,9 @@ export default function User() {
         },
         meta: {
           label: t(TRANSLATION_KEYS.user.table.filter.items.username.label),
-          placeholder:
-            t(TRANSLATION_KEYS.user.table.filter.items.username.placeholder),
+          placeholder: t(
+            TRANSLATION_KEYS.user.table.filter.items.username.placeholder
+          ),
           variant: "text",
         },
         enableColumnFilter: true,
@@ -197,8 +199,9 @@ export default function User() {
         },
         meta: {
           label: t(TRANSLATION_KEYS.user.table.filter.items.fullName.label),
-          placeholder:
-            t(TRANSLATION_KEYS.user.table.filter.items.fullName.placeholder),
+          placeholder: t(
+            TRANSLATION_KEYS.user.table.filter.items.fullName.placeholder
+          ),
           variant: "text",
         },
         enableColumnFilter: true,
@@ -217,8 +220,9 @@ export default function User() {
         cell: ({ row }) => <div>{row.getValue("email")}</div>,
         meta: {
           label: t(TRANSLATION_KEYS.user.table.filter.items.email.label),
-          placeholder:
-            t(TRANSLATION_KEYS.user.table.filter.items.email.placeholder),
+          placeholder: t(
+            TRANSLATION_KEYS.user.table.filter.items.email.placeholder
+          ),
           variant: "text",
         },
         enableColumnFilter: true,
@@ -239,8 +243,9 @@ export default function User() {
         },
         meta: {
           label: t(TRANSLATION_KEYS.user.table.filter.items.phoneNumber.label),
-          placeholder:
-            t(TRANSLATION_KEYS.user.table.filter.items.phoneNumber.placeholder),
+          placeholder: t(
+            TRANSLATION_KEYS.user.table.filter.items.phoneNumber.placeholder
+          ),
           variant: "text",
         },
         enableColumnFilter: true,
@@ -257,21 +262,16 @@ export default function User() {
         ),
         cell: ({ row }) => {
           const dateOfBirth: string = row.getValue("dateOfBirth");
+          console.log("🚀 ~ User ~ dateOfBirth:", dateOfBirth)
           return (
-            <div>
-              {dateOfBirth
-                ? dayjs
-                    .utc(dateOfBirth)
-                    .tz(dayjs.tz.guess())
-                    .format("DD/MM/YYYY")
-                : "_"}
-            </div>
+            <>{dateOfBirth ? parseDateTime(dateOfBirth, "DD/MM/YYYY") : "_"}</>
           );
         },
         meta: {
           label: t(TRANSLATION_KEYS.user.table.filter.items.dateOfBirth.label),
-          placeholder:
-            t(TRANSLATION_KEYS.user.table.filter.items.dateOfBirth.placeholder),
+          placeholder: t(
+            TRANSLATION_KEYS.user.table.filter.items.dateOfBirth.placeholder
+          ),
           variant: "date",
         },
         enableColumnFilter: true,
@@ -326,14 +326,11 @@ export default function User() {
             title={t(TRANSLATION_KEYS.common.table.fields.createdAt)}
           />
         ),
-        cell: ({ row }) => (
-          <div>
-            {dayjs
-              .utc(row.getValue("createdAt"))
-              .tz(dayjs.tz.guess())
-              .format("DD/MM/YYYY")}
-          </div>
-        ),
+        cell: ({ row }) => {
+          const createdAt: string = row.getValue("createdAt");
+          console.log("🚀 ~ User ~ createdAt:", createdAt)
+          return <>{parseDateTime(createdAt, "DD/MM/YYYY")}</>;
+        },
         meta: {
           label: t(TRANSLATION_KEYS.common.table.fields.createdAt),
           variant: "dateRange",

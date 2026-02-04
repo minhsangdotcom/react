@@ -40,7 +40,7 @@ export interface IPermissionModel {
 
 const DefaultUser = {
   id: "",
-  createdAt: new Date(),
+  createdAt: "",
   firstName: "",
   lastName: "",
   gender: null,

@@ -38,6 +38,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/design-system/cn/components/ui/tooltip";
+import { parseDateTime } from "@/utils/dateFormat";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -70,7 +71,7 @@ export default function Role() {
           <DataTableColumnHeader
             column={column}
             id="name"
-            title={TRANSLATION_KEYS.role.table.fields.name}
+            title={t(TRANSLATION_KEYS.role.table.fields.name)}
           />
         ),
         cell: ({ row }) => <div>{row.getValue("name")}</div>,
@@ -82,7 +83,7 @@ export default function Role() {
           <DataTableColumnHeader
             column={column}
             id="description"
-            title={TRANSLATION_KEYS.role.table.fields.description}
+            title={t(TRANSLATION_KEYS.role.table.fields.description)}
           />
         ),
         cell: ({ row }) => {
@@ -123,15 +124,12 @@ export default function Role() {
           <DataTableColumnHeader
             column={column}
             id="createdAt"
-            title={TRANSLATION_KEYS.common.table.fields.createdAt}
+            title={t(TRANSLATION_KEYS.common.table.fields.createdAt)}
           />
         ),
         cell: ({ row }) => (
           <div>
-            {dayjs
-              .utc(row.getValue("createdAt"))
-              .tz(dayjs.tz.guess())
-              .format("DD/MM/YYYY")}
+            {parseDateTime(row.getValue("createdAt"),"DD/MM/YYYY")}
           </div>
         ),
       },
