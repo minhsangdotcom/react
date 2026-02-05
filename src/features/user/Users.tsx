@@ -541,13 +541,15 @@ export function Users() {
 
   const pagination = () => {
     return (
-      <EllipsisPagination
+      <DataCursorPagination
         table={table}
-        config={{
-          boundaryCount: 1,
-          maxVisiblePages: 7,
-          siblingCount: 1,
+        cursorPageInfo={{
+          hasNextPage: pageInfo?.hasNextPage!,
+          hasPreviousPage: pageInfo?.hasPreviousPage!,
+          endCursor: pageInfo?.after,
+          startCursor: pageInfo?.before,
         }}
+        onCursorPageChange={handleCursorPageChange}
       />
     );
   };
