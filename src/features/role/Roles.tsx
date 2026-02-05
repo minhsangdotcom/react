@@ -105,8 +105,8 @@ export function Roles() {
               </TooltipTrigger>
               <TooltipContent
                 side="top"
-                className="max-w-100 max-h-50 overflow-x-hidden text-white border-2 border-gray-300 bg-gray-300
-                [--tooltip-bg:var(--color-gray-300)]
+                className="max-w-100 max-h-50 overflow-x-hidden text-black border-2 border-gray-200 bg-gray-200
+                [--tooltip-bg:var(--color-gray-200)]
                 "
               >
                 <p className="text-sm whitespace-pre-wrap wrap-break-word">
@@ -177,7 +177,7 @@ export function Roles() {
         size: 32,
       },
     ],
-    []
+    [code]
   );
 
   const { table } = useDataTable({
