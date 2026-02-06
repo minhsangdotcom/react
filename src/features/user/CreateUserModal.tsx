@@ -165,7 +165,7 @@ export default function CreateUserModal({
                       <span className="material-symbols-outlined text-4xl text-gray-400 dark:text-text-muted">
                         <img
                           src={user.avatar!}
-                          className="w-32 rounded-full object-cover"
+                          className="w-full h-32 rounded-full object-cover"
                         />
                       </span>
                       <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
