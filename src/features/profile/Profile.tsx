@@ -21,6 +21,7 @@ import { TRANSLATION_KEYS } from "@/config/translationKey";
 import { useTranslation } from "react-i18next";
 import "dayjs/locale/vi";
 import "dayjs/locale/en";
+import { Avatar, AvatarImage } from "@/design-system/cn/components/ui/avatar";
 dayjs.extend(utc);
 
 export function Profile() {
@@ -119,11 +120,12 @@ export function Profile() {
         <div className="flex items-center gap-4 mb-3 p-5">
           {/* Avatar */}
           <div className="relative shrink-0">
-            <img
-              src={userAvatar ?? defaultAvatarPicker.getAvatar(gender)}
-              alt="Avatar"
-              className="w-20 rounded-full object-cover"
-            />
+            <Avatar className="h-20 w-20 overflow-hidden rounded-full">
+              <AvatarImage
+                src={userAvatar ?? defaultAvatarPicker.getAvatar(gender)}
+                className="w-full h-full object-cover"
+              />
+            </Avatar>
 
             <label className="absolute bottom-0 right-1 flex h-5.5 w-5.5 items-center justify-center rounded-full bg-blue-500 shadow cursor-pointer">
               <img src={Edit} className="h-3 w-3" />

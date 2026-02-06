@@ -39,17 +39,19 @@ export function NavbarAvatar({
     <DropdownMenu>
       {/* TRIGGER */}
       <DropdownMenuTrigger asChild>
-        <Avatar className="h-8 w-8 md:h-10 md:w-10 cursor-pointer">
-          <AvatarImage src={avatarUrl} alt="User avatar" />
+        <Avatar className="h-8 w-8 overflow-hidden rounded-full cursor-pointer">
+          <AvatarImage src={avatarUrl} className="w-full h-full object-cover" />
         </Avatar>
       </DropdownMenuTrigger>
 
       {/* MENU */}
       <DropdownMenuContent side="bottom" align="end">
         <div className="flex items-center gap-3 px-3 py-2">
-          <Avatar className="h-9 w-9">
-            <AvatarImage src={avatarUrl} />
-            <AvatarFallback>JL</AvatarFallback>
+          <Avatar className="h-8 w-8 overflow-hidden rounded-full">
+            <AvatarImage
+              src={avatarUrl}
+              className="w-full h-full object-cover"
+            />
           </Avatar>
 
           <div className="flex flex-col">
@@ -76,7 +78,10 @@ export function NavbarAvatar({
               <DropdownMenuItem
                 onClick={() => navigate("settings/change-password")}
               >
-                {t(TRANSLATION_KEYS.navbar.profileMenu.settingAndSecurity.changePassword)}
+                {t(
+                  TRANSLATION_KEYS.navbar.profileMenu.settingAndSecurity
+                    .changePassword
+                )}
               </DropdownMenuItem>
             </DropdownMenuSubContent>
           </DropdownMenuPortal>
