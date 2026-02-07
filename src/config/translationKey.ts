@@ -111,6 +111,22 @@ export const TRANSLATION_KEYS = {
       },
       noContent: "common.table.noContent",
     },
+    dialog: {
+      confirm: {
+        delete: {
+          title: "common.dialog.confirm.delete.title",
+          message: "common.dialog.confirm.delete.message",
+          confirm: "common.dialog.confirm.delete.confirm",
+          cancel: "common.dialog.confirm.delete.cancel",
+        },
+        default: {
+          title: "common.dialog.confirm.default.title",
+          message: "common.dialog.confirm.default.message",
+          confirm: "common.dialog.confirm.default.confirm",
+          cancel: "common.dialog.confirm.default.cancel",
+        },
+      },
+    },
   },
 
   navigation: {

@@ -32,7 +32,7 @@ import { Checkbox } from "@dscn/components/ui/checkbox";
 import { DataTableFilterMenu } from "@/design-system/cn/components/data-table/data-table-filter-menu";
 import SearchBar from "@components/SearchBar";
 import CreateUserModal from "./CreateUserModal";
-import { ConfirmDialog } from "@/components/ConfirmDialog";
+import { ConfirmDialog } from "@components/confirmDialog";
 import UpdateUserModal from "./UpdateUserModal";
 import { QueryString } from "@/types/IQueryString";
 import { roleService } from "@features/role/roleService";
@@ -674,8 +674,12 @@ export function Users() {
       />
       <ConfirmDialog
         isOpen={openConfirmDialog}
-        title="Delete Item"
-        message="Are you sure you want to delete this item?"
+        title= {t(TRANSLATION_KEYS.common.dialog.confirm.delete.title, {
+          entity : t(TRANSLATION_KEYS.user.entity)
+        })}
+        message={t(TRANSLATION_KEYS.common.dialog.confirm.delete.message, {
+          entity : t(TRANSLATION_KEYS.user.entity)
+        })}
         onConfirm={handleConfirm}
         onCancel={() => setConfirmDialogOpen(false)}
       />

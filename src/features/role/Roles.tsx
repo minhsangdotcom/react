@@ -16,7 +16,7 @@ import {
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@dscn/components/ui/button";
 import { RoleModal } from "./RoleModal";
-import { ConfirmDialog } from "@/components/ConfirmDialog";
+import { ConfirmDialog } from "@components/confirmDialog";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
@@ -321,8 +321,12 @@ export function Roles() {
 
       <ConfirmDialog
         isOpen={dialogOpen}
-        title="Delete Item"
-        message="Are you sure you want to delete this item?"
+        title={t(TRANSLATION_KEYS.common.dialog.confirm.delete.title, {
+          entity: t(TRANSLATION_KEYS.role.entity),
+        })}
+        message={t(TRANSLATION_KEYS.common.dialog.confirm.delete.message, {
+          entity: t(TRANSLATION_KEYS.role.entity),
+        })}
         onConfirm={handleDelete}
         onCancel={() => {
           setDialogOpen(false);

@@ -109,6 +109,22 @@
         "pageOf": "Trang {{current}} / {{total}}"
       },
       "noContent": "Không có dữ liệu."
+    },
+    "dialog": {
+      "confirm": {
+        "delete": {
+          "title": "Xóa {{entity}}",
+          "message": "Bạn có chắc chắn muốn xóa {{entity}} này không?",
+          "confirm": "Có, xóa",
+          "cancel": "Hủy"
+        },
+        "default": {
+          "title": "Bạn có chắc chắn không?",
+          "message": "Hành động này không thể hoàn tác.",
+          "confirm": "Xác nhận",
+          "cancel": "Hủy"
+        }
+      }
     }
   },
   "navigation": {

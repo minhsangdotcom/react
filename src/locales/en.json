@@ -57,8 +57,8 @@
             "inArray": "Has any of",
             "notInArray": "Has none of"
           },
-          "options":{
-            "placeholder":"Search options..."
+          "options": {
+            "placeholder": "Search options..."
           },
           "join": {
             "and": "And",
@@ -109,6 +109,22 @@
         "pageOf": "Page {{current}} / {{total}}"
       },
       "noContent": "No results."
+    },
+    "dialog": {
+      "confirm": {
+        "delete": {
+          "title": "Delete {{entity}}",
+          "message": "Are you sure you want to delete this {{entity}}?",
+          "confirm": "Yes, delete it",
+          "cancel": "Cancel"
+        },
+        "default": {
+          "title": "Are you sure?",
+          "message": "This action cannot be undone.",
+          "confirm": "Confirm",
+          "cancel": "Cancel"
+        }
+      }
     }
   },
   "navigation": {

@@ -8,7 +8,7 @@ import {
   Edit2,
   Trash2,
 } from "lucide-react";
-import { IUser } from "./IUser";
+import { User } from "./IUser";
 import dayjs from "dayjs";
 
 import utc from "dayjs/plugin/utc";
@@ -16,10 +16,11 @@ import timezone from "dayjs/plugin/timezone";
 import getStatusTranslation, { UserStatus } from "./UserStatus";
 import { useTranslation } from "react-i18next";
 import { defaultAvatarPicker } from "@/utils/defaultAvatarPicker";
+import { TRANSLATION_KEYS } from "@/config/translationKey";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 interface UserCardProps {
-  user: IUser;
+  user: User;
   isExpanded: boolean;
   onToggle: (id: string) => void;
   onEdit: () => void;
@@ -82,7 +83,7 @@ export function UserCard({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-6">
             <div className="flex flex-col gap-1">
               <p className="text-text-muted text-[11px] uppercase tracking-wider font-semibold">
-                Email
+                {t(TRANSLATION_KEYS.user.table.fields.email)}
               </p>
               <div className="flex items-center gap-2 text-[#0d141b] text-sm font-medium">
                 <Mail size={14} className="text-text-muted" />
@@ -91,7 +92,7 @@ export function UserCard({
             </div>
             <div className="flex flex-col gap-1">
               <p className="text-text-muted text-[11px] uppercase tracking-wider font-semibold">
-                Phone
+                {t(TRANSLATION_KEYS.user.table.fields.phoneNumber)}
               </p>
               <div className="flex items-center gap-2 text-[#0d141b] text-sm font-medium">
                 <Phone size={14} className="text-text-muted" />
@@ -100,7 +101,7 @@ export function UserCard({
             </div>
             <div className="flex flex-col gap-1">
               <p className="text-text-muted text-[11px] uppercase tracking-wider font-semibold">
-                Date of birth
+                {t(TRANSLATION_KEYS.user.table.fields.dateOfBirth)}
               </p>
               <div className="flex items-center gap-2 text-[#0d141b] text-sm font-medium">
                 <Calendar size={14} className="text-text-muted" />
@@ -114,7 +115,7 @@ export function UserCard({
             </div>
             <div className="flex flex-col gap-1 relative">
               <p className="text-text-muted text-[11px] uppercase tracking-wider font-semibold">
-                Joined At
+                {t(TRANSLATION_KEYS.common.table.fields.createdAt)}
               </p>
               <div className="flex items-center gap-2 text-[#0d141b] text-sm font-medium">
                 <Clock size={14} className="text-text-muted" />
@@ -132,7 +133,7 @@ export function UserCard({
                 >
                   <Edit2 size={16} />
                   <span className="text-xs font-semibold uppercase sm:hidden">
-                    Edit
+                    {t(TRANSLATION_KEYS.common.actions.edit)}
                   </span>
                 </button>
                 <button
@@ -145,7 +146,7 @@ export function UserCard({
                 >
                   <Trash2 size={16} />
                   <span className="text-xs font-semibold uppercase sm:hidden">
-                    Delete
+                    {t(TRANSLATION_KEYS.common.actions.delete)}
                   </span>
                 </button>
               </div>
