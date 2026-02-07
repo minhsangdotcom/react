@@ -61,30 +61,30 @@ src/
 ## Một số ảnh chụp màn hình :fire:
 
 <p align="center">
-  <img src="/screenshot/login.png" alt="Login" width="720" /><br />
-  <img src="/screenshot/forgot-password.png" alt="Forgot Password" width="720" /><br />
-  <img src="/screenshot/reset-password.png" alt="Reset Password" width="720" /><br />
-  <img src="/screenshot/profile.png" alt="Profile" width="720" /><br />
-  <img src="/screenshot/change-password.png" alt="Change Password" width="720" /><br />
-  <img src="/screenshot/home.png" alt="Home" width="720" /><br />
-  <img src="/screenshot/role.png" alt="Role Management" width="720" /><br />
-  <img src="/screenshot/create-role.png" alt="Create Role" width="720" /><br />
-  <img src="/screenshot/user.png" alt="User Management" width="720" /><br />
-  <img src="/screenshot/create-user.png" alt="Create User" width="720" /><br />
-  <img src="/screenshot/update-user.png" alt="Update User" width="720" /><br />
-  <img src="/screenshot/data-hanling.png" alt="Data Handling" width="720" /><br />
+  <img src="screenshot/login.png" alt="Login" width="720" /><br />
+  <img src="screenshot/forgot-password.png" alt="Forgot Password" width="720" /><br />
+  <img src="screenshot/reset-password.png" alt="Reset Password" width="720" /><br />
+  <img src="screenshot/profile.png" alt="Profile" width="720" /><br />
+  <img src="screenshot/change-password.png" alt="Change Password" width="720" /><br />
+  <img src="screenshot/home.png" alt="Home" width="720" /><br />
+  <img src="screenshot/role.png" alt="Role Management" width="720" /><br />
+  <img src="screenshot/create-role.png" alt="Create Role" width="720" /><br />
+  <img src="screenshot/user.png" alt="User Management" width="720" /><br />
+  <img src="screenshot/create-user.png" alt="Create User" width="720" /><br />
+  <img src="screenshot/update-user.png" alt="Update User" width="720" /><br />
+  <img src="screenshot/data-hanling.png" alt="Data Handling" width="720" /><br />
 </p>
 
 <p align="center">
-  <img src="/screenshot/home-mobile.png" width="220" />
-  <img src="/screenshot/role-mobile.png" width="220" />
-  <img src="/screenshot/create-role-mobile.png" width="220" />
+  <img src="screenshot/home-mobile.png" width="220" />
+  <img src="screenshot/role-mobile.png" width="220" />
+  <img src="screenshot/create-role-mobile.png" width="220" />
 </p>
 
 <p align="center">
-  <img src="/screenshot/user-mobile.png" width="220" />
-  <img src="/screenshot/user-mobile-2.png" width="220" />
-  <img src="/screenshot/update-user-mobile.png" width="220" />
+  <img src="screenshot/user-mobile.png" width="220" />
+  <img src="screenshot/user-mobile-2.png" width="220" />
+  <img src="screenshot/update-user-mobile.png" width="220" />
 </p>
 
 ## :package: Cài đặt
