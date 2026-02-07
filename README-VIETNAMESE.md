@@ -60,26 +60,32 @@ src/
 
 ## Một số ảnh chụp màn hình :fire:
 
-![Đăng nhập](/screenshot/login.png)
-![Quên mật khẩu](/screenshot/forgot-password.png)
-![Đặt lại mật khẩu](/screenshot/reset-password.png)
-![Hồ sơ](/screenshot/profile.png)
-![Đổi mật khẩu](/screenshot/change-password.png)
-![Trang chủ](/screenshot/home.png)
-![Vai trò](/screenshot/role.png)
-![Tạo vai trò](/screenshot/create-role.png)
-![Người dùng](/screenshot/user.png)
-![Tạo người dùng](/screenshot/create-user.png)
-![Cập nhật người dùng](/screenshot/update-user.png)
-![Xử lý dữ liệu](/screenshot/data-hanling.png)
+<p align="center">
+  <img src="/screenshot/login.png" alt="Login" width="720" /><br />
+  <img src="/screenshot/forgot-password.png" alt="Forgot Password" width="720" /><br />
+  <img src="/screenshot/reset-password.png" alt="Reset Password" width="720" /><br />
+  <img src="/screenshot/profile.png" alt="Profile" width="720" /><br />
+  <img src="/screenshot/change-password.png" alt="Change Password" width="720" /><br />
+  <img src="/screenshot/home.png" alt="Home" width="720" /><br />
+  <img src="/screenshot/role.png" alt="Role Management" width="720" /><br />
+  <img src="/screenshot/create-role.png" alt="Create Role" width="720" /><br />
+  <img src="/screenshot/user.png" alt="User Management" width="720" /><br />
+  <img src="/screenshot/create-user.png" alt="Create User" width="720" /><br />
+  <img src="/screenshot/update-user.png" alt="Update User" width="720" /><br />
+  <img src="/screenshot/data-hanling.png" alt="Data Handling" width="720" /><br />
+</p>
 
-![Trang chủ – Chế độ xem di động](/screenshot/home-mobile.png)
-![Quản lý vai trò – Chế độ xem di động](/screenshot/role-mobile.png)
-![Tạo vai trò – Chế độ xem di động](/screenshot/create-role-mobile.png)
-![Hồ sơ người dùng – Chế độ xem di động](/screenshot/user-mobile.png)
-![Đổi mật khẩu – Chế độ xem di động](/screenshot/user-mobile.png)
-![Xác nhận đổi mật khẩu – Chế độ xem di động](/screenshot/user-mobile-2.png)
-![Cập nhật người dùng – Chế độ xem di động](/screenshot/update-user-mobile.png)
+<p align="center">
+  <img src="/screenshot/home-mobile.png" width="220" />
+  <img src="/screenshot/role-mobile.png" width="220" />
+  <img src="/screenshot/create-role-mobile.png" width="220" />
+</p>
+
+<p align="center">
+  <img src="/screenshot/user-mobile.png" width="220" />
+  <img src="/screenshot/user-mobile-2.png" width="220" />
+  <img src="/screenshot/update-user-mobile.png" width="220" />
+</p>
 
 ## :package: Cài đặt
 
