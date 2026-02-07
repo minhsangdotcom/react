@@ -102,8 +102,8 @@ src/
 ### 1. Clone the repository
 
 ```bash
-git clone <repository-url>
-cd <project-directory>
+git clone https://github.com/minhsangdotcom/react.git
+cd react
 ```
 
 ### 2. Install dependencies
