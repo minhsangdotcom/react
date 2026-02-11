@@ -19,6 +19,7 @@ export const TRANSLATION_KEYS = {
         success: {
           create: "common.notification.action.success.create",
           update: "common.notification.action.success.update",
+          send: "common.notification.action.success.send",
         },
       },
     },
@@ -152,11 +153,15 @@ export const TRANSLATION_KEYS = {
   login: {
     title: "login.title",
     form: {
-      identifier: "login.form.identifier",
-      password: "login.form.password",
+      fields: {
+        identifier: "login.form.fields.identifier",
+        password: "login.form.fields.password",
+      },
     },
     button: {
-      signin: "login.button.signin",
+      signin: {
+        title: "login.button.signin.title",
+      },
     },
     link: {
       forgotPassword: "login.link.forgotPassword",
@@ -176,21 +181,30 @@ export const TRANSLATION_KEYS = {
     title: "forgotPassword.title",
     description: "forgotPassword.description",
     form: {
-      email: "forgotPassword.form.email",
+      fields: {
+        email: "forgotPassword.form.fields.email",
+      },
     },
     button: {
-      send: "forgotPassword.button.send",
+      send: {
+        title: "forgotPassword.button.send.title",
+        name: "forgotPassword.button.send.name",
+      },
     },
   },
 
   resetPassword: {
     title: "resetPassword.title",
     form: {
-      newPassword: "resetPassword.form.newPassword",
-      confirmPassword: "resetPassword.form.confirmPassword",
+      fields: {
+        newPassword: "resetPassword.form.fields.newPassword",
+        confirmPassword: "resetPassword.form.fields.confirmPassword",
+      },
     },
     button: {
-      send: "resetPassword.button.send",
+      send: {
+        title: "resetPassword.button.send.title",
+      },
     },
     errors: {
       password: {
@@ -207,12 +221,14 @@ export const TRANSLATION_KEYS = {
   profile: {
     title: "profile.title",
     form: {
-      firstName: "profile.form.firstName",
-      lastName: "profile.form.lastName",
-      email: "profile.form.email",
-      phoneNumber: "profile.form.phoneNumber",
-      dateOfBirth: "profile.form.dateOfBirth",
-      gender: "profile.form.gender",
+      fields: {
+        firstName: "profile.form.fields.firstName",
+        lastName: "profile.form.fields.lastName",
+        email: "profile.form.fields.email",
+        phoneNumber: "profile.form.fields.phoneNumber",
+        dateOfBirth: "profile.form.fields.dateOfBirth",
+        gender: "profile.form.fields.gender",
+      },
     },
     gender: {
       male: "profile.gender.male",
@@ -223,9 +239,11 @@ export const TRANSLATION_KEYS = {
   changePassword: {
     title: "changePassword.title",
     form: {
-      currentPassword: "changePassword.form.currentPassword",
-      newPassword: "changePassword.form.newPassword",
-      confirmPassword: "changePassword.form.confirmPassword",
+      fields: {
+        currentPassword: "changePassword.form.fields.currentPassword",
+        newPassword: "changePassword.form.fields.newPassword",
+        confirmPassword: "changePassword.form.fields.confirmPassword",
+      },
     },
     errors: {
       currentPassword: {

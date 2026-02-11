@@ -2,7 +2,7 @@ import "@features/auth/login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import Input from "@/components/Input";
-import LoadingButton from "@components/LoadingButton";
+import LoadingButton from "@/components/LoadingButton";
 import { loginAsync } from "@features/auth/authAction";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -48,23 +48,23 @@ export default function Login() {
       <h2 className="login-form-title">{t(TRANSLATION_KEYS.login.title)}</h2>
       <form className="px-3 py-2" onSubmit={handleSubmit(submit)}>
         <Input
-          label={t(TRANSLATION_KEYS.login.form.identifier)}
+          label={t(TRANSLATION_KEYS.login.form.fields.identifier)}
           type="text"
           inputName="identifier"
           error={t(errors.identifier?.message as any)}
-          autoComplete={t(TRANSLATION_KEYS.login.form.identifier)}
+          autoComplete={t(TRANSLATION_KEYS.login.form.fields.identifier)}
           {...register("identifier")}
         />
 
         <PasswordInput
-          label={t(TRANSLATION_KEYS.login.form.password)}
+          label={t(TRANSLATION_KEYS.login.form.fields.password)}
           {...register("password")}
           error={t(errors.password?.message as any)}
         />
 
         <LoadingButton
           loading={data.isLoading}
-          text={t(TRANSLATION_KEYS.login.button.signin)}
+          text={t(TRANSLATION_KEYS.login.button.signin.title)}
           type="submit"
           className="w-full p-3 text-base font-semibold text-white bg-brand-primary hover:bg-brand-primary-hover rounded cursor-pointer mb-1.25 disabled:opacity-50 disabled:cursor-not-allowed"
         />

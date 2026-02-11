@@ -16,7 +16,7 @@ import {
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@dscn/components/ui/button";
 import { RoleModal } from "./RoleModal";
-import { ConfirmDialog } from "@components/confirmDialog";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";

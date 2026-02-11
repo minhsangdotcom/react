@@ -35,7 +35,7 @@ const authService = {
   ): Promise<ApiResult<void>> {
     return await send({
       url: "users/reset-password",
-      method: "PUT",
+      method: "POST",
       data: { ...request },
     });
   },

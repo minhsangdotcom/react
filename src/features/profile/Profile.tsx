@@ -1,8 +1,8 @@
 import "./profile.css";
-import { Loading } from "@components/Loading";
+import { Loading } from "@/components/Loading";
 import { ChangeEvent, useEffect, useState } from "react";
 import profileService from "@features/profile/profileService";
-import LoadingButton from "@components/LoadingButton";
+import LoadingButton from "@/components/LoadingButton";
 import { UserProfileResponse } from "@/features/profile/IUserProfile";
 import Select from "react-select";
 import { Gender, createGenderOptions } from "@/features/user/Gender";
@@ -144,7 +144,7 @@ export function Profile() {
         <form className="profile-form" onSubmit={handleSubmit(submit)}>
           <div className="row">
             <div className="field">
-              <label>{t(TRANSLATION_KEYS.profile.form.firstName)}</label>
+              <label>{t(TRANSLATION_KEYS.profile.form.fields.firstName)}</label>
               <input
                 {...register("firstName")}
                 className={errors.firstName && "border-red-500!"}
@@ -157,7 +157,7 @@ export function Profile() {
             </div>
 
             <div className="field">
-              <label>{t(TRANSLATION_KEYS.profile.form.lastName)}</label>
+              <label>{t(TRANSLATION_KEYS.profile.form.fields.lastName)}</label>
               <input
                 className={errors.lastName?.message && "border-red-500!"}
                 {...register("lastName")}
@@ -172,7 +172,7 @@ export function Profile() {
 
           <div className="row">
             <div className="field">
-              <label>{t(TRANSLATION_KEYS.profile.form.email)}</label>
+              <label>{t(TRANSLATION_KEYS.profile.form.fields.email)}</label>
               <input
                 type="email"
                 {...register("email")}
@@ -186,7 +186,7 @@ export function Profile() {
             </div>
 
             <div className="field">
-              <label>{t(TRANSLATION_KEYS.profile.form.phoneNumber)}</label>
+              <label>{t(TRANSLATION_KEYS.profile.form.fields.phoneNumber)}</label>
               <input {...register("phoneNumber")} />
               {errors.phoneNumber?.message && (
                 <span className="text-xs text-red-500">
@@ -198,7 +198,7 @@ export function Profile() {
 
           <div className="row">
             <div className="field">
-              <label>{t(TRANSLATION_KEYS.profile.form.dateOfBirth)}</label>
+              <label>{t(TRANSLATION_KEYS.profile.form.fields.dateOfBirth)}</label>
               <Controller
                 name="dateOfBirth"
                 control={control}
@@ -217,14 +217,14 @@ export function Profile() {
                       .startOf("year")
                       .toDate()}
                     valueFormat="DD/MM/YYYY"
-                    placeholder={t(TRANSLATION_KEYS.profile.form.dateOfBirth)}
+                    placeholder={t(TRANSLATION_KEYS.profile.form.fields.dateOfBirth)}
                   />
                 )}
               />
             </div>
 
             <div className="field">
-              <label>{t(TRANSLATION_KEYS.profile.form.gender)}</label>
+              <label>{t(TRANSLATION_KEYS.profile.form.fields.gender)}</label>
               <Controller
                 name="gender"
                 control={control}

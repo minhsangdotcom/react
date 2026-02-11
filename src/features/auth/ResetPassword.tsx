@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import authService from "@features/auth/authService";
 
-import LoadingButton from "@components/LoadingButton";
+import LoadingButton from "@/components/LoadingButton";
 import PasswordInput from "@/components/PasswordInput";
 import {
   resetPasswordSchema,
@@ -27,15 +27,20 @@ export function ResetPassword() {
   } = useForm<ResetPasswordSchemaType>({
     resolver: zodResolver(resetPasswordSchema),
   });
+  const navigate = useNavigate();
 
   const submit = async (data: ResetPasswordSchemaType) => {
     setLoading(true);
-    await authService.resetPassword({
+    const result = await authService.resetPassword({
       token,
       password: data.password,
       email,
     });
     setLoading(false);
+
+    if (result.success) {
+      navigate("/login");
+    }
   };
 
   return (
@@ -49,20 +54,20 @@ export function ResetPassword() {
         </h2>
 
         <PasswordInput
-          label={t(TRANSLATION_KEYS.resetPassword.form.newPassword)}
+          label={t(TRANSLATION_KEYS.resetPassword.form.fields.newPassword)}
           {...register("password")}
           error={t(errors.password?.message as any)}
         />
 
         <PasswordInput
-          label={t(TRANSLATION_KEYS.resetPassword.form.confirmPassword)}
+          label={t(TRANSLATION_KEYS.resetPassword.form.fields.confirmPassword)}
           {...register("confirmPassword")}
           error={t(errors.confirmPassword?.message as any)}
         />
 
         <LoadingButton
           loading={loading}
-          text={t(TRANSLATION_KEYS.resetPassword.button.send)}
+          text={t(TRANSLATION_KEYS.resetPassword.button.send.title)}
           type="submit"
         />
       </form>

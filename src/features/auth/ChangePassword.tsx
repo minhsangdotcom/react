@@ -50,19 +50,19 @@ export function ChangePassword() {
         </h2>
 
         <PasswordInput
-          label={t(TRANSLATION_KEYS.changePassword.form.currentPassword)}
+          label={t(TRANSLATION_KEYS.changePassword.form.fields.currentPassword)}
           {...register("oldPassword")}
           error={t(errors.oldPassword?.message as any)}
         />
 
         <PasswordInput
-          label={t(TRANSLATION_KEYS.changePassword.form.newPassword)}
+          label={t(TRANSLATION_KEYS.changePassword.form.fields.newPassword)}
           {...register("password")}
           error={t(errors.password?.message as any)}
         />
 
         <PasswordInput
-          label={t(TRANSLATION_KEYS.changePassword.form.confirmPassword)}
+          label={t(TRANSLATION_KEYS.changePassword.form.fields.confirmPassword)}
           {...register("confirmPassword")}
           error={t(errors.confirmPassword?.message as any)}
         />

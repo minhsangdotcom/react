@@ -18,7 +18,8 @@
       "action": {
         "success": {
           "create": "Create {{entity}} Successfully!",
-          "update": "Update {{entity}} Successfully!"
+          "update": "Update {{entity}} Successfully!",
+          "send": "send {{object}} Successfully!"
         }
       }
     },
@@ -147,11 +148,15 @@
   "login": {
     "title": "Login",
     "form": {
-      "identifier": "Username or Email",
-      "password": "Password"
+      "fields": {
+        "identifier": "Username or Email",
+        "password": "Password"
+      }
     },
     "button": {
-      "signin": "Sign In"
+      "signin": {
+        "title": "Sign In"
+      }
     },
     "link": {
       "forgotPassword": "Forgot password"
@@ -170,20 +175,29 @@
     "title": "Forgot your password",
     "description": "Enter your email address and we will send you a reset link",
     "form": {
-      "email": "Email"
+      "fields": {
+        "email": "Email"
+      }
     },
     "button": {
-      "send": "Send Reset Link"
+      "send": {
+        "title": "Send Reset Link",
+        "name": "Reset Link"
+      }
     }
   },
   "resetPassword": {
     "title": "Reset your password",
     "form": {
-      "newPassword": "New Password",
-      "confirmPassword": "Confirm Password"
+      "fields": {
+        "newPassword": "New Password",
+        "confirmPassword": "Confirm Password"
+      }
     },
     "button": {
-      "send": "Reset Password"
+      "send": {
+        "title": "Reset Password"
+      }
     },
     "errors": {
       "password": {
@@ -200,12 +214,14 @@
   "profile": {
     "title": "Profile",
     "form": {
-      "firstName": "First Name",
-      "lastName": "Last Name",
-      "email": "Email Address",
-      "phoneNumber": "Phone Number",
-      "dateOfBirth": "Date of Birth",
-      "gender": "Gender"
+      "fields": {
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": "Email Address",
+        "phoneNumber": "Phone Number",
+        "dateOfBirth": "Date of Birth",
+        "gender": "Gender"
+      }
     },
     "gender": {
       "male": "Male",
@@ -216,9 +232,11 @@
   "changePassword": {
     "title": "Change your password",
     "form": {
-      "currentPassword": "Current password",
-      "newPassword": "New password",
-      "confirmPassword": "Confirm password"
+      "fields": {
+        "currentPassword": "Current password",
+        "newPassword": "New password",
+        "confirmPassword": "Confirm password"
+      }
     },
     "errors": {
       "currentPassword": {

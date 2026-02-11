@@ -32,7 +32,7 @@ import { Checkbox } from "@dscn/components/ui/checkbox";
 import { DataTableFilterMenu } from "@/design-system/cn/components/data-table/data-table-filter-menu";
 import SearchBar from "@components/SearchBar";
 import CreateUserModal from "./CreateUserModal";
-import { ConfirmDialog } from "@components/confirmDialog";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
 import UpdateUserModal from "./UpdateUserModal";
 import { QueryString } from "@/types/IQueryString";
 import { roleService } from "@features/role/roleService";

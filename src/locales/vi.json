@@ -18,7 +18,8 @@
       "action": {
         "success": {
           "create": "Tạo {{entity}} thành công",
-          "update": "Cập nhật {{entity}} thành công!"
+          "update": "Cập nhật {{entity}} thành công!",
+          "send": "Gửi {{object}} thành công!"
         }
       }
     },
@@ -147,11 +148,15 @@
   "login": {
     "title": "Đăng nhập",
     "form": {
-      "identifier": "Tên đăng nhập hoặc Email",
-      "password": "Mật khẩu"
+      "fields": {
+        "identifier": "Tên đăng nhập hoặc Email",
+        "password": "Mật khẩu"
+      }
     },
     "button": {
-      "signin": "Đăng nhập"
+      "signin": {
+        "title": "Đăng nhập"
+      }
     },
     "link": {
       "forgotPassword": "Quên mật khẩu?"
@@ -170,20 +175,27 @@
     "title": "Quên mật khẩu",
     "description": "Nhập địa chỉ email của bạn và chúng tôi sẽ gửi liên kết đặt lại mật khẩu",
     "form": {
-      "email": "Email"
+      "fields": { "email": "Email" }
     },
     "button": {
-      "send": "Gửi liên kết đặt lại"
+      "send": {
+        "title": "Gửi liên kết",
+        "name": "liên kết"
+      }
     }
   },
   "resetPassword": {
     "title": "Đặt lại mật khẩu",
     "form": {
-      "newPassword": "Mật khẩu mới",
-      "confirmPassword": "Xác nhận mật khẩu"
+      "fields": {
+        "newPassword": "Mật khẩu mới",
+        "confirmPassword": "Xác nhận mật khẩu"
+      }
     },
     "button": {
-      "send": "Đặt lại mật khẩu"
+      "send": {
+        "title": "Đặt lại mật khẩu"
+      }
     },
     "errors": {
       "password": {
@@ -200,12 +212,14 @@
   "profile": {
     "title": "Hồ sơ",
     "form": {
-      "firstName": "Tên",
-      "lastName": "Họ",
-      "email": "Địa chỉ email",
-      "phoneNumber": "Số điện thoại",
-      "dateOfBirth": "Ngày sinh",
-      "gender": "Giới tính"
+      "fields": {
+        "firstName": "Tên",
+        "lastName": "Họ",
+        "email": "Địa chỉ email",
+        "phoneNumber": "Số điện thoại",
+        "dateOfBirth": "Ngày sinh",
+        "gender": "Giới tính"
+      }
     },
     "gender": {
       "male": "Nam",
@@ -216,9 +230,11 @@
   "changePassword": {
     "title": "Đổi mật khẩu",
     "form": {
-      "currentPassword": "Mật khẩu hiện tại",
-      "newPassword": "Mật khẩu mới",
-      "confirmPassword": "Xác nhận mật khẩu"
+      "fields": {
+        "currentPassword": "Mật khẩu hiện tại",
+        "newPassword": "Mật khẩu mới",
+        "confirmPassword": "Xác nhận mật khẩu"
+      }
     },
     "button": {
       "submit": "Đổi mật khẩu"
