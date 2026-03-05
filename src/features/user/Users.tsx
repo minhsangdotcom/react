@@ -446,7 +446,7 @@ export function Users() {
     );
     sanitizeSearchQuery(queryParam, search, [
       "username",
-      "firsName",
+      "firstName",
       "lastName",
       "email",
       "phoneNumber",
