@@ -56,7 +56,7 @@ async function send<TRequest, TResult>(
     delete config.data;
     config.params = request.data;
     config.paramsSerializer = (params) => {
-      return qs.stringify(params);
+      return qs.stringify(params, { arrayFormat: "repeat" });
     };
   }
 
