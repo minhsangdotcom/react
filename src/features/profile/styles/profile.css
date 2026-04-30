@@ -1,0 +1,16 @@
+.input-wrapper .mantine-DatePicker-input,
+.input-wrapper .mantine-Input-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--color-brand-border);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.input-wrapper .mantine-DatePicker-input:focus,
+.input-wrapper .mantine-Input-input:focus {
+  outline: none;
+  border-color: var(--color-brand-border-focus);
+}

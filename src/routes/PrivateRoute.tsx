@@ -1,5 +1,5 @@
 import { RouteObject } from "react-router-dom";
-import { Profile } from "@/features/profile/Profile";
+import { Profile } from "@/features/profile/page/Profile";
 import RequiredAuth from "@/routes/RequiredAuth";
 import Home from "@/features/home/Home";
 import { Roles } from "@/features/role/Roles";

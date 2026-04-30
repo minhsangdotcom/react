@@ -1,9 +1,9 @@
-import "./profile.css";
 import { Loading } from "@components/Loading";
+import '../styles/profile.css'
 import { ChangeEvent, useEffect, useState } from "react";
-import profileService from "@features/profile/profileService";
+import profileService from "@/features/profile/services/profileService";
 import LoadingButton from "@components/LoadingButton";
-import { UserProfileResponse } from "@/features/profile/IUserProfile";
+import { UserProfileResponse } from "@/features/profile/types/IUserProfile";
 import Select from "react-select";
 import { Gender, createGenderOptions } from "@/features/user/Gender";
 import { DateInput } from "@mantine/dates";
@@ -12,7 +12,7 @@ import Edit from "@assets/icons/edit-icon.png";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { useAppSelector } from "@/store/hook";
-import { profileSchema, profileSchemaType } from "./profileSchema";
+import { profileSchema, profileSchemaType } from "../validation/profileSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { defaultAvatarPicker } from "@/utils/defaultAvatarPicker";
@@ -22,6 +22,7 @@ import { useTranslation } from "react-i18next";
 import "dayjs/locale/vi";
 import "dayjs/locale/en";
 import { Avatar, AvatarImage } from "@/design-system/cn/components/ui/avatar";
+import { getCSSVariable } from "@/utils/getCSSVariable";
 dayjs.extend(utc);
 
 export function Profile() {
@@ -141,7 +142,7 @@ export function Profile() {
           </div>
         </div>
 
-        <form className="profile-form" onSubmit={handleSubmit(submit)}>
+        {/* <form className="profile-form" onSubmit={handleSubmit(submit)}>
           <div className="row">
             <div className="field">
               <label>{t(TRANSLATION_KEYS.profile.form.firstName)}</label>
@@ -255,6 +256,157 @@ export function Profile() {
               className="save-btn"
             />
           </div>
+        </form> */}
+        <form className="w-full" onSubmit={handleSubmit(submit)}>
+          {/* First Row - FirstName & LastName */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <div className="flex flex-col">
+              <label className="block mb-2 text-sm font-medium text-gray-700">
+                {t(TRANSLATION_KEYS.profile.form.firstName)}
+              </label>
+              <input
+                {...register("firstName")}
+                className={`w-full px-4 py-3 text-base border rounded-lg transition-colors focus:outline-none ${
+                  errors.firstName
+                    ? "border-red-500 focus:border-red-600"
+                    : "border-gray-300 focus:border-brand-border-focus"
+                }`}
+              />
+              {errors.firstName?.message && (
+                <span className="mt-1 text-xs font-medium text-red-500">
+                  {t(errors.firstName?.message as any)}
+                </span>
+              )}
+            </div>
+
+            <div className="flex flex-col">
+              <label className="block mb-2 text-sm font-medium text-gray-700">
+                {t(TRANSLATION_KEYS.profile.form.lastName)}
+              </label>
+              <input
+                {...register("lastName")}
+                className={`w-full px-4 py-3 text-base border rounded-lg transition-colors focus:outline-none ${
+                  errors.lastName
+                    ? "border-red-500 focus:border-red-600"
+                    : "border-gray-300 focus:border-brand-border-focus"
+                }`}
+              />
+              {errors.lastName?.message && (
+                <span className="mt-1 text-xs font-medium text-red-500">
+                  {t(errors.lastName?.message as any)}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Second Row - Email & Phone */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <div className="flex flex-col">
+              <label className="block mb-2 text-sm font-medium text-gray-700">
+                {t(TRANSLATION_KEYS.profile.form.email)}
+              </label>
+              <input
+                type="email"
+                {...register("email")}
+                className={`w-full px-4 py-3 text-base border rounded-lg transition-colors focus:outline-none ${
+                  errors.email
+                    ? "border-red-500 focus:border-red-600"
+                    : "border-gray-300 focus:border-brand-border-focus"
+                }`}
+              />
+              {errors.email?.message && (
+                <span className="mt-1 text-xs font-medium text-red-500">
+                  {t(errors.email?.message as any)}
+                </span>
+              )}
+            </div>
+
+            <div className="flex flex-col">
+              <label className="block mb-2 text-sm font-medium text-gray-700">
+                {t(TRANSLATION_KEYS.profile.form.phoneNumber)}
+              </label>
+              <input
+                {...register("phoneNumber")}
+                className={`w-full px-4 py-3 text-base border rounded-lg transition-colors focus:outline-none ${
+                  errors.phoneNumber
+                    ? "border-red-500 focus:border-red-600"
+                    : "border-gray-300 focus:border-brand-border-focus"
+                }`}
+              />
+              {errors.phoneNumber?.message && (
+                <span className="mt-1 text-xs font-medium text-red-500">
+                  {t(errors.phoneNumber?.message as any)}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Third Row - Date of Birth & Gender */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <div className="flex flex-col input-wrapper">
+              <label className="block mb-2 text-sm font-medium text-gray-700">
+                {t(TRANSLATION_KEYS.profile.form.dateOfBirth)}
+              </label>
+              <Controller
+                name="dateOfBirth"
+                control={control}
+                render={({ field }) => (
+                  <DateInput
+                    locale={code}
+                    value={field.value}
+                    onChange={field.onChange}
+                    allowDeselect
+                    maxDate={dayjs()
+                      .subtract(18, "year")
+                      .endOf("year")
+                      .toDate()}
+                    minDate={dayjs()
+                      .subtract(100, "year")
+                      .startOf("year")
+                      .toDate()}
+                    valueFormat="DD/MM/YYYY"
+                    placeholder={t(TRANSLATION_KEYS.profile.form.dateOfBirth)}
+                    className="w-full"
+                  />
+                )}
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label className="block mb-2 text-sm font-medium text-gray-700">
+                {t(TRANSLATION_KEYS.profile.form.gender)}
+              </label>
+              <Controller
+                name="gender"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    styles={customStyles}
+                    options={genderOptions}
+                    value={
+                      genderOptions.find(
+                        (x) => x.value.toString() === field.value
+                      ) ?? null
+                    }
+                    onChange={(option) => {
+                      field.onChange(option?.value ?? null);
+                    }}
+                  />
+                )}
+              />
+            </div>
+          </div>
+
+          {/* Save Button */}
+          <div className="flex justify-center pt-4">
+            <LoadingButton
+              loading={submitLoading}
+              text={t(TRANSLATION_KEYS.common.actions.save)}
+              type="submit"
+              className="w-1/2 px-6 py-3 bg-brand-primary hover:bg-brand-primary-hover text-white font-semibold border-none rounded-xl text-base transition-all duration-200 shadow-md hover:shadow-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            />
+          </div>
         </form>
       </div>
     </div>
@@ -262,15 +414,18 @@ export function Profile() {
 }
 
 const customStyles = {
-  control: (base: any) => ({
+  control: (base: any, state : any) => ({
     ...base,
     borderRadius: "0.5rem",
-    borderColor: "#b4afaf",
+    borderColor: state.isFocused ? getCSSVariable("--color-brand-border-focus"): getCSSVariable("--color-brand-border"),
     padding: "0.4rem",
     boxShadow: "none",
     background: "white",
     cursor: "pointer",
     height: "47px",
+    "&:hover": {
+     // borderColor: state.isFocused ? "#5bc0de" : "#9ca3af",
+    },
   }),
   menu: (base: any) => ({
     ...base,
@@ -280,7 +435,9 @@ const customStyles = {
   option: (base: any, state: any) => ({
     ...base,
     padding: "0.75rem 1rem",
-    backgroundColor: state.isFocused ? "rgba(91,192,222,0.2)" : "white",
+    backgroundColor: state.isFocused
+    ? getCSSVariable("--color-brand-background-hover")
+    : "white",
     color: "#333",
     cursor: "pointer",
   }),

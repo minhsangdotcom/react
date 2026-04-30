@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "@/features/auth/slices/authSlice";
-import profileProducer from "@features/profile/profileSlice";
+import profileProducer from "@/features/profile/slices/profileSlice";
 import languageReducer from "./language/languageSlice";
 import { languageMiddleware } from "./language/languageMiddleware";
 

@@ -117,8 +117,9 @@
 @theme {
   --color-brand-primary: #18181b;
   --color-brand-primary-hover: #27272a;
-
-  --radius-md: 0.375rem;
+  --color-brand-border-focus: #93c5fd;
+  --color-brand-border:#d1d5db;
+  --color-brand-background-hover:#d4eef7;
 }
 
 @layer base {

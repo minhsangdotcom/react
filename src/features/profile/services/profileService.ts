@@ -1,5 +1,5 @@
 import { ApiResult } from "@/lib/http/IApiResult";
-import { UserProfileResponse } from "./IUserProfile";
+import { UserProfileResponse } from "../types/IUserProfile";
 import { send } from "@/lib/http/api";
 
 const profileService = {

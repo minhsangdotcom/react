@@ -1,9 +1,9 @@
 import { SidebarTrigger } from "@dscn/components/ui/sidebar";
-import { profileAsync } from "@features/profile/profileAction";
+import { profileAsync } from "@/features/profile/actions/profileAction";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { useEffect, useRef, useState } from "react";
 import { NavbarAvatar } from "./NavbarAvatar";
-import { IUserProfileResponse } from "@/features/profile/IUserProfile";
+import { IUserProfileResponse } from "@/features/profile/types/IUserProfile";
 import { defaultAvatarPicker } from "@/utils/defaultAvatarPicker";
 import { Language } from "./Language";
 import {

@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { Gender } from "../user/Gender";
-import { userSchema } from "../user/userSchema";
+import { Gender } from "../../user/Gender";
+import { userSchema } from "../../user/userSchema";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
 
 const profileSchema = userSchema.extend({

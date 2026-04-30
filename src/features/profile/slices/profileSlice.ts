@@ -1,8 +1,8 @@
 import { localStorageUtil } from "@/utils/storages/localStorageUtil";
 import { createSlice } from "@reduxjs/toolkit";
 import { APP_KEY } from "@/config/key";
-import { profileAsync } from "./profileAction";
-import { UserProfileResponse } from "./IUserProfile";
+import { profileAsync } from "../actions/profileAction";
+import { UserProfileResponse } from "../types/IUserProfile";
 import { Response } from "@/types/IResponse";
 
 interface ProfileInfo {
