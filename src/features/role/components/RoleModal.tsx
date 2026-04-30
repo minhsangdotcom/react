@@ -170,7 +170,7 @@ export function RoleModal({
 
           {loading ? (
             <div className="flex items-center justify-center min-h-100">
-              <span className="h-6 w-6 animate-spin rounded-full border-2 border-blue-300 border-t-transparent" />
+              <span className="h-6 w-6 animate-spin rounded-full border-2 border-brand-border-focus border-t-transparent" />
             </div>
           ) : (
             <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6 flex-1 overflow-hidden">
@@ -178,10 +178,10 @@ export function RoleModal({
               <div className="space-y-4">
                 <input
                   type="text"
-                  className={`w-full border p-2 rounded focus:outline-none ${
+                  className={`w-full border p-2 rounded focus:outline-none focus:ring-1 ${
                     errors.name
                       ? "border-red-300 focus:ring-red-300"
-                      : "focus:border-blue-200 focus:ring-blue-300"
+                      : "border-brand-border  focus:ring-brand-border-focus"
                   }`}
                   placeholder={t(
                     TRANSLATION_KEYS.role.form.fields.name.placeholder
@@ -195,10 +195,10 @@ export function RoleModal({
                 )}
 
                 <textarea
-                  className={`w-full border p-2 rounded focus:outline-none min-h-30 ${
+                  className={`w-full border p-2 rounded focus:outline-none focus:ring-1 min-h-30 ${
                     errors.description
                       ? "border-red-300 focus:ring-red-300"
-                      : "focus:border-blue-200 focus:ring-blue-300"
+                      : "border-brand-border focus:ring-brand-border-focus"
                   }`}
                   placeholder={t(
                     TRANSLATION_KEYS.role.form.fields.description.placeholder
