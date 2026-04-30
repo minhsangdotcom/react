@@ -1,10 +1,10 @@
 import { send } from "@/lib/http/api";
 import { ApiResult } from "@/lib/http/IApiResult";
-import { ResetpasswordRequest } from "@/features/auth/IResetPasswordRequest";
-import { LoginResponse } from "@features/auth/ILoginResponse";
-import { TokenResponse } from "@features/auth/ITokenResponse";
-import { LoginRequest } from "@features/auth/ILoginRequest";
-import { ChangePasswordRequest } from "./IChangePasswordRequest";
+import { ResetpasswordRequest } from "@/features/auth/forgotPassword/types/IResetPasswordRequest";
+import { LoginResponse } from "@/features/auth/login/types/ILoginResponse";
+import { TokenResponse } from "@/features/auth/types/ITokenResponse";
+import { LoginRequest } from "@/features/auth/login/types/ILoginRequest";
+import { ChangePasswordRequest } from "../changePassword/types/IChangePasswordRequest";
 
 const authService = {
   login: async function (

@@ -1,5 +1,5 @@
 import { FormEvent, useState } from "react";
-import authService from "@features/auth/authService";
+import authService from "@/features/auth/services/authService";
 import Input from "@/components/Input";
 import LoadingButton from "@components/LoadingButton";
 import { useTranslation } from "react-i18next";
@@ -17,10 +17,10 @@ export function ForgotPassword() {
     setLoading(false);
   };
   return (
-    <div className="w-full max-w-md py-5">
+    <div className="w-full max-w-md flex justify-center flex-col">
       <form
         onSubmit={handleSubmit}
-        className="rounded-xl bg-background p-6 shadow-lg border border-border"
+        className="rounded-xl bg-background p-6 shadow-lg border border-border "
       >
         <h2 className="text-2xl font-semibold tracking-tight mb-2">
           {t(TRANSLATION_KEYS.forgotPassword.title)}

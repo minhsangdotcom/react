@@ -1,12 +1,12 @@
-import "@features/auth/login.css";
+import "@features/auth/login/styles/login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import Input from "@/components/Input";
 import LoadingButton from "@components/LoadingButton";
-import { loginAsync } from "@features/auth/authAction";
+import { loginAsync } from "@/features/auth/actions/authAction";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema, loginSchemaType } from "./loginSchema";
+import { loginSchema, loginSchemaType } from "../validation/loginSchema";
 import PasswordInput from "@/components/PasswordInput";
 import { useTranslation } from "react-i18next";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
@@ -44,7 +44,7 @@ export default function Login() {
   }
 
   return (
-    <div className="login-form-container w-full md:w-md py-5">
+    <div className="login-form-container w-full md:w-md">
       <h2 className="login-form-title">{t(TRANSLATION_KEYS.login.title)}</h2>
       <form className="px-3 py-2" onSubmit={handleSubmit(submit)}>
         <Input

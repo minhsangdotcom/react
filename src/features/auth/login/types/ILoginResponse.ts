@@ -1,4 +1,4 @@
-import { TokenResponse } from "./ITokenResponse";
+import { TokenResponse } from "../../types/ITokenResponse";
 
 export interface LoginResponse extends TokenResponse {
   tokenType: string;

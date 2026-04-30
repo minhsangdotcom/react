@@ -3,14 +3,14 @@ import PasswordInput from "@/components/PasswordInput";
 import {
   changePasswordSchema,
   ChangePasswordSchemaType,
-} from "./changePasswordSchema";
+} from "../validation/changePasswordSchema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import authService from "./authService";
+import authService from "../../services/authService";
 import { useState } from "react";
 import { showSuccessToast } from "@/notifications/toastSuccess";
 import { useAppDispatch } from "@/store/hook";
-import { logout } from "./authSlice";
+import { logout } from "../../slices/authSlice";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
 import { useTranslation } from "react-i18next";
 

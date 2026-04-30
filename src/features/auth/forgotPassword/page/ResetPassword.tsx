@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import authService from "@features/auth/authService";
+import authService from "@/features/auth/services/authService";
 
 import LoadingButton from "@components/LoadingButton";
 import PasswordInput from "@/components/PasswordInput";
 import {
   resetPasswordSchema,
   ResetPasswordSchemaType,
-} from "./resetPasswordSchema";
+} from "../validation/resetPasswordSchema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
@@ -39,7 +39,7 @@ export function ResetPassword() {
   };
 
   return (
-    <div className="w-full max-w-md py-5">
+    <div className="w-full max-w-md flex flex-col justify-center">
       <form
         onSubmit={handleSubmit(submit)}
         className="rounded-xl bg-background p-6 shadow-lg border border-border"

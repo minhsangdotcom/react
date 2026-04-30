@@ -7,7 +7,7 @@ import { Users } from "@/features/user/Users";
 
 import "@/styles/table.css";
 import Layout from "@/layouts/Layout";
-import { ChangePassword } from "@/features/auth/ChangePassword";
+import { ChangePassword } from "@/features/auth/changePassword/page/ChangePassword";
 
 const PrivateRoute: RouteObject = {
   element: <RequiredAuth />,

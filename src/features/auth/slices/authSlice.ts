@@ -2,9 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 import { Response } from "@/types/IResponse";
 import { APP_KEY } from "@/config/key";
 import { localStorageUtil } from "@/utils/storages/localStorageUtil";
-import { LoginResponse } from "@features/auth/ILoginResponse";
-import { TokenResponse } from "@features/auth/ITokenResponse";
-import { loginAsync, refreshAsync } from "./authAction";
+import { LoginResponse } from "@/features/auth/login/types/ILoginResponse";
+import { TokenResponse } from "@/features/auth/types/ITokenResponse";
+import { loginAsync, refreshAsync } from "../actions/authAction";
 
 interface Auth {
   token?: string | null;

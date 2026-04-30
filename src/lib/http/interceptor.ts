@@ -9,8 +9,8 @@ import { showBadRequestToast } from "@/notifications/toastBadRequest";
 import { showNotFoundToast } from "@/notifications/toastNotFound";
 import { showNetworkErrorToast } from "@/notifications/toastNetworkError";
 import { Store } from "@reduxjs/toolkit";
-import { logout } from "@/features/auth/authSlice";
-import { refreshAsync } from "@/features/auth/authAction";
+import { logout } from "@/features/auth/slices/authSlice";
+import { refreshAsync } from "@/features/auth/actions/authAction";
 
 export function requestHandler(
   config: InternalAxiosRequestConfig<any>

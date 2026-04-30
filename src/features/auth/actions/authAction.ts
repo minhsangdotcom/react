@@ -1,5 +1,5 @@
-import authService from "@/features/auth/authService";
-import { LoginRequest } from "@features/auth/ILoginRequest";
+import authService from "@/features/auth/services/authService";
+import { LoginRequest } from "@/features/auth/login/types/ILoginRequest";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const loginAsync = createAsyncThunk(

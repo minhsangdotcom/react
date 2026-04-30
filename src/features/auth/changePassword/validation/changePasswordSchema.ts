@@ -1,7 +1,7 @@
 import z from "zod";
 import {
   resetPasswordValidator,
-} from "./resetPasswordSchema";
+} from "../../forgotPassword/validation/resetPasswordSchema";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
 
 const changePasswordSchema = resetPasswordValidator

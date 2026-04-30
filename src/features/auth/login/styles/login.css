@@ -1,6 +1,7 @@
 .login-form-container {
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 .login-form-group label {
   margin-bottom: 0.5rem;

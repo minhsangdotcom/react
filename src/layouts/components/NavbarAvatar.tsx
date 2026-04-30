@@ -16,7 +16,7 @@ import {
   AvatarImage,
 } from "@dscn/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
-import { logout } from "@features/auth/authSlice";
+import { logout } from "@/features/auth/slices/authSlice";
 import { useAppDispatch } from "@/store/hook";
 import { useTranslation } from "react-i18next";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
