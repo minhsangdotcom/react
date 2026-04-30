@@ -5,7 +5,7 @@ import profileService from "@/features/profile/services/profileService";
 import LoadingButton from "@components/LoadingButton";
 import { UserProfileResponse } from "@/features/profile/types/IUserProfile";
 import Select from "react-select";
-import { Gender, createGenderOptions } from "@/features/user/Gender";
+import { Gender, createGenderOptions } from "@/features/user/types/Gender";
 import { DateInput } from "@mantine/dates";
 import Edit from "@assets/icons/edit-icon.png";
 

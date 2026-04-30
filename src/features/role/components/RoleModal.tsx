@@ -7,15 +7,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@dscn/components/ui/dialog";
-import { roleService } from "@/features/role/roleService";
+import { roleService } from "@/features/role/services/roleService";
 import {
   Permission,
   PermissionGroup,
   PermissionResponse,
 } from "@/types/permission/IPermission";
-import { RoleResponse } from "@/features/role/IRole";
+import { RoleResponse } from "@/features/role/types/IRole";
 import LoadingButton from "@/components/LoadingButton";
-import { roleSchema, roleSchemaType } from "./roleSchema";
+import { roleSchema, roleSchemaType } from "../validation/roleSchema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ApiResult } from "@/lib/http/IApiResult";

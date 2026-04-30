@@ -2,8 +2,8 @@ import { RouteObject } from "react-router-dom";
 import { Profile } from "@/features/profile/page/Profile";
 import RequiredAuth from "@/routes/RequiredAuth";
 import Home from "@/features/home/Home";
-import { Roles } from "@/features/role/Roles";
-import { Users } from "@/features/user/Users";
+import { Roles } from "@/features/role/page/Roles";
+import { Users } from "@/features/user/page/Users";
 
 import "@/styles/table.css";
 import Layout from "@/layouts/Layout";

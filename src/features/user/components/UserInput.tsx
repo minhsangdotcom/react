@@ -40,12 +40,12 @@ const UserInput = forwardRef<HTMLInputElement, InputProps>(
             aria-describedby={error ? `${name}-error` : undefined}
             className={`
               w-full h-12 rounded-lg border bg-white text-gray-900
-              focus:outline-none focus:ring-2 focus:ring-blue-300
+              focus:outline-none focus:ring-2 focus:ring-brand-border-focus
               dark:bg-input-dark dark:text-white
               dark:border-border-dark
               ${icon ? "pl-10" : "pl-4"}
               ${trailingIcon ? "pr-10" : "pr-4"}
-              ${error ? "border-red-500 focus:ring-red-300" : "border-gray-300"}
+              ${error ? "border-red-500 focus:ring-red-300" : "border-brand-border"}
               disabled:opacity-60 disabled:cursor-not-allowed
             `}
             {...props}

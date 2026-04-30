@@ -1,5 +1,5 @@
 import z from "zod";
-import { Gender } from "./Gender";
+import { Gender } from "../types/Gender";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
 
 const userSchema = z.object({

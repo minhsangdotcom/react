@@ -1,5 +1,5 @@
 import { PermissionResponse } from "@/types/permission/IPermission";
-import { Role } from "../role/IRole";
+import { Role } from "../../role/types/IRole";
 import { Gender } from "./Gender";
 import { UserStatus } from "./UserStatus";
 import { Entity } from "@/types/IEntity";

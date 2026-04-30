@@ -1,4 +1,4 @@
-import { Gender } from "@features/user/Gender";
+import { Gender } from "@/features/user/types/Gender";
 import avatarGirl from "@assets/images/avatar-girl.png";
 import avatarBoy from "@assets/images/avatar-boy.png";
 

@@ -1,3 +1,4 @@
+import { getCSSVariable } from "@/utils/getCSSVariable";
 import { StylesConfig } from "react-select";
 
 const permissionSelectStyles: StylesConfig = {
@@ -5,15 +6,15 @@ const permissionSelectStyles: StylesConfig = {
     ...base,
     minHeight: "48px",
     borderRadius: "8px",
-    borderColor: state.isFocused ? "transparent" : "#D1D5DB",
+    borderColor: state.isFocused ? getCSSVariable("--color-brand-border-focus"): getCSSVariable("--color-brand-border"),
     boxShadow: state.isFocused
-      ? "0 0 0 2px #93C5FD" // blue-300
+      ? `0 0 0 2px ${getCSSVariable('--color-brand-border-focus')}`
       : "none",
     backgroundColor: "white",
     padding: "4px",
     cursor: "pointer",
     "&:hover": {
-      borderColor: "#D1D5DB",
+      borderColor: getCSSVariable('--color-brand-border'),
     },
   }),
 
@@ -51,7 +52,7 @@ const permissionSelectStyles: StylesConfig = {
     color: "#047857",
     cursor: "pointer",
     ":hover": {
-      backgroundColor: "#D1FAE5",
+      backgroundColor: "var(--color-brand-border)",
       color: "#065F46",
     },
   }),
@@ -95,15 +96,15 @@ const roleSelectStyles: StylesConfig = {
     ...base,
     minHeight: "48px",
     borderRadius: "8px",
-    borderColor: state.isFocused ? "transparent" : "#D1D5DB",
+    borderColor: state.isFocused ? getCSSVariable("--color-brand-border-focus"): getCSSVariable("--color-brand-border"),
     boxShadow: state.isFocused
-      ? "0 0 0 2px #93C5FD" // blue-300
+      ? `0 0 0 2px ${getCSSVariable('--color-brand-border-focus')}` // blue-300
       : "none",
     backgroundColor: "white",
     padding: "4px",
     cursor: "pointer",
     "&:hover": {
-      borderColor: "#D1D5DB",
+      borderColor: getCSSVariable('--color-brand-border'),
     },
   }),
 
@@ -152,7 +153,7 @@ const roleSelectStyles: StylesConfig = {
     fontSize: "14px",
     cursor: "pointer",
     backgroundColor: state.isSelected
-      ? "#93C5FD"
+      ? getCSSVariable('--color-brand-border-focus')
       : state.isFocused
         ? "#F3F4F6"
         : "white",

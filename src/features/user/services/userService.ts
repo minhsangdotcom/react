@@ -2,7 +2,7 @@ import { QueryString } from "@/types/IQueryString";
 import { Pagination } from "@/types/IResponse";
 import { send } from "@/lib/http/api";
 import { ApiResult } from "@/lib/http/IApiResult";
-import { UserResponse } from "./IUser";
+import { UserResponse } from "../types/IUser";
 
 export const userService = {
   list: async function (

@@ -1,6 +1,6 @@
 import { Auditable } from "@/types/IAuditable";
 import { Entity } from "@/types/IEntity";
-import { PermissionResponse } from "../../types/permission/IPermission";
+import { PermissionResponse } from "../../../types/permission/IPermission";
 
 export interface Role extends Entity {
   name: string;

@@ -8,12 +8,12 @@ import {
   Edit2,
   Trash2,
 } from "lucide-react";
-import { User } from "./IUser";
+import { User } from "../types/IUser";
 import dayjs from "dayjs";
 
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import getStatusTranslation, { UserStatus } from "./UserStatus";
+import getStatusTranslation, { UserStatus } from "../types/UserStatus";
 import { useTranslation } from "react-i18next";
 import { defaultAvatarPicker } from "@/utils/defaultAvatarPicker";
 import { TRANSLATION_KEYS } from "@/config/translationKey";

@@ -17,20 +17,20 @@ import DefaultUser, {
   RoleModel,
   User,
   UserResponse,
-} from "./IUser";
-import getGenderTranslation, { Gender } from "./Gender";
-import getStatusTranslation, { UserStatus } from "./UserStatus";
-import { userService } from "./userService";
+} from "../types/IUser";
+import getGenderTranslation, { Gender } from "../types/Gender";
+import getStatusTranslation, { UserStatus } from "../types/UserStatus";
+import { userService } from "../services/userService";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { permissionSelectStyles, roleSelectStyles } from "./selectStyle";
+import { permissionSelectStyles, roleSelectStyles } from "../styles/selectStyle";
 import {
   SkeletonBlock,
   SkeletonInput,
   SkeletonToggle,
   SkeletonWideInput,
 } from "@/components/Skeleton";
-import { userSchema, userSchemaType } from "./userSchema";
+import { userSchema, userSchemaType } from "../validation/userSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { defaultAvatarPicker } from "@/utils/defaultAvatarPicker";

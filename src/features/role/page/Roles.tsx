@@ -2,8 +2,8 @@ import { DataTableColumnHeader } from "@dscn/components/data-table/data-table-co
 import { useDataTable } from "@dscn/hooks/use-data-table";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { roleService } from "@/features/role/roleService";
-import { Role } from "@/features/role/IRole";
+import { roleService } from "@/features/role/services/roleService";
+import { Role } from "@/features/role/types/IRole";
 import { DataTable } from "@dscn/components/data-table/data-table";
 
 import { defaultParams } from "@/types/QueryParam";
@@ -15,7 +15,7 @@ import {
 } from "@dscn/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@dscn/components/ui/button";
-import { RoleModal } from "./RoleModal";
+import { RoleModal } from "../components/RoleModal";
 import { ConfirmDialog } from "@components/confirmDialog";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";

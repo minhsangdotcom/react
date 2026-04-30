@@ -1,3 +1,4 @@
+import { getCSSVariable } from "@/utils/getCSSVariable";
 import { StylesConfig } from "react-select";
 export const genderSelectStyles: StylesConfig = {
   control: (base, state) => ({
@@ -5,13 +6,13 @@ export const genderSelectStyles: StylesConfig = {
     width: "100%",
     minHeight: "48px",
     borderRadius: "0.5rem",
-    borderColor: state.isFocused ? "transparent" : "#D1D5DB",
+    borderColor: state.isFocused ? getCSSVariable("--color-brand-border-focus"): getCSSVariable("--color-brand-border"),
     backgroundColor: "white",
     paddingLeft: "0.25rem",
     cursor: "pointer",
-    boxShadow: state.isFocused ? "0 0 0 2px var(--color-blue-300)" : "none",
+    boxShadow: state.isFocused ? `0 0 0 2px ${getCSSVariable("--color-brand-border-focus")}` : "none",
     "&:hover": {
-      borderColor: "#D1D5DB",
+      borderColor: getCSSVariable("--color-brand-border"),
     },
   }),
 

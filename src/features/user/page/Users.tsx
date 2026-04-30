@@ -17,8 +17,8 @@ import {
   RoleModel,
   User,
   UserResponse,
-} from "@/features/user/IUser";
-import getStatusTranslation, { UserStatus } from "@/features/user/UserStatus";
+} from "@/features/user/types/IUser";
+import getStatusTranslation, { UserStatus } from "@/features/user/types/UserStatus";
 import { Column, ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -26,19 +26,19 @@ import timezone from "dayjs/plugin/timezone";
 import { CheckCircle, MoreHorizontal, XCircle } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useQueryParam } from "@/hooks/useQueyParam";
-import { userService } from "@/features/user/userService";
+import { userService } from "@/features/user/services/userService";
 import { PageInfo, Pagination } from "@/types/IResponse";
 import { Checkbox } from "@dscn/components/ui/checkbox";
 import { DataTableFilterMenu } from "@/design-system/cn/components/data-table/data-table-filter-menu";
 import SearchBar from "@components/SearchBar";
-import CreateUserModal from "./CreateUserModal";
+import CreateUserModal from "../components/CreateUserModal";
 import { ConfirmDialog } from "@components/confirmDialog";
-import UpdateUserModal from "./UpdateUserModal";
+import UpdateUserModal from "../components/UpdateUserModal";
 import { QueryString } from "@/types/IQueryString";
-import { roleService } from "@features/role/roleService";
+import { roleService } from "@/features/role/services/roleService";
 import permissionService from "@/services/permission/permissionService";
 import { PermissionGroupResponse } from "@/types/permission/IPermission";
-import { Role } from "../role/IRole";
+import { Role } from "../../role/types/IRole";
 import { Loading } from "@/components/Loading";
 import { defaultAvatarPicker } from "@/utils/defaultAvatarPicker";
 import { showSuccessToast } from "@/notifications/toastSuccess";
@@ -55,7 +55,7 @@ import {
 } from "@/design-system/cn/components/data-table/data-table-pagination";
 import { sanitizeQuery } from "@/utils/queryParams/sanitizeQuery";
 import { sanitizeSearchQuery } from "@/utils/queryParams/sanitizeSearchQuery";
-import { UserCard } from "./UserCard";
+import { UserCard } from "../components/UserCard";
 import { vi, enUS } from "date-fns/locale";
 import { parseDateTime } from "@/utils/dateFormat";
 dayjs.extend(utc);
