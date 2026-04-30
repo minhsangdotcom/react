@@ -1,4 +1,3 @@
-import "@features/auth/login/styles/login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import Input from "@/components/Input";
@@ -44,8 +43,8 @@ export default function Login() {
   }
 
   return (
-    <div className="login-form-container w-full md:w-md">
-      <h2 className="login-form-title">{t(TRANSLATION_KEYS.login.title)}</h2>
+    <div className="w-full md:w-md flex flex-col justify-center">
+      <h2 className="text-2xl font-semibold text-center mb-4">{t(TRANSLATION_KEYS.login.title)}</h2>
       <form className="px-3 py-2" onSubmit={handleSubmit(submit)}>
         <Input
           label={t(TRANSLATION_KEYS.login.form.identifier)}
@@ -69,7 +68,7 @@ export default function Login() {
           className="w-full p-3 text-base font-semibold text-white bg-brand-primary hover:bg-brand-primary-hover rounded cursor-pointer mb-1.25 disabled:opacity-50 disabled:cursor-not-allowed"
         />
 
-        <Link to={"/forgot-password"} className="text-600 forget-password-text">
+        <Link to={"/forgot-password"} className="text-600 cursor-pointer text-base underline">
           {t(TRANSLATION_KEYS.login.link.forgotPassword)}
         </Link>
       </form>
