@@ -1,9 +1,9 @@
 import { RouteObject } from "react-router-dom";
 import { PublicLayout } from "@/layouts/PublicLayout";
-import { ForgotPassword } from "@/features/auth/ForgotPassword";
+import { ForgotPassword } from "@/features/auth/forgotPassword/page/ForgotPassword";
 import RequireGuest from "./RequireGuest";
-import Login from "@/features/auth/Login";
-import { ResetPassword } from "@/features/auth/ResetPassword";
+import Login from "@/features/auth/login/page/Login";
+import { ResetPassword } from "@/features/auth/forgotPassword/page/ResetPassword";
 
 const PublicRoute: RouteObject[] = [
   {

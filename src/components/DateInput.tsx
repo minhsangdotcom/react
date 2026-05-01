@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { DatePicker, DatesProvider } from "@mantine/dates";
+import { DatePicker } from "@mantine/dates";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
 import "dayjs/locale/en";
@@ -89,11 +89,11 @@ export function DateInput({
           className ??
           `
           w-full h-12 px-4 rounded-lg
-          border border-gray-300 dark:border-border-dark
-          bg-white dark:bg-input-dark
-          text-gray-900 dark:text-white
-          placeholder:text-gray-400 dark:placeholder:text-text-muted
-          focus:outline-none focus:ring-2 focus:ring-blue-300
+          border border-brand-border
+          bg-white
+          text-gray-900
+          placeholder:text-gray-400
+          focus:outline-none focus:ring-2 focus:ring-brand-border-focus
           cursor-pointer
         `
         }
@@ -127,7 +127,7 @@ export function DateInput({
       {opened && (
         <div
           className={`
-          absolute z-999 rounded-lg border shadow-lg bg-white dark:bg-input-dark px-4 py-3
+          absolute z-999 rounded-lg border shadow-lg bg-white px-4 py-3
           ${side === "bottom" ? "top-full mt-2" : "bottom-full mb-2"}
         `}
         >

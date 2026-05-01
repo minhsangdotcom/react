@@ -14,7 +14,7 @@
 
 .form-input {
   padding: 0.5rem 0.75rem;
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-brand-border);
   border-radius: 4px;
   font-size: 1rem;
   transition:
@@ -22,10 +22,10 @@
     border-color 0.2s ease;
 }
 
-.form-input:focus {
-  outline: none;
-  border-color: #f0f0f0;
-  box-shadow: 0 0 0 2px #f0f0f0;
+.form-input:focus  {
+  outline: none !important;
+  border-color: var(--color-brand-border-focus) !important;
+  box-shadow: 0 0 0 2px #f0f0f0 !important;
 }
 .form-input:hover {
   background-color: #fafafa;

@@ -1,0 +1,77 @@
+import { Link, useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "@/store/hook";
+import Input from "@/components/Input";
+import LoadingButton from "@components/LoadingButton";
+import { loginAsync } from "@/features/auth/actions/authAction";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema, loginSchemaType } from "../validation/loginSchema";
+import PasswordInput from "@/components/PasswordInput";
+import { useTranslation } from "react-i18next";
+import { TRANSLATION_KEYS } from "@/config/translationKey";
+
+export default function Login() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<loginSchemaType>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      identifier: "chloe.kim",
+      password: "Admin@123",
+    },
+  });
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const data = useAppSelector((store) => store.auth);
+  const { t } = useTranslation();
+
+  async function submit(formData: loginSchemaType) {
+    try {
+      await dispatch(
+        loginAsync({
+          identifier: formData.identifier,
+          password: formData.password,
+        })
+      ).unwrap();
+
+      navigate("/");
+    } catch {
+      //
+    }
+  }
+
+  return (
+    <div className="w-full md:w-md flex flex-col justify-center">
+      <h2 className="text-2xl font-semibold text-center mb-4">{t(TRANSLATION_KEYS.login.title)}</h2>
+      <form className="px-3 py-2" onSubmit={handleSubmit(submit)}>
+        <Input
+          label={t(TRANSLATION_KEYS.login.form.fields.identifier)}
+          type="text"
+          inputName="identifier"
+          error={t(errors.identifier?.message as any)}
+          autoComplete={t(TRANSLATION_KEYS.login.form.fields.identifier)}
+          {...register("identifier")}
+        />
+
+        <PasswordInput
+          label={t(TRANSLATION_KEYS.login.form.fields.password)}
+          {...register("password")}
+          error={t(errors.password?.message as any)}
+        />
+
+        <LoadingButton
+          loading={data.isLoading}
+          text={t(TRANSLATION_KEYS.login.button.signin.title)}
+          type="submit"
+          className="w-full p-3 text-base font-semibold text-white bg-brand-primary hover:bg-brand-primary-hover rounded cursor-pointer mb-1.25 disabled:opacity-50 disabled:cursor-not-allowed"
+        />
+
+        <Link to={"/forgot-password"} className="text-600 cursor-pointer text-base underline">
+          {t(TRANSLATION_KEYS.login.link.forgotPassword)}
+        </Link>
+      </form>
+    </div>
+  );
+}
