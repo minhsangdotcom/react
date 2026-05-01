@@ -44,29 +44,24 @@ export function UserCard({
         className="flex items-center gap-4 p-4 justify-between cursor-pointer hover:bg-slate-50 transition-colors"
         onClick={() => onToggle(user.id)}
       >
-        <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 sm:gap-4">
           <img
             src={user.avatar ?? defaultAvatarPicker.getAvatar(user.gender)}
             alt={user.firstName + user.lastName}
-            className="rounded-full h-12 w-12 border-2 border-primary/10 object-cover"
+            className="rounded-full h-12 w-12 shrink-0 border-2 border-primary/10 object-cover"
           />
-          <div className="flex flex-col justify-center">
-            <div className="flex items-center gap-2">
-              <p className="text-[#0d141b] text-base font-semibold leading-none">
+          <div className="flex flex-col justify-center min-w-0">
+            <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
+              <p className="text-[#0d141b] text-base font-semibold leading-none truncate">
                 {user.firstName} {user.lastName}
               </p>
               <span
-                className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-green-300`}
+                className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-green-300 shrink-0`}
               >
                 {t(getStatusTranslation(user.status as UserStatus) as any)}
               </span>
-              {false && (
-                <span className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-blue-100 text-primary">
-                  Admin
-                </span>
-              )}
             </div>
-            <p className="text-text-muted text-sm font-normal mt-1 text-gray-500">
+            <p className="text-text-muted text-sm font-normal mt-1 text-gray-500 truncate">
               @{user.username}
             </p>
           </div>
@@ -79,7 +74,7 @@ export function UserCard({
       </div>
 
       {isExpanded && (
-        <div className="bg-[#fcfdfe] border-t border-border-light p-4 animate-fadeIn">
+        <div className="bg-[#fcfdfe] border-t border-white p-4 animate-fadeIn">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-6">
             <div className="flex flex-col gap-1">
               <p className="text-text-muted text-[11px] uppercase tracking-wider font-semibold">
