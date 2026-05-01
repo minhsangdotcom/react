@@ -18,7 +18,7 @@ const UserInput = forwardRef<HTMLInputElement, InputProps>(
         {/* LABEL */}
         <label
           htmlFor={name}
-          className="text-sm font-medium text-gray-700 dark:text-gray-200"
+          className="text-sm font-medium text-gray-700"
         >
           {label}
         </label>
@@ -41,8 +41,6 @@ const UserInput = forwardRef<HTMLInputElement, InputProps>(
             className={`
               w-full h-12 rounded-lg border bg-white text-gray-900
               focus:outline-none focus:ring-2 focus:ring-brand-border-focus
-              dark:bg-input-dark dark:text-white
-              dark:border-border-dark
               ${icon ? "pl-10" : "pl-4"}
               ${trailingIcon ? "pr-10" : "pr-4"}
               ${error ? "border-red-500 focus:ring-red-300" : "border-brand-border"}

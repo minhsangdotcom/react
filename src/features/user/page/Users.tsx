@@ -32,7 +32,7 @@ import { Checkbox } from "@dscn/components/ui/checkbox";
 import { DataTableFilterMenu } from "@/design-system/cn/components/data-table/data-table-filter-menu";
 import SearchBar from "@components/SearchBar";
 import CreateUserModal from "../components/CreateUserModal";
-import { ConfirmDialog } from "@components/confirmDialog";
+import { ConfirmDialog } from "@components/ConfirmDialog";
 import UpdateUserModal from "../components/UpdateUserModal";
 import { QueryString } from "@/types/IQueryString";
 import { roleService } from "@/features/role/services/roleService";
@@ -346,7 +346,7 @@ export function Users() {
                   size="icon"
                   className="focus:outline-none focus:ring-0 focus:ring-offset-0"
                 >
-                  <MoreHorizontal className="h-4 w-4 text-dark-600 dark:text-dark-300" />
+                  <MoreHorizontal className="h-4 w-4 text-dark-600" />
                   <span className="sr-only">isOpen menu</span>
                 </Button>
               </DropdownMenuTrigger>
@@ -354,7 +354,7 @@ export function Users() {
               <DropdownMenuContent
                 align="end"
                 sideOffset={4}
-                className="min-w-35 bg-white dark:bg-800 rounded-lg shadow-lg p-1 z-100 cursor-pointer border-0"
+                className="min-w-35 bg-white rounded-lg shadow-lg p-1 z-100 cursor-pointer border-0"
               >
                 <DropdownMenuItem
                   onClick={() => {

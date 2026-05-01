@@ -142,7 +142,7 @@ export function Roles() {
                   size="icon"
                   className="focus:outline-none focus:ring-0 focus:ring-offset-0"
                 >
-                  <MoreHorizontal className="h-4 w-4 text-dark-600 dark:text-dark-300" />
+                  <MoreHorizontal className="h-4 w-4 text-dark-600" />
                   <span className="sr-only">isOpen menu</span>
                 </Button>
               </DropdownMenuTrigger>
@@ -150,7 +150,7 @@ export function Roles() {
               <DropdownMenuContent
                 align="end"
                 sideOffset={4}
-                className="min-w-35 bg-white dark:bg-800 rounded-lg shadow-lg p-1 z-100 cursor-pointer border-0"
+                className="min-w-35 bg-white rounded-lg shadow-lg p-1 z-100 cursor-pointer border-0"
               >
                 <DropdownMenuItem
                   onClick={(_) => {

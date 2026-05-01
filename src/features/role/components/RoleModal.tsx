@@ -237,7 +237,7 @@ export function RoleModal({
           )}
 
           {/* Action buttons */}
-          <DialogFooter className="flex justify-end gap-3 px-2 py-2 border-t border-gray-200 dark:border-border-dark shrink-0">
+          <DialogFooter className="flex justify-end gap-3 px-2 py-2 border-t border-gray-200 shrink-0">
             <DialogClose asChild>
               <button
                 className="

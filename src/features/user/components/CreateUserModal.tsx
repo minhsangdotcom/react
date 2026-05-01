@@ -145,8 +145,8 @@ export default function CreateUserModal({
       <DialogContent className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/40 backdrop-blur-[2px]">
         <div className="flex flex-col w-full max-w-4xl max-h-[90vh] rounded-xl shadow-2xl overflow-hidden ring-1 ring-white/10 animate-fade-in-up bg-white">
           {/*Header*/}
-          <DialogHeader className="flex justify-between px-6 py-5 border-b border-gray-200 dark:border-border-dark bg-background-light dark:bg-background-dark shrink-0">
-            <DialogTitle className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">
+          <DialogHeader className="flex justify-between px-6 py-5 border-b border-gray-200 shrink-0">
+            <DialogTitle className="text-xl font-bold text-gray-900 tracking-tight">
               {t(TRANSLATION_KEYS.user.modal.create.title)}
             </DialogTitle>
           </DialogHeader>
@@ -161,8 +161,8 @@ export default function CreateUserModal({
                     className="relative group cursor-pointer"
                     onClick={() => fileInputRef.current?.click()}
                   >
-                    <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-dashed border-gray-300 dark:border-border-dark bg-gray-50 dark:bg-input-dark flex items-center justify-center group-hover:border-primary transition-colors relative">
-                      <span className="material-symbols-outlined text-4xl text-gray-400 dark:text-text-muted">
+                    <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-dashed border-gray-300 bg-gray-50  flex items-center justify-center group-hover:border-primary transition-colors relative">
+                      <span className="material-symbols-outlined text-4xl text-gray-400">
                         <img
                           src={user.avatar!}
                           className="w-full h-32 rounded-full object-cover"
@@ -182,7 +182,7 @@ export default function CreateUserModal({
                       />
                     </div>
                   </div>
-                  <p className="text-sm text-gray-500 dark:text-text-muted text-center">
+                  <p className="text-sm text-gray-500 text-center">
                     {t(TRANSLATION_KEYS.user.form.fields.avatar.label)}
                     <br />
                     <span className="text-xs opacity-70">
@@ -206,7 +206,7 @@ export default function CreateUserModal({
                   />
 
                   <div className="flex flex-col gap-2">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                    <span className="text-sm font-medium text-gray-700">
                       {t(TRANSLATION_KEYS.user.form.fields.gender.label)}
                     </span>
                     <div className="relative">
@@ -238,7 +238,7 @@ export default function CreateUserModal({
                   </div>
 
                   <div className="date-wrapper flex flex-col gap-2">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                    <span className="text-sm font-medium text-gray-700">
                       {t(TRANSLATION_KEYS.user.form.fields.dateOfBirth.label)}
                     </span>
                     <Controller
@@ -260,10 +260,10 @@ export default function CreateUserModal({
                 </div>
               </div>
 
-              <div className="h-px bg-gray-200 dark:bg-border-dark w-full" />
+              <div className="h-px bg-gray-200 w-full" />
               {/* Contact & Account */}
               <div>
-                <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-4">
+                <h3 className="text-base font-semibold text-gray-900 mb-4">
                   {t(TRANSLATION_KEYS.user.form.sections.contactAndAccount)}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -295,7 +295,7 @@ export default function CreateUserModal({
                       label={t(
                         TRANSLATION_KEYS.user.form.fields.password.label
                       )}
-                      labelClassName="text-sm font-medium text-gray-700 dark:text-gray-200"
+                      labelClassName="text-sm font-medium text-gray-700"
                       inputClassName="w-full rounded-lg border focus:outline-none border-gray-300 bg-white text-gray-900 h-12 px-4 focus:ring-2 focus:ring-blue-300"
                       errorClassName="text-xs text-red-500 mt-0.5"
                       {...register("password")}
@@ -305,12 +305,12 @@ export default function CreateUserModal({
                 </div>
               </div>
 
-              <div className="h-px bg-gray-200 dark:bg-border-dark w-full" />
+              <div className="h-px bg-gray-200 w-full" />
 
               {/* Access Control */}
               <>
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-base font-semibold text-gray-900 dark:text-white">
+                  <h3 className="text-base font-semibold text-gray-900">
                     {t(TRANSLATION_KEYS.user.form.sections.accessControl)}
                   </h3>
                   <div className="flex gap-3 items-center py-3 px-2">
@@ -328,7 +328,7 @@ export default function CreateUserModal({
                         }));
                       }}
                     />
-                    <span className="text-sm font-medium  text-gray-700 dark:text-gray-200">
+                    <span className="text-sm font-medium  text-gray-700">
                       {t(TRANSLATION_KEYS.user.form.fields.status.label)}
                     </span>
                     <br />
@@ -338,7 +338,7 @@ export default function CreateUserModal({
                 {/* role & permission */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="flex flex-col gap-2">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                    <span className="text-sm font-medium text-gray-700">
                       {t(TRANSLATION_KEYS.user.form.fields.roles.label)}
                     </span>
                     <Select
@@ -367,7 +367,7 @@ export default function CreateUserModal({
                     />
                   </div>
                   <div className="flex flex-col gap-2">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                    <span className="text-sm font-medium text-gray-700">
                       {t(TRANSLATION_KEYS.user.form.fields.permissions.label)}
                     </span>
                     <Select
@@ -401,7 +401,7 @@ export default function CreateUserModal({
           </div>
 
           {/*Footer*/}
-          <DialogFooter className="flex justify-end gap-3 px-6 py-5 border-t border-gray-200 dark:border-border-dark bg-gray-50 dark:bg-[#111722] shrink-0">
+          <DialogFooter className="flex justify-end gap-3 px-6 py-5 border-t border-gray-200 bg-gray-50 shrink-0">
             <DialogClose asChild>
               <button
                 className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"

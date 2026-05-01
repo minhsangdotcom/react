@@ -329,7 +329,7 @@ export default function UpdateUserModal({
                     error={t(errors.phoneNumber?.message as any)}
                   />
                   <div className="date-wrapper flex flex-col gap-2">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                    <span className="text-sm font-medium text-gray-700">
                       {t(TRANSLATION_KEYS.user.form.fields.dateOfBirth.label)}
                     </span>
                     <Controller
@@ -364,7 +364,7 @@ export default function UpdateUserModal({
                       }}
                     />
 
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                    <span className="text-sm font-medium text-gray-700">
                       {t(TRANSLATION_KEYS.user.form.fields.status.label)}
                     </span>
                   </div>
@@ -373,7 +373,7 @@ export default function UpdateUserModal({
                 {/* roles and permissions */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="flex flex-col gap-2">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                    <span className="text-sm font-medium text-gray-700">
                       {t(TRANSLATION_KEYS.user.form.fields.roles.label)}
                     </span>
                     <Select
@@ -406,7 +406,7 @@ export default function UpdateUserModal({
                     />
                   </div>
                   <div className="flex flex-col gap-2">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                    <span className="text-sm font-medium text-gray-700">
                       {t(TRANSLATION_KEYS.user.form.fields.permissions.label)}
                     </span>
                     <Select
@@ -444,7 +444,7 @@ export default function UpdateUserModal({
           )}
 
           {/* Footer */}
-          <DialogFooter className="flex justify-end gap-3 px-6 py-5 border-t border-gray-200 dark:border-border-dark bg-gray-50 dark:bg-[#111722] shrink-0">
+          <DialogFooter className="flex justify-end gap-3 px-6 py-5 border-t border-gray-200 bg-gray-50 shrink-0">
             <DialogClose asChild>
               <button
                 className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 cursor-pointer"
