@@ -57,7 +57,7 @@ import { sanitizeQuery } from "@/utils/queryParams/sanitizeQuery";
 import { sanitizeSearchQuery } from "@/utils/queryParams/sanitizeSearchQuery";
 import { UserCard } from "../components/UserCard";
 import { vi, enUS } from "date-fns/locale";
-import { parseDateTime } from "@/utils/dateFormat";
+import { formatDate } from "@/utils/dateFormat";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -263,7 +263,7 @@ export function Users() {
         cell: ({ row }) => {
           const dateOfBirth: string = row.getValue("dateOfBirth");
           return (
-            <>{dateOfBirth ? parseDateTime(dateOfBirth, "DD/MM/YYYY") : "_"}</>
+            <>{dateOfBirth ? formatDate(dateOfBirth, "DD/MM/YYYY") : "_"}</>
           );
         },
         meta: {
@@ -327,7 +327,7 @@ export function Users() {
         ),
         cell: ({ row }) => {
           const createdAt: string = row.getValue("createdAt");
-          return <>{parseDateTime(createdAt, "DD/MM/YYYY")}</>;
+          return <>{formatDate(createdAt, "DD/MM/YYYY")}</>;
         },
         meta: {
           label: t(TRANSLATION_KEYS.common.table.fields.createdAt),

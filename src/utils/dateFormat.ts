@@ -1,208 +1,127 @@
-/**
- * Date parsing utility with timezone support using Day.js
- * Handles both date strings and Unix timestamps (in seconds or milliseconds)
- */
-
 import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
-// Extend dayjs with plugins
 dayjs.extend(utc);
 dayjs.extend(timezone);
+dayjs.extend(relativeTime);
 
-/**
- * Input types for date parsing
- */
-export type DateInput = string | number;
+// ─── Types ────────────────────────────────────────────────────────────────────
 
-/**
- * IANA timezone string
- */
+/** Accepts ISO strings, Unix timestamps (s or ms), or Date objects */
+export type DateInput = string | number | Date;
+
 export type Timezone = string;
 
-/**
- * Date format string using Day.js tokens
- */
+/** Day.js format tokens */
 export type DateFormat = string;
 
-/**
- * Common date formats (Day.js format tokens)
- */
+// ─── Constants ────────────────────────────────────────────────────────────────
+
+const MS_THRESHOLD = 10_000_000_000;
+
 export const DateFormats = {
   ISO: 'YYYY-MM-DD HH:mm:ss',
-  DATE_ONLY: 'YYYY-MM-DD',
-  TIME_ONLY: 'HH:mm:ss',
-  DATETIME_12H: 'YYYY-MM-DD hh:mm:ss A',
-  US_FORMAT: 'MM/DD/YYYY HH:mm:ss',
-  EU_FORMAT: 'DD/MM/YYYY HH:mm:ss',
+  DATE: 'YYYY-MM-DD',
+  TIME_24: 'HH:mm:ss',
+  TIME_12: 'hh:mm A',
+  DATETIME_12: 'YYYY-MM-DD hh:mm A',
+  US: 'MM/DD/YYYY',
+  EU: 'DD/MM/YYYY',
   FULL: 'dddd, MMMM D, YYYY h:mm A',
   SHORT: 'MMM D, YYYY',
+  MONTH_YEAR: 'MMMM YYYY',
 } as const;
 
-/**
- * Type for DateFormats keys
- */
 export type DateFormatKey = keyof typeof DateFormats;
 
-/**
- * Parse a date or Unix timestamp to a specific format with timezone
- * @param input - Date string or Unix timestamp (seconds or milliseconds)
- * @param format - Output format (default: 'YYYY-MM-DD HH:mm:ss')
- * @param tz - IANA timezone (default: system timezone)
- * @returns Formatted date string
- * @throws Error if input is invalid
- */
-export function parseDateTime(
-  input: DateInput,
-  format: DateFormat = 'YYYY-MM-DD HH:mm:ss',
-  tz: Timezone = dayjs.tz.guess()
-): string {
-  let dayjsObj: Dayjs;
-
-  // Handle Unix timestamp (detect if it's in seconds or milliseconds)
-  if (typeof input === 'number') {
-    // If the number is less than 10000000000, it's likely in seconds
-    if (input < 10000000000) {
-      dayjsObj = dayjs.unix(input);
-    } else {
-      dayjsObj = dayjs(input);
-    }
-  } 
-  // Handle date string
-  else if (typeof input === 'string') {
-    // Try parsing as Unix timestamp if it's a numeric string
-    if (/^\d+$/.test(input)) {
-      const num = parseInt(input, 10);
-      if (num < 10000000000) {
-        dayjsObj = dayjs.unix(num);
-      } else {
-        dayjsObj = dayjs(num);
-      }
-    } else {
-      dayjsObj = dayjs(input);
-    }
-  } else {
-    throw new Error('Input must be a date string or Unix timestamp');
-  }
-
-  // Validate date
-  if (!dayjsObj.isValid()) {
-    throw new Error('Invalid date input');
-  }
-
-  // Convert to target timezone and format
-  return dayjsObj.tz(tz).format(format);
-}
+// ─── Core (internal) ──────────────────────────────────────────────────────────
 
 /**
- * Parse with 12-hour format (AM/PM)
- * @param input - Date string or Unix timestamp
- * @param tz - IANA timezone (default: system timezone)
- * @returns Formatted date string with AM/PM
- * @throws Error if input is invalid
+ * Normalizes any DateInput into a Dayjs object.
+ * Single source of truth — no duplication across functions.
  */
-export function parseDateTime12h(
-  input: DateInput,
-  tz: Timezone = dayjs.tz.guess()
-): string {
-  let dayjsObj: Dayjs;
+function toDayjs(input: DateInput): Dayjs {
+  if (input instanceof Date) {
+    return dayjs(input);
+  }
 
   if (typeof input === 'number') {
-    if (input < 10000000000) {
-      dayjsObj = dayjs.unix(input);
-    } else {
-      dayjsObj = dayjs(input);
-    }
-  } else if (typeof input === 'string') {
-    if (/^\d+$/.test(input)) {
-      const num = parseInt(input, 10);
-      if (num < 10000000000) {
-        dayjsObj = dayjs.unix(num);
-      } else {
-        dayjsObj = dayjs(num);
-      }
-    } else {
-      dayjsObj = dayjs(input);
-    }
-  } else {
-    throw new Error('Input must be a date string or Unix timestamp');
+    const d = input < MS_THRESHOLD ? dayjs.unix(input) : dayjs(input);
+    if (!d.isValid()) throw new Error(`Invalid timestamp: ${input}`);
+    return d;
   }
 
-  if (!dayjsObj.isValid()) {
-    throw new Error('Invalid date input');
+  // Numeric string → treat as Unix timestamp
+  if (/^\d+$/.test(input)) {
+    const num = Number(input);
+    return num < MS_THRESHOLD ? dayjs.unix(num) : dayjs(num);
   }
 
-  return dayjsObj.tz(tz).format('YYYY-MM-DD hh:mm:ss A');
+  const d = dayjs(input);
+  if (!d.isValid()) throw new Error(`Invalid date string: "${input}"`);
+  return d;
+}
+
+// ─── Utilities ────────────────────────────────────────────────────────────────
+
+/**
+ * Format a date with optional timezone.
+ * @example
+ * formatDate(1714000000, DateFormats.FULL, 'Asia/Ho_Chi_Minh')
+ * // → "Monday, April 25, 2024 12:26 AM"
+ */
+export function formatDate(
+  input: DateInput,
+  format: DateFormat = DateFormats.ISO,
+  tz: Timezone = dayjs.tz.guess()
+): string {
+  return toDayjs(input).tz(tz).format(format);
 }
 
 /**
- * Get current timezone
- * @returns IANA timezone string
+ * Human-readable relative time.
+ * @example
+ * timeAgo('2024-04-01') // → "a month ago"
  */
-export function getCurrentTimezone(): Timezone {
-  return dayjs.tz.guess();
+export function timeAgo(input: DateInput): string {
+  return toDayjs(input).fromNow();
 }
 
 /**
- * Convert between timezones
- * @param input - Date string or Unix timestamp
- * @param fromTz - Source timezone
- * @param toTz - Target timezone
- * @param format - Output format (default: 'YYYY-MM-DD HH:mm:ss')
- * @returns Formatted date string in target timezone
- * @throws Error if input is invalid
+ * Convert a date from one timezone to another.
  */
-export function convertTimezone(
+export function convertTz(
   input: DateInput,
   fromTz: Timezone,
   toTz: Timezone,
-  format: DateFormat = 'YYYY-MM-DD HH:mm:ss'
+  format: DateFormat = DateFormats.ISO
 ): string {
-  let dayjsObj: Dayjs;
-  
-  if (typeof input === 'number') {
-    dayjsObj = input < 10000000000 ? dayjs.unix(input) : dayjs(input);
-  } else {
-    dayjsObj = dayjs(input);
-  }
-  
-  if (!dayjsObj.isValid()) {
-    throw new Error('Invalid date input');
-  }
-  
-  return dayjsObj.tz(fromTz).tz(toTz).format(format);
+  return toDayjs(input).tz(fromTz).tz(toTz).format(format);
 }
 
 /**
- * Parse date and return Day.js object for advanced manipulation
- * @param input - Date string or Unix timestamp
- * @param tz - IANA timezone (default: system timezone)
- * @returns Day.js object
- * @throws Error if input is invalid
+ * Returns a raw Dayjs object for advanced manipulation.
+ * Escape hatch — prefer the typed helpers above.
  */
-export function parseDateObject(
+export function toDateObject(
   input: DateInput,
   tz: Timezone = dayjs.tz.guess()
 ): Dayjs {
-  let dayjsObj: Dayjs;
+  return toDayjs(input).tz(tz);
+}
 
-  if (typeof input === 'number') {
-    dayjsObj = input < 10000000000 ? dayjs.unix(input) : dayjs(input);
-  } else if (typeof input === 'string') {
-    if (/^\d+$/.test(input)) {
-      const num = parseInt(input, 10);
-      dayjsObj = num < 10000000000 ? dayjs.unix(num) : dayjs(num);
-    } else {
-      dayjsObj = dayjs(input);
-    }
-  } else {
-    throw new Error('Input must be a date string or Unix timestamp');
-  }
+/** Returns the current system IANA timezone string. */
+export const guessTimezone = (): Timezone => dayjs.tz.guess();
 
-  if (!dayjsObj.isValid()) {
-    throw new Error('Invalid date input');
-  }
-
-  return dayjsObj.tz(tz);
+/**
+ * Convert any DateInput to a UTC ISO 8601 string with Z suffix.
+ * @example
+ * toUTC('2024-04-25 07:00:00')     // → "2024-04-25T00:00:00.000Z"
+ * toUTC(1714000000)                // → "2024-04-25T05:06:40.000Z"
+ * toUTC(new Date())                // → "2026-05-03T12:00:00.000Z"
+ */
+export function toUTC(input: DateInput): string {
+  return toDayjs(input).utc().toISOString();
 }
