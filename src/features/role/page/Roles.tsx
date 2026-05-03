@@ -35,10 +35,9 @@ import { TRANSLATION_KEYS } from "@/config/translationKey";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "@/design-system/cn/components/ui/tooltip";
-import { parseDateTime } from "@/utils/dateFormat";
+import { formatDate } from "@/utils/dateFormat";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
@@ -128,7 +127,7 @@ export function Roles() {
           />
         ),
         cell: ({ row }) => (
-          <div>{parseDateTime(row.getValue("createdAt"), "DD/MM/YYYY")}</div>
+          <div>{formatDate(row.getValue("createdAt"), "DD/MM/YYYY")}</div>
         ),
       },
       {

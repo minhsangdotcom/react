@@ -23,6 +23,7 @@ import "dayjs/locale/vi";
 import "dayjs/locale/en";
 import { Avatar, AvatarImage } from "@/design-system/cn/components/ui/avatar";
 import { getCSSVariable } from "@/utils/getCSSVariable";
+import { toUTC } from "@/utils/dateFormat";
 dayjs.extend(utc);
 
 export function Profile() {
@@ -52,7 +53,9 @@ export function Profile() {
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const img = e.target.files?.[0];
-    if (!img) return;
+    if (!img) {
+      return;
+    }
     if (!img.type.startsWith("image/")) {
       return;
     }
@@ -64,10 +67,14 @@ export function Profile() {
     const formData = new FormData();
 
     Object.entries({ ...data, avatar: user?.avatar }).forEach(([key, val]) => {
-      if (val == null) return;
-      if (key === "avatar") return;
+      if (val == null) {
+        return;
+      }
+      if (key === "avatar"){
+         return;
+      }
       if (key === "dateOfBirth") {
-        formData.append(key, dayjs(val).utc().format());
+        formData.append(key, toUTC(val));
         return;
       }
 
@@ -118,6 +125,9 @@ export function Profile() {
   return (
     <div className="flex items-center justify-between">
       <div className="w-full px-4 pb-10 sm:px-0 sm:max-w-md md:max-w-lg 2xl:max-w-2xl mt-3 mx-auto">
+        {
+          // profile header
+        }
         <div className="flex items-center gap-4 mb-3 p-5">
           {/* Avatar */}
           <div className="relative shrink-0">
@@ -141,122 +151,9 @@ export function Profile() {
             </h2>
           </div>
         </div>
-
-        {/* <form className="profile-form" onSubmit={handleSubmit(submit)}>
-          <div className="row">
-            <div className="field">
-              <label>{t(TRANSLATION_KEYS.profile.form.fields.firstName)}</label>
-              <input
-                {...register("firstName")}
-                className={errors.firstName && "border-red-500!"}
-              />
-              {errors.firstName?.message && (
-                <span className="text-xs text-red-500">
-                  {t(errors.firstName?.message as any)}
-                </span>
-              )}
-            </div>
-
-            <div className="field">
-              <label>{t(TRANSLATION_KEYS.profile.form.fields.lastName)}</label>
-              <input
-                className={errors.lastName?.message && "border-red-500!"}
-                {...register("lastName")}
-              />
-              {errors.lastName?.message && (
-                <span className="text-xs text-red-500">
-                  {t(errors.lastName?.message as any)}
-                </span>
-              )}
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="field">
-              <label>{t(TRANSLATION_KEYS.profile.form.fields.email)}</label>
-              <input
-                type="email"
-                {...register("email")}
-                className={errors.email?.message && "border-red-500!"}
-              />
-              {errors.email?.message && (
-                <span className="text-xs text-red-500">
-                  {t(errors.email?.message as any)}
-                </span>
-              )}
-            </div>
-
-            <div className="field">
-              <label>{t(TRANSLATION_KEYS.profile.form.fields.phoneNumber)}</label>
-              <input {...register("phoneNumber")} />
-              {errors.phoneNumber?.message && (
-                <span className="text-xs text-red-500">
-                  {t(errors.phoneNumber?.message as any)}
-                </span>
-              )}
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="field">
-              <label>{t(TRANSLATION_KEYS.profile.form.fields.dateOfBirth)}</label>
-              <Controller
-                name="dateOfBirth"
-                control={control}
-                render={({ field }) => (
-                  <DateInput
-                    locale={code}
-                    value={field.value}
-                    onChange={field.onChange}
-                    allowDeselect
-                    maxDate={dayjs()
-                      .subtract(18, "year")
-                      .endOf("year")
-                      .toDate()}
-                    minDate={dayjs()
-                      .subtract(100, "year")
-                      .startOf("year")
-                      .toDate()}
-                    valueFormat="DD/MM/YYYY"
-                    placeholder={t(TRANSLATION_KEYS.profile.form.fields.dateOfBirth)}
-                  />
-                )}
-              />
-            </div>
-
-            <div className="field">
-              <label>{t(TRANSLATION_KEYS.profile.form.fields.gender)}</label>
-              <Controller
-                name="gender"
-                control={control}
-                render={({ field }) => (
-                  <Select
-                    {...field}
-                    styles={customStyles}
-                    options={genderOptions}
-                    value={
-                      genderOptions.find(
-                        (x) => x.value.toString() == field.value
-                      ) ?? null
-                    }
-                    onChange={(option) => {
-                      field.onChange(option?.value ?? null);
-                    }}
-                  />
-                )}
-              />
-            </div>
-          </div>
-
-          <div className="btn-wrapper">
-            <LoadingButton
-              loading={submitLoading}
-              text={t(TRANSLATION_KEYS.common.actions.save)}
-              type="submit"
-              className="save-btn"
-            />
-          </div>
-        </form> */}
+       {/*
+            profile form 
+        */}
         <form className="w-full" onSubmit={handleSubmit(submit)}>
           {/* First Row - FirstName & LastName */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">

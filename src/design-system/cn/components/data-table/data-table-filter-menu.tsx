@@ -41,7 +41,6 @@ import {
   getDefaultFilterOperator,
   getFilterOperators,
 } from "@dscn/lib/data-table";
-import { formatDate } from "@dscn/lib/format";
 import { generateId } from "@dscn/lib/id";
 import { getFiltersStateParser } from "@dscn/lib/parsers";
 import { cn } from "@dscn/lib/utils";
@@ -52,7 +51,7 @@ import type {
 import { useTranslation } from "react-i18next";
 import { TRANSLATION_KEYS } from "@/config/translationKey";
 import { Locale } from "react-day-picker";
-import { parseDateTime } from "@/utils/dateFormat";
+import { formatDate } from "@/utils/dateFormat";
 
 const FILTERS_KEY = "filters";
 const DEBOUNCE_MS = 300;
@@ -884,12 +883,12 @@ function onFilterInputRender<TData>({
       const format = "DD/MM/YYYY";
       const displayValue =
         filter.operator === "isBetween" && dateValue.length === 2
-          ? `${parseDateTime(Number(dateValue[0]), format)} - ${parseDateTime(
+          ? `${formatDate(Number(dateValue[0]), format)} - ${formatDate(
               Number(dateValue[1]),
               format
             )}`
           : dateValue[0]
-            ? parseDateTime(Number(dateValue[0]), format)
+            ? formatDate(Number(dateValue[0]), format)
             : "Pick date...";
 
       return (
