@@ -263,7 +263,6 @@ export function Profile() {
                       .toDate()}
                     valueFormat="DD/MM/YYYY"
                     placeholder={t(TRANSLATION_KEYS.profile.form.fields.dateOfBirth)}
-                    className="w-full"
                   />
                 )}
               />
